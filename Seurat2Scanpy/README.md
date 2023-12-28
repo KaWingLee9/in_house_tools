@@ -8,12 +8,12 @@ Functions to transform Seurat object to Scanpy object
 exec(open('Seurat2Scanpy.py','r').read())  
 r_home="/home/lijiarong/miniconda3/envs/R/lib/R" # path of R console 
 ```
-3. For scRNA-Seq data:  
+4. For scRNA-Seq data:  
 ```
 adata=sc_Seurat2Scanpy('seurat_obj.rds',r_home,
                     exp_mat_slot=['RNA','data'])
 ```
-4. For spatial-omics data:  
+5. For spatial-omics data:  
 ```
 adata=st_Seurat2Scanpy('seurat_obj.rds',r_home,
                     exp_mat_slot=['RNA','data'],res_type='lowres')
