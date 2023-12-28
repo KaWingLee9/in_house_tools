@@ -11,9 +11,12 @@ exec(open('Seurat2Scanpy.py','r').read())
 r_home="/home/lijiarong/miniconda3/envs/R/lib/R" # path of R console 
 ```
 For scRNA-Seq data:  
+```
 adata=sc_Seurat2Scanpy('seurat_obj.rds',r_home,
                     exp_mat_slot=['RNA','data'])
-For 10X Visium data:  
+```
+For spatial data:  
+```
 adata=st_Seurat2Scanpy('seurat_obj.rds',r_home,
                     exp_mat_slot=['RNA','data'],res_type='lowres')
-
+```
