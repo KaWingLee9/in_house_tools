@@ -4,7 +4,7 @@ Functions to transform Seurat object to Scanpy object
 SOAPy
 
 ### Tutorial
-To use the script here, you should prepare an R console with `Seurat`, `SeuratObject`
+To use the script here, you should prepare an R console with `Seurat`, `SeuratObject`  
 Download the source file Seurat2Scanpy.py and import the functions:  
 ```
 exec(open('Seurat2Scanpy.py','r').read())  
