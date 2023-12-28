@@ -15,7 +15,7 @@ For scRNA-Seq data:
 adata=sc_Seurat2Scanpy('seurat_obj.rds',r_home,
                     exp_mat_slot=['RNA','data'])
 ```
-For spatial data:  
+For spatial-omics data:  
 ```
 adata=st_Seurat2Scanpy('seurat_obj.rds',r_home,
                     exp_mat_slot=['RNA','data'],res_type='lowres')
