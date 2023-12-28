@@ -2,7 +2,7 @@ Functions to transform Seurat object to Scanpy object
 
 ### Tutorial
 1. To use the script here, you should prepare:  
-A) Python console with: ``, ``, ``, ``  
+A) Python console with: `scanpy`, `numpy`, `pandas`, `rpy2`  
 B) R console with: `Seurat`, `dplyr`  
 3. Sample `.rds` files of ST datasets could be downloaded from  
 4. Download the source file Seurat2Scanpy.py and import the functions:  
