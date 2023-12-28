@@ -21,4 +21,4 @@ adata=st_Seurat2Scanpy('seurat_obj.rds',r_home,
 `exp_mat_slot` is a list with `assay` and `slot` name of expression matrix in seurat object to export to `adata.X`.
 
 ### Citation
-SOAPy
+Wang H, Li J, Jing S, et al. SOAPy: a Python package to dissect spatial architecture, dynamics and communication[J]. bioRxiv, 2023: 2023.12. 21.572725.
