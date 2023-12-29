@@ -128,6 +128,13 @@ def st_Seurat2Scanpy(seurat_file,r_home,
     }
     """)
 
+    GetImageType=r("""
+    function(image_obj){
+    library(Seurat)
+    return(class(image_obj))
+    }
+    """)
+
     import pandas as pd
     import numpy as np
     
