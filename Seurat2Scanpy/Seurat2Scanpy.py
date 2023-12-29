@@ -1,4 +1,4 @@
-# function to transform 10X Visium data
+# function to transform ST data
 def st_Seurat2Scanpy(seurat_file,r_home,
                      exp_mat_slot=['RNA','counts'],res_type='lowres'):
     
