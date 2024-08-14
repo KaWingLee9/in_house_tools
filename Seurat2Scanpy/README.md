@@ -1,5 +1,6 @@
 Functions to transform Seurat object to Scanpy object  
-Results are adapted for SOAPy  
+Results are adapted for SOAPy 
+Temporally for Seurat v4   
 
 ### Tutorial
 1. To use the script here, you should prepare:  
