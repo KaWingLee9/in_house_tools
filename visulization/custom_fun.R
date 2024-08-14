@@ -1,5 +1,5 @@
+# Correlation bubble plot with significance test
 # Required packages: ggplot2, Hmisc, dendsort
-
 CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
         size='p.value', # 'p.value', 'p.adj'
         p.adj.method='fdr',
