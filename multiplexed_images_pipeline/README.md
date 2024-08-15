@@ -5,6 +5,7 @@ Running Mesmer in docker, please refer to https://deepcell.readthedocs.io/en/mas
 
 
 ## Expression quantification, cell type classification and in-situ visualization
+Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input.  
 Please refer to `.ipynb`
 
 ## Citation
