@@ -8,7 +8,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 ### Table of Contents
 * [Correlation bubble plot with significance test](#Correlation bubble plot with significance test)
 
-### Correlation bubble plot with significance test
+### <a name="Correlation bubble plot with significance test">Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
 Parameters of `CorPlot`:
 + `df`: data frame (observations x variables)
