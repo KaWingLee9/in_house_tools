@@ -1,4 +1,4 @@
-# Some custom visualization in R
+# Some custom visualization methods in R
 
 ```
 library(ggplot2)
