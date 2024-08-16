@@ -84,4 +84,4 @@ Parameters of `SHeatmap`:
 + `sig.level`, `sig.label`: significance level and corresponding labels
 + `p.adj`, `p.adj.method`: whether to adjust p value and method for p value adjustment (passed on to `p.adjust(method=...)`)
 + `scale`: whether to scale data within each variable
-+ ...: other arguments passed on to `ComplexHeatmap::Heatmap`
++ `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
