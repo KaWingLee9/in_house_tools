@@ -101,3 +101,82 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
                               
     return(p)
 }
+
+# Required packages: dplyr, coin, ComplexHeatmap
+SumHeatmap=function(df,group_col,variable_col,value_col,test.mode='ONEvsVALUE',
+                    test.method='t.test',permutated=FALSE,...){
+
+    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group_col,'~',variable_col)),value.var=value_col,fun.aggregate=mean) %>% 
+        data.frame(row.names=1,check.names=FALSE)
+
+
+    p_matrix=lapply(unique(df[,variable_col]),function(x){
+        df=sapply(unique(df[,group_col]),function(y){
+
+            if (test.mode=='ONEvsVALUE'){
+                x1=df[ (df[,group_col] %in% y) & (df[,variable_col] %in% x) ,value_col]
+                x2=mean(df[ df[,variable_col] %in% x ,value_col])
+
+                if (test.method=='t.test'){
+                    x2=mean(df[ df[,variable_col] %in% x ,value_col])
+                    p=t.test(x1,mu=x2)$p.value
+                }
+
+                if (test.method=='wilcox.test'){
+                    x2=median(df[ df[,variable_col] %in% x ,value_col])
+                    p=wilcox.test(x1,mu=x2)$p.value
+                }
+                
+                return(p)
+            }
+
+            if (test.mode=='ONEvsOTHER'){
+                x1=df[ (df[,group_col] %in% y) & (df[,variable_col] %in% x) ,value_col]
+                x2=df[ (!df[,group_col] %in% y) & ((df[,variable_col] %in% x)) ,value_col ]
+            }
+
+            if (test.mode=='ONEvsALL'){
+                x1=df[ (df[,group_col] %in% y) & (df[,variable_col] %in% x) ,value_col]
+                x2=df[ df[,variable_col] %in% x ,value_col]
+            }
+            
+            if (permutated){
+                
+                df_test=data.frame(value=c(x1,x2),
+                group=as.factor(c(rep('A',length.out=length(x1)),rep('B',length.out=length(x2)))))
+                colnames(df_test)=c('value','group')
+                df_test=data.frame(df_test)
+                
+                if (test.method=='oneway.test'){
+                    p=coin::pvalue(coin::oneway_test(value~group,df_test))
+                }
+                
+                if (test.method=='wilcox.test'){
+                    p=coin::pvalue(coin::wilcox_test(value~group,df_test))
+                }
+            }
+            
+            if (!permutated){
+                if (test.method=='t.test'){
+                    p=t.test(x1,x2)$p.value
+                }
+                
+                if (test.method=='wilcox.test'){
+                    p=wilcox.test(x1,x2)$p.value
+                }
+            }
+            
+            return(p)
+
+        }) %>% data.frame()
+        
+        colnames(df)=x
+        return(df)
+        
+    }) %>% dplyr::bind_cols()
+    
+    return(p_matrix)
+    
+    Heatmap(heatmap_matrix,...)
+
+}
