@@ -6,15 +6,6 @@
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
-Parameters of `CorPlot`:
-+ `df`: data frame (observations x variables)
-+ `cor.method`: methods to calculate correlation, could be `pearson` or `spearman`, passed on to `Hmisc::rcorr(type=...)`
-+ `tri`: show the `whole` matrix or `upper`/`lower` triangular matrix
-+ `size`: `p.value` or `p.adj` reflected by bubble size
-+ `p.adj.method`: method for p value adjustment (e.g. `bonferroni` or `fdr`), passed on to `p.adjust(method=...)`
-+ `sig.circle`: whether to show outlines of the bubbles if significant
-+ `sig.level`: significance level for hypothesis test, reflected in sig.circle
-
 ``` r
 library(ggplot2)
 library(patchwork)
@@ -30,10 +21,17 @@ p3=CorPlot(mtcars,cor.method='pearson',tri='lower',size='p.value',sig.level=0.01
 options(repr.plot.height=5,repr.plot.width=5*3)
 p1+p2+p3
 ```
-
 <p align="center">
   <img height="400" src="pct/CorPlot.png">
 </p>
+Parameters of `CorPlot`:
++ `df`: data frame (observations x variables)
++ `cor.method`: methods to calculate correlation, could be `pearson` or `spearman`, passed on to `Hmisc::rcorr(type=...)`
++ `tri`: show the `whole` matrix or `upper`/`lower` triangular matrix
++ `size`: `p.value` or `p.adj` reflected by bubble size
++ `p.adj.method`: method for p value adjustment (e.g. `bonferroni` or `fdr`), passed on to `p.adjust(method=...)`
++ `sig.circle`: whether to show outlines of the bubbles if significant
++ `sig.level`: significance level for hypothesis test, reflected in sig.circle
 
 ## <a name="heatmap1">SHeatmap - Summarized heatmap with significance test</a>
 
