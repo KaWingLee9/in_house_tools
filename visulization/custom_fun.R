@@ -181,10 +181,12 @@ SumHeatmap=function(df,group_col,variable_col,value_col,test.mode='ONEvsVALUE',
     sig.label=rev(sig.label)
     sig.level=rev(sig.level)
     
-    Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
+    ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
         for (q in length(sig.level)){
             if (p_matrix[i,j]<=sig.level[q]) {
                 grid.text(sig.label[q], x, y)
         }}},...)
+
+    return(ht)
 
 }
