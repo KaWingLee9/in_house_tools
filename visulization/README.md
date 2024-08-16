@@ -62,6 +62,7 @@ head(df)
 
 ```
 
+Parameters of `SHeatmap`:
 + df: a long data frame 
 + `group.col`: column name represents sample group
 + `variable.col`: column name represents variable
@@ -69,6 +70,7 @@ head(df)
 + `test.mode`: one of  `ONEvsVALUE`, `ONEvsOTHER` and `ONEvsALL`
 + `permutated`: whether to use permutation-based method
 + `test.method`: one of `t.test`, `wilcox.test` and `oneway.test`
-                    test.method='t.test',permutated=FALSE,
-                    sig.level=c(0.01,0.05),sig.label=c('**','*'),
-                    p.adj=FALSE,p.adj.method='fdr',scale=FALSE,
++ `sig.level`, `sig.label=c('**','*')`: significance level and corresponding labels
++ `p.adj`, `p.adj.method`: whether to adjust p value and method for p value adjustment (passed on to `p.adjust(method=...)`)
++ `scale`: whether to scale data within each variable
++ ...: other arguments passed on to `ComplexHeatmap::Heatmap`
