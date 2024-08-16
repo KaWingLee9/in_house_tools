@@ -33,5 +33,5 @@ p1+p2+p3
 ```
 
 <p align="center">
-  <img height="80" src="pct/CorPlot.png">
+  <img height="800" src="pct/CorPlot.png">
 </p>
