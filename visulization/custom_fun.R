@@ -38,7 +38,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
     test_result[test_result[,'x']==test_result[,'y'],'p.adj']=0.1
 
     if (!sig.circle){
-        p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size))
+        p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size),color='#FFFFFF00')
     }
 
     if(sig.circle){
