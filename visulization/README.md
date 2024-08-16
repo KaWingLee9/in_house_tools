@@ -15,7 +15,7 @@ Parameters of `CorPlot`:
 + `sig.circle`: whether to show outlines of the bubbles if significant
 + `sig.level`: significance level for hypothesis test, reflected in sig.circle
 
-```
+``` r
 library(ggplot2)
 library(patchwork)
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
