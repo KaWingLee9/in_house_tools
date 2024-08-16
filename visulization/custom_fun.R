@@ -106,14 +106,26 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
 # Required packages: dplyr, coin, ComplexHeatmap
 SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
-                    sig.level=c(0.01,0.05),sig.label=c('**','*'),...){
+                    sig.level=c(0.01,0.05),sig.label=c('**','*'),
+                    p.adj=FALSE,p.adj.method='fdr',scale=FALSE,...){
+    
+    options(warn=-1)
+    
+    library(dplyr)
+    
+    if (scale){
+        df_1=df %>% group_by(!!!syms(variable.col)) %>% mutate(value.col=scale(!!!syms(value.col)))
+        df[,value.col]=df_1[,'value.col']
+    }
 
-    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=mean) %>% 
+   heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=mean) %>% 
         data.frame(row.names=1,check.names=FALSE)
 
 
     p_matrix=lapply(unique(df[,variable.col]),function(x){
-        df=sapply(unique(df[,group.col]),function(y){
+        
+        m=unique(df[,group.col])
+        df=sapply(m,function(y){
 
             if (test.mode=='ONEvsVALUE'){
                 x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
@@ -170,25 +182,34 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
             
             return(p)
 
-        }) %>% data.frame()
+        },USE.NAMES=TRUE) %>% data.frame()
         
+        rownames(df)=m
         colnames(df)=x
         return(df)
         
     }) %>% dplyr::bind_cols()
 
     p_matrix=p_matrix[rownames(heatmap_matrix),colnames(heatmap_matrix)]
-
-    sig.label=rev(sig.label)
-    sig.level=rev(sig.level)
+    
+    if (p.adj){
+        p_matrix_adj=unlist(p_matrix) %>% p.adjust(method=p.adj.method) %>% matrix(c(nrow(p_matrix),ncol(p_matrix)))
+        rownames(p_matrix_adj)=rownames(p_matrix)
+        colnames(p_matrix_adj)=colnames(p_matrix)
+        p_matrix=p_matrix_adj
+    }
 
     library(ComplexHeatmap)
     ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
-        for (q in length(sig.level)){
-            if (p_matrix[i,j]<=sig.level[q]) {
-                grid.text(sig.label[q], x, y)
-        }}},...)
-
+        q=min(which(p_matrix[i,j]<=sig.level))
+        if (q<=length(sig.level)){
+            grid.text(sig.label[q],x,y)
+        } else{
+            grid.text('',x,y)
+        }
+    },...)
+    
+    options(warn=1)
     return(ht)
 
 }
