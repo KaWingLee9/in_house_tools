@@ -35,7 +35,7 @@ Parameters of `CorPlot`:
 + `sig.level`: significance level for hypothesis test, reflected in sig.circle
 
 ## <a name="heatmap1">SHeatmap - Summarized heatmap of group data with significance test</a>
-
+Required packages: dplyr, ComplexHeatmap  
 ``` r
 # load dataset
 data(iris)
