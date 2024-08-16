@@ -181,7 +181,8 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
 
     sig.label=rev(sig.label)
     sig.level=rev(sig.level)
-    
+
+    library(ComplexHeatmap)
     ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
         for (q in length(sig.level)){
             if (p_matrix[i,j]<=sig.level[q]) {
