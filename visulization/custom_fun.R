@@ -115,10 +115,11 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     
     if (scale){
         df_1=df %>% group_by(!!!syms(variable.col)) %>% mutate(value.col=scale(!!!syms(value.col)))
-        df[,value.col]=df_1[,'value.col']
+        df_1[,value.col]=df_1[,'value.col']
+        df=data.frame(df_1)
     }
-
-   heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=mean) %>% 
+    
+    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=mean) %>% 
         data.frame(row.names=1,check.names=FALSE)
 
 
