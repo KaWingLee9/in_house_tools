@@ -89,6 +89,3 @@ Parameters of `SHeatmap`:
 + `scale`: whether to scale data within each variable
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
-|----------|----------|
-|----------|----------|
-|----------|----------|
