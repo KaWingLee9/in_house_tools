@@ -43,7 +43,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
 
     if(sig.circle){
         p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size,color='sig'))+
-          scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'))
+          scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'),na.value='#FFFFFF00',limits=c(TRUE,FALSE))
     }
 
     p=p+
