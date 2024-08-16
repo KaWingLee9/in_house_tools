@@ -72,6 +72,9 @@ ht_2=SumHeatmap(df,group.col='Species',variable.col='variable',value.col='value'
 options(repr.plot.height=5,repr.plot.width=5*2)
 draw(ht_1+ht_2,auto_adjust=FALSE)
 ```
+<p align="center">
+  <img height="400" src="pct/SHeatmap.png">
+</p>
 
 Parameters of `SHeatmap`:
 + df: a long data frame 
