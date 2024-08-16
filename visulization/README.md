@@ -1,4 +1,4 @@
-# Some custom visualization methods in R
+# Custom R visualization functions
 
 ## Table of Contents
 * [CorPlot - Correlation bubble plot with significance test](#correlation)
