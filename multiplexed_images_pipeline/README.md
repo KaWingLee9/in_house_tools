@@ -1,4 +1,4 @@
-# Data preprocessing of multiplexed imaging data
+# Data preprocessing of multiplexed imaging data (Python)
 This pipeline is used for data preprocessing and visualization for multiplexed imaging data, which could be perfectly adapted for scanpy and SOAPy.  
 ## Cell segmentation using DeepCell - Mesmer
 To run Mesmer in docker, please refer to https://deepcell.readthedocs.io/en/master/.  
