@@ -1,4 +1,4 @@
-# Correlation bubble plot with significance test
+# CorPlot - Correlation bubble plot with significance test
 # Required packages: ggplot2, Hmisc, dendsort
 CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
         size='p.value', # 'p.value', 'p.adj'
@@ -57,10 +57,11 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
       theme(panel.background = element_blank(), 
             panel.grid.major = element_blank(),
             panel.border = element_blank())+
-      ggtitle(stringr::str_to_title(paste0(cor.method,' correlation')))+
+      labs(fill=stringr::str_to_title(paste0(cor.method,'\ncorrelation')))+
       theme(plot.title=element_text(hjust=0.5))+
       labs(color=paste0('Sig\ (',size,'<=',sig.level,')'))+
-      scale_size_continuous(range=c(6,0.2))
+      scale_size_continuous(range=c(6,0.2))+
+      guides(fill=guide_colorbar(order=1),size=guide_legend(order=2),color=guide_legend(order=3))
 
     if (tri=='lower'){
         p=p+
