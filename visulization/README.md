@@ -24,6 +24,7 @@ p1+p2+p3
 <p align="center">
   <img height="400" src="pct/CorPlot.png">
 </p>
+
 Parameters of `CorPlot`:
 + `df`: data frame (observations x variables)
 + `cor.method`: methods to calculate correlation, could be `pearson` or `spearman`, passed on to `Hmisc::rcorr(type=...)`
