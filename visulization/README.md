@@ -6,3 +6,6 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 
 ### Correlation bubble plot with significance test
 Required packages: ggplot2, Hmisc, dendsort
+```
+library(patchwork)
+```
