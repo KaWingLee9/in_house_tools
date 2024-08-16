@@ -2,6 +2,7 @@
 
 ## Table of Contents
 * [Correlation bubble plot with significance test](#correlation)
+* [Heatmap with significance test](#heatmap1)
 
 ## <a name="correlation">Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
@@ -33,3 +34,5 @@ p1+p2+p3
 <p align="center">
   <img height="400" src="pct/CorPlot.png">
 </p>
+
+## <a name="heatmap1">Heatmap with significance test</a>
