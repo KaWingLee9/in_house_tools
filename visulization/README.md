@@ -90,5 +90,5 @@ Parameters of `SHeatmap`:
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
 |----------|----------|
-|----------|-------|
-|----------|-------|
+|----------|----------|
+|----------|----------|
