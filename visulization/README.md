@@ -11,7 +11,7 @@ Required packages: Hmisc, dendsort
 Parameters of `CorPlot`:
 + `df`: data frame (observations x variables);
 + `cor.method`: methods to calculate correlation, could be `pearson` or `spearman`;
-+ `tri`: show the `whole` matrix or `upper`/`lower` triangular ones;
++ `tri`: show the `whole` matrix or `upper`/`lower` triangular matrix;
 + `size`: `p.value` or `p.adj` reflected by bubble size;
 + `p.adj.method`: method for p value adjustment (e.g. `bonferroni` or `fdr`), passed on to `p.adjust(method=...)`;
 + `sig.circle`: whether to show outlines of the bubbles if significant;
