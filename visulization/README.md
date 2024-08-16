@@ -90,5 +90,5 @@ Parameters of `SHeatmap`:
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
 <p align="center">
-  <img height="400" src="pct/SHeatmap_description.png">
+  <img height="400" src="pct/SHeatmap_description.jpg">
 </p>
