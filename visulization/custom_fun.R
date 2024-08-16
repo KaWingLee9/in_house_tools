@@ -105,7 +105,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
 # Required packages: dplyr, coin, ComplexHeatmap
 SumHeatmap=function(df,group_col,variable_col,value_col,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
-                    sig.level=c(0.01,0.05)sig.label=c('**','*'),...){
+                    sig.level=c(0.01,0.05),sig.label=c('**','*'),...){
 
     heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group_col,'~',variable_col)),value.var=value_col,fun.aggregate=mean) %>% 
         data.frame(row.names=1,check.names=FALSE)
@@ -182,9 +182,9 @@ SumHeatmap=function(df,group_col,variable_col,value_col,test.mode='ONEvsVALUE',
     sig.level=rev(sig.level)
     
     Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
-    for (q in length(sig.level)){
-        if (p_matrix[i,j]<=sig.level[q]) {
-            grid.text(sig.label[q], x, y)
+        for (q in length(sig.level)){
+            if (p_matrix[i,j]<=sig.level[q]) {
+                grid.text(sig.label[q], x, y)
         }}},...)
 
 }
