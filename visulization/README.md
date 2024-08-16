@@ -2,7 +2,7 @@
 
 ## Table of Contents
 * [CorPlot - Correlation bubble plot with significance test](#correlation)
-* [SHeatmap - Summarized heatmap with significance test](#heatmap1)
+* [SHeatmap - Summarized heatmap of group data with significance test](#heatmap1)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
@@ -34,7 +34,7 @@ Parameters of `CorPlot`:
 + `sig.circle`: whether to show outlines of the bubbles if significant
 + `sig.level`: significance level for hypothesis test, reflected in sig.circle
 
-## <a name="heatmap1">SHeatmap - Summarized heatmap with significance test</a>
+## <a name="heatmap1">SHeatmap - Summarized heatmap of group data with significance test</a>
 
 ``` r
 # load dataset
@@ -61,3 +61,14 @@ head(df)
 
 
 ```
+
++ df: a long data frame 
++ `group.col`: column name represents sample group
++ `variable.col`: column name represents variable
++ `value.col`: column name represents values
++ `test.mode`: one of  `ONEvsVALUE`, `ONEvsOTHER` and `ONEvsALL`
++ `permutated`: whether to use permutation-based method
++ `test.method`: one of `t.test`, `wilcox.test` and `oneway.test`
+                    test.method='t.test',permutated=FALSE,
+                    sig.level=c(0.01,0.05),sig.label=c('**','*'),
+                    p.adj=FALSE,p.adj.method='fdr',scale=FALSE,
