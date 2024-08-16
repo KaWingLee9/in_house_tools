@@ -38,17 +38,18 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
     test_result[test_result[,'x']==test_result[,'y'],'p.adj']=0.1
 
     if (!sig.circle){
-        p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size),color='#FFFFFF00')
+        p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size))+
+          geom_point(shape=21,color='#FFFFFF00')
     }
 
     if(sig.circle){
         p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size,color='sig'))+
-          scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'),na.value='#FFFFFF00',limits=c(TRUE,FALSE))
+          scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'),na.value='#FFFFFF00',limits=c(TRUE,FALSE))+
+          geom_point(shape=21,stroke=1)
     }
 
     p=p+
-      geom_point(shape=21,stroke=1)+
-      scale_fill_gradient2(low='blue',mid='white',high='red',na.value='#CFCFCF')+
+      scale_fill_gradient2(low='blue',mid='white',high='red')+
       scale_size(trans='reverse')+
       theme_minimal()+ 
       coord_fixed()+
