@@ -1,10 +1,10 @@
 # Some custom visualization methods in R
 
 ## Table of Contents
-* [Correlation bubble plot with significance test](#correlation)
+* [CorPlot - Correlation bubble plot with significance test](#correlation)
 * [Heatmap with significance test](#heatmap1)
 
-## <a name="correlation">Correlation bubble plot with significance test</a>
+## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
 Parameters of `CorPlot`:
 + `df`: data frame (observations x variables)
