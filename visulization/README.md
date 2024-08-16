@@ -89,3 +89,6 @@ Parameters of `SHeatmap`:
 + `scale`: whether to scale data within each variable
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
+<p align="center">
+  <img height="400" src="pct/SHeatmap_description.png">
+</p>
