@@ -102,29 +102,30 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
     return(p)
 }
 
+# SHeatmap - Summarized heatmap with significance test
 # Required packages: dplyr, coin, ComplexHeatmap
-SumHeatmap=function(df,group_col,variable_col,value_col,test.mode='ONEvsVALUE',
+SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
                     sig.level=c(0.01,0.05),sig.label=c('**','*'),...){
 
-    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group_col,'~',variable_col)),value.var=value_col,fun.aggregate=mean) %>% 
+    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=mean) %>% 
         data.frame(row.names=1,check.names=FALSE)
 
 
-    p_matrix=lapply(unique(df[,variable_col]),function(x){
-        df=sapply(unique(df[,group_col]),function(y){
+    p_matrix=lapply(unique(df[,variable.col]),function(x){
+        df=sapply(unique(df[,group.col]),function(y){
 
             if (test.mode=='ONEvsVALUE'){
-                x1=df[ (df[,group_col] %in% y) & (df[,variable_col] %in% x) ,value_col]
-                x2=mean(df[ df[,variable_col] %in% x ,value_col])
+                x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
+                x2=mean(df[ df[,variable.col] %in% x ,value.col])
 
                 if (test.method=='t.test'){
-                    x2=mean(df[ df[,variable_col] %in% x ,value_col])
+                    x2=mean(df[ df[,variable.col] %in% x ,value.col])
                     p=t.test(x1,mu=x2)$p.value
                 }
 
                 if (test.method=='wilcox.test'){
-                    x2=median(df[ df[,variable_col] %in% x ,value_col])
+                    x2=median(df[ df[,variable.col] %in% x ,value.col])
                     p=wilcox.test(x1,mu=x2)$p.value
                 }
                 
@@ -132,13 +133,13 @@ SumHeatmap=function(df,group_col,variable_col,value_col,test.mode='ONEvsVALUE',
             }
 
             if (test.mode=='ONEvsOTHER'){
-                x1=df[ (df[,group_col] %in% y) & (df[,variable_col] %in% x) ,value_col]
-                x2=df[ (!df[,group_col] %in% y) & ((df[,variable_col] %in% x)) ,value_col ]
+                x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
+                x2=df[ (!df[,group.col] %in% y) & ((df[,variable.col] %in% x)) ,value.col ]
             }
 
             if (test.mode=='ONEvsALL'){
-                x1=df[ (df[,group_col] %in% y) & (df[,variable_col] %in% x) ,value_col]
-                x2=df[ df[,variable_col] %in% x ,value_col]
+                x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
+                x2=df[ df[,variable.col] %in% x ,value.col]
             }
             
             if (permutated){
