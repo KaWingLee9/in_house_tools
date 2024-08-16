@@ -77,7 +77,7 @@ draw(ht_1+ht_2,auto_adjust=FALSE)
 </p>
 
 Parameters of `SHeatmap`:
-+ df: a long data frame 
++ `df`: a long data frame 
 + `group.col`: column name represents sample group
 + `variable.col`: column name represents variable
 + `value.col`: column name represents values
@@ -88,3 +88,7 @@ Parameters of `SHeatmap`:
 + `p.adj`, `p.adj.method`: whether to adjust p value and method for p value adjustment (passed on to `p.adjust(method=...)`)
 + `scale`: whether to scale data within each variable
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
+
+|----------|----------|
+|----------|-------|
+|----------|-------|
