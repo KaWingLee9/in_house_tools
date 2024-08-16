@@ -48,7 +48,7 @@ head(iris)
 5          5.0         3.6          1.4         0.2  setosa
 6          5.4         3.9          1.7         0.4  setosa
 
-# input data
+# generate a long data frame as input data
 df=reshape2::melt(iris,id.vars='Species',measure.vars=c('Sepal.Length','Sepal.Width','Petal.Length','Petal.Width'))
 head(df)
   Species     variable value
@@ -59,7 +59,18 @@ head(df)
 5  setosa Sepal.Length   5.0
 6  setosa Sepal.Length   5.4
 
+ht_1=SumHeatmap(df,group.col='Species',variable.col='variable',value.col='value',test.mode='ONEvsVALUE',
+                name='Raw\nmatrix',
+                test.method='t.test',permutated=FALSE,
+                sig.level=c(0.00001,0.01),sig.label=c('**','*'),p.adj=TRUE,scale=FALSE)
 
+ht_2=SumHeatmap(df,group.col='Species',variable.col='variable',value.col='value',test.mode='ONEvsVALUE',
+                name='Scaled\nmatrix',col=circlize::colorRamp2(c(-2,0,4),c('#1a318b','#ffffff','#9a133d')),
+                test.method='t.test',permutated=FALSE,
+                sig.level=c(0.00001,0.01),sig.label=c('**','*'),p.adj=TRUE,scale=TRUE)
+
+options(repr.plot.height=5,repr.plot.width=5*2)
+draw(ht_1+ht_2,auto_adjust=FALSE)
 ```
 
 Parameters of `SHeatmap`:
