@@ -7,5 +7,7 @@ To run Mesmer in docker, please refer to https://deepcell.readthedocs.io/en/mast
 ## Expression quantification, cell type classification and in-situ visualization
 Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input. The codes are in `.ipynb`.
 
+## Data generation of different plaforms
+
 ## Citation
 Wang H, Li J, Jing S, et al. SOAPy: a Python package to dissect spatial architecture, dynamics and communication[J]. bioRxiv, 2023: 2023.12. 21.572725.
