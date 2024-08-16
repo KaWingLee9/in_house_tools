@@ -119,7 +119,13 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
         df=data.frame(df_1)
     }
     
-    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=mean) %>% 
+    if (test.method=='t.test'){
+        agg.fun=mean
+    } else {
+        agg.fun=median
+    }
+    
+    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=agg.fun) %>% 
         data.frame(row.names=1,check.names=FALSE)
 
 
