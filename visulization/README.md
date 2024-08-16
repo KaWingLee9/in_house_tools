@@ -6,9 +6,9 @@ library(patchwork)
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
 ```
 ### Table of Contents
-* [Correlation bubble plot with significance test](#Correlation bubble plot with significance test)
+* [Correlation bubble plot with significance test](#correlation)
 
-### <a name="Correlation bubble plot with significance test">Correlation bubble plot with significance test</a>
+### <a name="correlation">Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
 Parameters of `CorPlot`:
 + `df`: data frame (observations x variables)
