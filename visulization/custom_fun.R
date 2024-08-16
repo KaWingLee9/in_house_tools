@@ -34,8 +34,8 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
     test_result$sig=test_result[,size]<=sig.level
     # test_result$sig[is.na(test_result$sig)]=FALSE
     # test_result[test_result[,'x']==test_result[,'y'],'Correlation']=NA
-    test_result[test_result[,'x']==test_result[,'y'],'p.value']=0.8
-    test_result[test_result[,'x']==test_result[,'y'],'p.adj']=0.8
+    test_result[test_result[,'x']==test_result[,'y'],'p.value']=0.1
+    test_result[test_result[,'x']==test_result[,'y'],'p.adj']=0.1
 
     if (!sig.circle){
         p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size))
