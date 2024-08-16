@@ -6,7 +6,7 @@ library(patchwork)
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
 ```
 ### Table of Contents
-* [Correlation bubble plot with significance test](### Correlation bubble plot with significance test)
+* [Correlation bubble plot with significance test](#Correlation bubble plot with significance test)
 
 ### Correlation bubble plot with significance test
 Required packages: Hmisc, dendsort  
