@@ -3,6 +3,7 @@
 ```
 library(ggplot2)
 library(patchwork)
+# load the custom functions
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
 ```
 ## Table of Contents
