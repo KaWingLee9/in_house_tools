@@ -47,7 +47,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
     }
 
     p=p+
-      geom_point(shape=21)+
+      geom_point(shape=21,stroke=1)+
       scale_fill_gradient2(low='blue',mid='white',high='red',na.value='#CFCFCF')+
       scale_size(trans='reverse')+
       theme_minimal()+ 
