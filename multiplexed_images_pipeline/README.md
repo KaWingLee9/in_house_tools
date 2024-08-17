@@ -49,7 +49,7 @@ SOAPy could be used for further spatial-related analysis.
 
 ## Data generation from different plaforms
 ### IMC (Imaging mass cytometry)
-Convert IMC `.txt` files to multiplexed `.tiff` files.
+Convert IMC `.txt` files to multiplexed `.tiff` files.  
 Reaquired packages: readimc
 ``` python
 import os
