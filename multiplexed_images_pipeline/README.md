@@ -41,7 +41,7 @@ segmentation_predictions=app.predict(img_mesmer,preprocess_kwargs={'percentile':
 tifffile.imwrite(file.split('.')[0]+'_mask.tiff', segmentation_predictions[0,:,:,0])
 ```
 
-Note: Parameter `iamge_mpp` in `app.predict` specifies resolution of the image (aka `$\mu m$` of each pixel).  
+Note: Parameter `iamge_mpp` in `app.predict` specifies resolution of the image (aka $\mu m$ of each pixel).  
 IMC: 1, MIBI_TOF: 0.5
 ## Expression quantification, cell type classification and in-situ visualization
 Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input. The codes are in `.ipynb`.  
