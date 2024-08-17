@@ -47,7 +47,7 @@ IMC: 1, MIBI_TOF: 0.5
 Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input. The codes are in `.ipynb`.  
 SOAPy could be used for further spatial-related analysis.
 
-## Data generation of different plaforms
+## Data generation from different plaforms
 ### IMC (Imaging mass cytometry)
 Convert IMC `.txt` files to multiplexed `.tiff` files.
 Reaquired packages: readimc
