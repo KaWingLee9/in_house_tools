@@ -1,4 +1,5 @@
 Functions to transform Seurat object to Scanpy object  
+__{For both single-cell and spatial-omics data!!!}__
 Results are adapted for SOAPy  
 Temporally for Seurat v4   
 
