@@ -82,11 +82,11 @@ Parameters of `SHeatmap`:
 + `variable.col`: column name represents variable
 + `value.col`: column name represents values
 + `test.mode`: one of  `ONEvsVALUE`, `ONEvsOTHER` and `ONEvsALL`
-+ `permutated`: whether to use permutation-based method
++ `permutated`: whether to use permutation-based method. Permutation-based methods are from `coin` package
 + `test.method`: one of `t.test`, `wilcox.test` and `oneway.test`
 + `sig.level`, `sig.label`: significance level and corresponding labels, should be increasing ordered
 + `p.adj`, `p.adj.method`: whether to adjust p value and method for p value adjustment (passed on to `p.adjust(method=...)`)
-+ `scale`: whether to scale data within each variable
++ `scale`: whether to scale data within each variable. Default: `TRUE`
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
 <p align="center">
