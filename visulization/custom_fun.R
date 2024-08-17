@@ -107,7 +107,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
 SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
                     sig.level=c(0.01,0.05),sig.label=c('**','*'),
-                    p.adj=FALSE,p.adj.method='fdr',scale=FALSE,...){
+                    p.adj=FALSE,p.adj.method='fdr',scale=TRUE,...){
     
     options(warn=-1)
     
