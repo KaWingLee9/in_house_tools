@@ -31,7 +31,7 @@ in_mem_marker_kwargs = {'mem_channel_1': ['PanCK','CK6','CK17','EGFR','Beta_cate
                         'mem_channel_3':['SMA','Vimentin','CD31'],
                         'mem_channel_2': ['CD45','CD3', 'CD68',  'CD8A', 'MPO']}
 
-file=''
+file='./Point4.tiff'
 img_multipledxed=tifffile.imread(file)
 # remove the highest and lowest 2% of the pixels
 img_norm=Denoise_img(img_multipledxed,98)
