@@ -1,3 +1,5 @@
+# Authors: Jiarong Li (Kelvin Lee), Wenwen Zhang, Heqi Wang, Jiao Yuan
+
 import numpy as np
 def Denoise_img(img,percentile):
     for i in range(0, img.shape[0]):
