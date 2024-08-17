@@ -45,7 +45,8 @@ Note: Parameter `iamge_mpp` in `app.predict` specifies the resolution of the ima
 IMC: 1, MIBI_TOF: 0.5
 ## Expression quantification, cell type classification and in-situ visualization
 Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input. The codes are in `.ipynb`.  
-SOAPy could be used for further spatial-related analysis.
+SOAPy could be used for further spatial-related analysis.  
+__Reference__: Rendeiro, A.F., Ravichandran, H., Bram, Y. et al. The spatial landscape of lung pathology during COVID-19 progression. Nature 593, 564–569 (2021). https://doi.org/10.1038/s41586-021-03475-6
 
 ## Data generation from different plaforms
 ### IMC (Imaging mass cytometry)
@@ -63,7 +64,7 @@ for file in file_ls:
     tifffile.imwrite(file.split('.')[0]+'.tiff',data=img)
 ```
 
-Reference: Windhager, J., Zanotelli, V.R.T., Schulz, D. et al. An end-to-end workflow for multiplexed image processing and analysis. Nat Protoc 18, 3565–3613 (2023). https://doi.org/10.1038/s41596-023-00881-0
+__Reference__: Windhager, J., Zanotelli, V.R.T., Schulz, D. et al. An end-to-end workflow for multiplexed image processing and analysis. Nat Protoc 18, 3565–3613 (2023). https://doi.org/10.1038/s41596-023-00881-0
 
 ## Citation
 Wang H, Li J, Jing S, et al. SOAPy: a Python package to dissect spatial architecture, dynamics and communication[J]. bioRxiv, 2023: 2023.12. 21.572725.
