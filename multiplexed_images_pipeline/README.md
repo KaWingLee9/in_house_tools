@@ -36,11 +36,13 @@ img_multipledxed=tifffile.imread(file)
 # remove the highest and lowest 2% of the pixels
 img_norm=Denoise_img(img_multipledxed,98)
 img_mesmer=Generate_mesmer_input(img_norm,marker_list,in_nuc_marker_kwargs,in_mem_marker_kwargs)
-segmentation_predictions=app.predict(img_mesmer,preprocess_kwargs={'percentile':99.9},image_mpp=1,compartment='whole-cell')
+segmentation_predictions=app.predict(img_mesmer,preprocess_kwargs={'percentile':99.9},image_mpp=0.5,compartment='whole-cell')
 # save mask file
 tifffile.imwrite(file.split('.')[0]+'_mask.tiff', segmentation_predictions[0,:,:,0])
 ```
 
+Note: Parameter `iamge_mpp` in `app.predict` specifies resolution of the image (aka \mu m of each pixel).  
+IMC: 1, MIBI_TOF: 0.5
 ## Expression quantification, cell type classification and in-situ visualization
 Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input. The codes are in `.ipynb`.  
 SOAPy could be used for further spatial-related analysis.
