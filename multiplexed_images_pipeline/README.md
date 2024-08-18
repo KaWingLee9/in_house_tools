@@ -62,10 +62,10 @@ import numpy as np
 import tifffile
 from readimc import TXTFile
 
-for file in file_ls:
-    with TXTFile(file) as f:
-        img=f.read_acquisition()
-    tifffile.imwrite(file.split('.')[0]+'.tiff',data=img)
+file='./Point4.tiff'
+with TXTFile(file) as f:
+    img=f.read_acquisition()
+tifffile.imwrite(file.split('.')[0]+'.tiff',data=img)
 ```
 
 __Reference__: Windhager, J., Zanotelli, V.R.T., Schulz, D. et al. An end-to-end workflow for multiplexed image processing and analysis. Nat Protoc 18, 3565–3613 (2023). https://doi.org/10.1038/s41596-023-00881-0
