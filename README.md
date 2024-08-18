@@ -8,4 +8,4 @@ https://github.com/KaWingLee9
 ### Small programming tricks and tools
 + [Custom R visualization functions](https://github.com/KaWingLee9/in_house_tools/tree/main/visulization)  
 + [Conver Seurat object (v4) to scanpy object (for both __single-cell__ and __spatial-omics__ data)](https://github.com/KaWingLee9/in_house_tools/tree/main/Seurat2Scanpy)
-+ Clustering stability assessment
++ Clustering result assessment
