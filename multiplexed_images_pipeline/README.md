@@ -3,7 +3,7 @@ This pipeline is used for data preprocessing and visualization for multiplexed i
 ## Cell segmentation
 ### Mesmer
 To run Mesmer in docker, please refer to https://deepcell.readthedocs.io/en/master/.  
-Required packages: numpy, pandas, matplotlib, tifffile, deepcell
+__Required packages__: numpy, pandas, matplotlib, tifffile, deepcell
 ``` python
 import os
 import pandas as pd
@@ -55,7 +55,7 @@ Next, `SOAPy` could be used for further spatial-related analysis.
 ## Data generation from different plaforms
 ### IMC (Imaging mass cytometry)
 Convert IMC `.txt` files to multiplexed `.tiff` files.  
-Reaquired packages: readimc
+__Reaquired packages__: readimc
 ``` python
 import os
 import numpy as np
