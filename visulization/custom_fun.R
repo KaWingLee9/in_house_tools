@@ -107,7 +107,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
 SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
                     sig.level=c(0.01,0.05),sig.label=c('**','*'),
-                    p.adj=FALSE,p.adj.method='fdr',scale=TRUE,...){
+                    p.adj=FALSE,p.adj.method='fdr',scale=TRUE,transpose=FALSE,...){
     
     options(warn=-1)
     
@@ -205,7 +205,12 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
         colnames(p_matrix_adj)=colnames(p_matrix)
         p_matrix=p_matrix_adj
     }
-
+        
+    if (transpose){
+        heatmap_matrix=t(heatmap_matrix)
+        p_matrix=t(p_matrix)
+    }
+        
     library(ComplexHeatmap)
     ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
         q=min(which(p_matrix[i,j]<=sig.level))
