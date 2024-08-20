@@ -97,3 +97,43 @@ Parameters of `SHeatmap`:
 </p>
 
 ## <a name="heatmap2">SimilarityHeatmap - Blocks division in similarity heatmap</a>
+__Required packages__: simplifyEnrichment, ComplexHeatmap
+``` r
+library(simplifyEnrichment)
+library(ComplexHeatmap)
+
+library(leukemiasEset)
+data(leukemiasEset)
+
+df=t(leukemiasEset@assayData$exprs)
+df[1:5,1:5]
+	ENSG00000000003	ENSG00000000005	ENSG00000000419	ENSG00000000457	ENSG00000000460
+GSM330151.CEL	3.386743	3.539030	9.822758	4.747283	3.307188
+GSM330153.CEL	3.687029	3.836208	7.969170	4.866344	4.046402
+GSM330154.CEL	3.360517	3.246327	9.457491	4.981642	5.529369
+GSM330157.CEL	3.459388	3.063286	9.591018	5.982854	4.619444
+GSM330171.CEL	3.598589	3.307543	9.863687	5.779449	3.352696
+```
+The first mode: Manually determine cluster number
+```r
+c1=SimilarityHeatmap(df,automatic_clustering=FALSE,cluster_num=4)
+```
+<p align="center">
+  <img height="400" src="pct/SimilarityHeatmap_c1.png">
+</p>
+
+The second mode: Automatically blocks division  
+Clustering performance with different cutoff. Lower cutoff -> More clusters.
+``` r
+SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
+```
+<p align="center">
+  <img height="400" src="pct/SimilarityHeatmap_select_cutoff.png">
+</p>
+
+``` r
+c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.52)
+```
+<p align="center">
+  <img height="400" src="pct/SimilarityHeatmap_c2.png">
+</p>
