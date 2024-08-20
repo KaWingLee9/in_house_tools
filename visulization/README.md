@@ -33,6 +33,7 @@ Parameters of `CorPlot`:
 + `p.adj.method`: method for p value adjustment (e.g. `bonferroni` or `fdr`), passed on to `p.adjust(method=...)`
 + `sig.circle`: whether to show outlines of the bubbles if significant
 + `sig.level`: significance level for hypothesis test, reflected in sig.circle
++ `stroke`: outline thickness of the circle
 
 ## <a name="heatmap1">SHeatmap - Summarized heatmap of group data with significance test</a>
 Required packages: dplyr, ComplexHeatmap  
