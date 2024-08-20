@@ -138,3 +138,7 @@ c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.5
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c2.png">
 </p>
+
+Parameters for ``:
+
+The function shows the similarity heatmap and returns a vector of the cluster assignment of each sample.
