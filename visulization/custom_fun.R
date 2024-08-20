@@ -112,6 +112,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     options(warn=-1)
     
     library(dplyr)
+    library(ComplexHeatmap)
     
     if (scale){
         df_1=df %>% group_by(!!!syms(variable.col)) %>% mutate(value.col=scale(!!!syms(value.col)))
@@ -211,7 +212,6 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
         p_matrix=t(p_matrix)
     }
         
-    library(ComplexHeatmap)
     ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
         q=min(which(p_matrix[i,j]<=sig.level))
         if (q<=length(sig.level)){
@@ -231,7 +231,10 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
 SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
                            select_cutoff=FALSE,cutoff_seq=seq(0.6,0.98,by=0.01),
                            cluster_num=0,...){
-  
+        
+  library(simplifyEnrichment)
+  library(ComplexHeatmap)
+
   similarity_matrix=cor(t(df))
 
   col_type=c('#5050FFFF','#CE3D32FF','#749B58FF','#F0E685FF','#466983FF','#BA6338FF','#5DB1DDFF','#802268FF','#6BD76BFF','#D595A7FF','#924822FF',
