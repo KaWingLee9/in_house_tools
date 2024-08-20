@@ -114,7 +114,8 @@ GSM330154.CEL	3.360517	3.246327	9.457491	4.981642	5.529369
 GSM330157.CEL	3.459388	3.063286	9.591018	5.982854	4.619444
 GSM330171.CEL	3.598589	3.307543	9.863687	5.779449	3.352696
 ```
-The first mode: Manually determine cluster number
+__A.__ Clustering the samples  
+__The first mode__: Manually determine cluster number
 ```r
 c1=SimilarityHeatmap(df,automatic_clustering=FALSE,cluster_num=4)
 ```
@@ -122,7 +123,7 @@ c1=SimilarityHeatmap(df,automatic_clustering=FALSE,cluster_num=4)
   <img height="400" src="pct/SimilarityHeatmap_c1.png">
 </p>
 
-The second mode: Automatically blocks division  
+__The second mode__: Automatically blocks division  
 Clustering performance with different cutoff. Lower cutoff -> More clusters.
 ``` r
 SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
@@ -137,3 +138,5 @@ c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.5
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c2.png">
 </p>
+
+__B.__ Clustering the genes
