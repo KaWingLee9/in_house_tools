@@ -1,8 +1,9 @@
 # Custom R visualization functions
 
 ## Table of Contents
-* [CorPlot - Correlation bubble plot with significance test](#correlation)
-* [SHeatmap - Summarized heatmap of group data with significance test](#heatmap1)
++ [CorPlot - Correlation bubble plot with significance test](#correlation)
++ [SHeatmap - Summarized heatmap of group data with significance test](#heatmap1)
++ [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
@@ -94,3 +95,5 @@ Parameters of `SHeatmap`:
 <p align="center">
   <img height="400" src="pct/SHeatmap_description.jpg">
 </p>
+
+## <a name="heatmap2">SimilarityHeatmap - Blocks division in similarity heatmap</a>
