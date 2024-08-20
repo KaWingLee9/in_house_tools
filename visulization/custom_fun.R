@@ -5,7 +5,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
         p.adj.method='fdr',
         sig.level=0.05,
         tri='whole', # 'whole', 'lower', 'upper'
-        sig.circle=TRUE){
+        sig.circle=TRUE,stroke=1){
     
     library(ggplot2)
 
@@ -45,7 +45,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
     if(sig.circle){
         p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size,color='sig'))+
           scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'),na.value='#FFFFFF00',limits=c(TRUE,FALSE))+
-          geom_point(shape=21,stroke=1)
+          geom_point(shape=21,stroke=stroke)
     }
 
     p=p+
