@@ -2,7 +2,7 @@
 
 ## Table of Contents
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
-+ [SHeatmap - Summarized heatmap of group data with significance test](#heatmap1)
++ [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
@@ -36,7 +36,7 @@ Parameters of `CorPlot`:
 + `sig.level`: significance level for hypothesis test, reflected in sig.circle
 + `stroke`: outline thickness of the circle
 
-## <a name="heatmap1">SHeatmap - Summarized heatmap of group data with significance test</a>
+## <a name="heatmap1">SHeatmap - Summarized heatmap of grouped data with significance test</a>
 Required packages: dplyr, ComplexHeatmap  
 ``` r
 # load dataset
