@@ -225,3 +225,64 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     return(ht)
 
 }
+                              
+# SimilarityHeatmap - Blocks division in similarity heatmap
+# Required packages: simplifyEnrichment, ComplexHeatmap                      
+SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
+                           select_cutoff=FALSE,cutoff_seq=seq(0.6,0.98,by=0.01),
+                           cluster_num=0){
+  
+  similarity_matrix=cor(t(df))
+
+  col_type=c('#5050FFFF','#CE3D32FF','#749B58FF','#F0E685FF','#466983FF','#BA6338FF','#5DB1DDFF','#802268FF','#6BD76BFF','#D595A7FF','#924822FF',
+    '#837B8DFF','#C75127FF','#D58F5CFF','#7A65A5FF','#E4AF69FF','#3B1B53FF','#CDDEB7FF','#612A79FF','#AE1F63FF','#E7C76FFF','#5A655EFF',
+    '#CC9900FF','#99CC00FF','#A9A9A9FF','#CC9900FF','#99CC00FF','#33CC00FF','#00CC33FF','#00CC99FF','#0099CCFF','#0A47FFFF','#4775FFFF',
+    '#FFC20AFF','#FFD147FF','#990033FF','#991A00FF','#996600FF','#809900FF','#339900FF','#00991AFF','#009966FF','#008099FF','#003399FF',
+    '#1A0099FF','#660099FF','#990080FF','#D60047FF','#FF1463FF','#00D68FFF','#14FFB1FF')
+
+
+  if(automatic_clustering){
+    if (select_cutoff){
+      select_cutoff(similarity_matrix,cutoff=cutoff_seq,verbose=FALSE,partition_fun=partition_by_hclust)
+      return('')
+    } else {
+  
+      r=rownames(similarity_matrix)
+      c=binary_cut(similarity_matrix,cutoff=cutoff,partition_fun=partition_by_hclust)
+      or=r[order(c)]
+      c=as.factor(c)
+  
+      col_type=col_type[1:max(as.numeric(c))]
+      names(col_type)=1:max(as.numeric(c))
+      
+      print(  Heatmap(similarity_matrix,cluster_rows=FALSE,cluster_columns=FALSE,row_order=or,column_order=or,
+              show_row_names=FALSE,show_column_names=FALSE,
+              row_split=c,column_split=c,
+              left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
+              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE))  )
+      
+      names(c)=r
+      return(c)
+    }
+  } else {
+    if (cluster_num!=0){
+      hc=hclust(as.dist(1-similarity_matrix),method='ward.D2')
+      hc=dendsort::dendsort(hc)
+      c=cutree(hc,cluster_num)
+  
+      r=rownames(similarity_matrix)
+      or=hc[['labels']][hc[['order']]]
+      c=as.factor(c)
+      col_type=col_type[1:max(as.numeric(c))]
+      names(col_type)=1:max(as.numeric(c))
+      
+      print(  Heatmap(similarity_matrix,cluster_rows=FALSE,cluster_columns=FALSE,row_order=or,column_order=or,
+              show_row_names=FALSE,show_column_names=FALSE,
+              row_split=c,column_split=c,
+              left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
+              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE)) )
+      
+      return(c)
+    }
+  }
+}
