@@ -230,7 +230,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
 # Required packages: simplifyEnrichment, ComplexHeatmap                      
 SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
                            select_cutoff=FALSE,cutoff_seq=seq(0.6,0.98,by=0.01),
-                           cluster_num=0){
+                           cluster_num=0,...){
   
   similarity_matrix=cor(t(df))
 
@@ -259,7 +259,7 @@ SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
               show_row_names=FALSE,show_column_names=FALSE,
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
-              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE))  )
+              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...)  )
       
       names(c)=r
       return(c)
@@ -280,7 +280,7 @@ SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
               show_row_names=FALSE,show_column_names=FALSE,
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
-              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE)) )
+              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...) )
       
       return(c)
     }
