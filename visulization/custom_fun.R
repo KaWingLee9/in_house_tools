@@ -313,11 +313,11 @@ SimilarityHeatmap=function(data,cutoff=0.85,mode='automatic',
         or=r[order(c)]
         c=as.factor(c)
 
-        Heatmap(clustering_matrix,cluster_rows=FALSE,cluster_columns=FALSE,
+        print( Heatmap(clustering_matrix,cluster_rows=FALSE,cluster_columns=FALSE,
               show_row_names=FALSE,show_column_names=FALSE,name='Consensus\nmatrix',
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
-              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE) )
+              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),... ) )
 
         return (c)   
     }     
