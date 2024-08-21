@@ -228,7 +228,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                               
 # SimilarityHeatmap - Blocks division in similarity heatmap
 # Required packages: simplifyEnrichment, ComplexHeatmap                      
-SimilarityHeatmap=function(df,cutoff=0.85,mode='manual',
+SimilarityHeatmap=function(df,cutoff=0.85,mode='automatic',
                            select_cutoff=FALSE,cutoff_seq=seq(0.6,0.98,by=0.01),
                            cluster_num=0,...){
         
