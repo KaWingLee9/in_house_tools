@@ -228,7 +228,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                               
 # SimilarityHeatmap - Blocks division in similarity heatmap
 # Required packages: simplifyEnrichment, ComplexHeatmap                      
-SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
+SimilarityHeatmap=function(df,cutoff=0.85,mode='manual',
                            select_cutoff=FALSE,cutoff_seq=seq(0.6,0.98,by=0.01),
                            cluster_num=0,...){
         
@@ -244,7 +244,7 @@ SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
     '#1A0099FF','#660099FF','#990080FF','#D60047FF','#FF1463FF','#00D68FFF','#14FFB1FF')
 
 
-  if(automatic_clustering){
+  if (mode=='automatic'){
     if (select_cutoff){
       select_cutoff(similarity_matrix,cutoff=cutoff_seq,verbose=FALSE,partition_fun=partition_by_hclust)
       return('')
@@ -267,8 +267,12 @@ SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
       names(c)=r
       return(c)
     }
-  } else {
-    if (cluster_num!=0){
+  } 
+        
+  if (mode=='maunal'){
+    if (select_cutoff){
+      NbClust()
+    } else if (cluster_num!=0){
       hc=hclust(as.dist(1-similarity_matrix),method='ward.D2')
       hc=dendsort::dendsort(hc)
       c=cutree(hc,cluster_num)
@@ -288,4 +292,9 @@ SimilarityHeatmap=function(df,cutoff=0.85,automatic_clustering=TRUE,
       return(c)
     }
   }
+        
+  if (mode=='ConsensusClusterPlus'){
+          
+  }
+        
 }
