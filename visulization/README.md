@@ -156,7 +156,7 @@ ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,selec
 ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=FALSE,cluster_num=11)
 ```
 <p align="center">
-  <img height="400" src="pct/SimilarityHeatmap_c3.jpg">
+  <img height="400" src="pct/SimilarityHeatmap_c3.png.png">
 </p>
 
 The function shows the similarity heatmap and returns a vector of the cluster assignment of each sample.
