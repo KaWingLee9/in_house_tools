@@ -144,7 +144,12 @@ c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.5
 
 __The third mode__: `mode='ConsunsusClusterPlus'`; Blocks identification using `ConsensusClusterPlus`.  
 
-Parameters for `SimilarityHeatmap`:
+``` r
+ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
+```
 
+``` r
+ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=FALSE,cluster_num=11)
+```
 
 The function shows the similarity heatmap and returns a vector of the cluster assignment of each sample.
