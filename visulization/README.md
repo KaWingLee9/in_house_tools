@@ -115,15 +115,17 @@ GSM330157.CEL	3.459388	3.063286	9.591018	5.982854	4.619444
 GSM330171.CEL	3.598589	3.307543	9.863687	5.779449	3.352696
 ```
 The following codes are for samples clustering. You can input transposed expression matrix for genes clustering.  
-__The first mode__: Manually determine cluster number
+There are three `mode`s for blocks identification with similarity matrix: `mode`=c(`manual`, `automatic`, `ConsunsusClusterPlus`). For each mode, `select_cutoff`=TRUE presents the effects under different cluster assignment parameters.
+
+__The first mode__: Manually determine cluster number using `ward.D2` hierarchical clustering method. Clstering effects are assessed by `NbClust`.
 ```r
-c1=SimilarityHeatmap(df,automatic_clustering=FALSE,cluster_num=4)
+c1=SimilarityHeatmap(df,mode='manual',cluster_num=4)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c1.png">
 </p>
 
-__The second mode__: Automatically blocks division  
+__The second mode__: Automatically blocks division. Clstering effects are assessed by `simplifyEnrichment`.  
 Clustering performance with different cutoff. Lower cutoff -> More clusters.
 ``` r
 SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
@@ -139,6 +141,9 @@ c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.5
   <img height="400" src="pct/SimilarityHeatmap_c2.png">
 </p>
 
-Parameters for ``:
+__The third mode__: Blocks identification using `ConsensusClusterPlus`.  
+
+Parameters for `SimilarityHeatmap`:
+
 
 The function shows the similarity heatmap and returns a vector of the cluster assignment of each sample.
