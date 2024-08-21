@@ -273,7 +273,7 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
     }
   } 
         
-  if (mode=='maunal'){
+  if (mode=='manual'){
     if (select_cutoff){
         test_index_1=c("kl","ch","hartigan","ccc","scott","marriot","trcovw","tracew","friedman","rubin",
                         "cindex", "db", "silhouette", 
