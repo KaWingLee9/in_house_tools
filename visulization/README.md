@@ -154,7 +154,7 @@ ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,selec
 ```
 ``` r
 # return the cluster assignment
-c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus,select_cutoff=FALSE,cluster_num=13)
+c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus',select_cutoff=FALSE,cluster_num=13)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c3.png">
