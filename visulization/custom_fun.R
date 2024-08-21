@@ -235,7 +235,7 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
         
   library(ComplexHeatmap)
 
-  if ((!(mode=='ConsensusClusterPlus') & (select_cutoff==FALSE))) {
+  if (!((mode=='ConsensusClusterPlus') & (select_cutoff==FALSE))) {
       similarity_matrix=cor(t(data))
   }
 
@@ -251,8 +251,7 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
     library(simplifyEnrichment)
           
     if (select_cutoff){
-      select_cutoff(similarity_matrix,cutoff=cutoff_seq,verbose=FALSE,partition_fun=partition_by_hclust)
-      return('')
+      return(select_cutoff(similarity_matrix,cutoff=cutoff_seq,verbose=FALSE,partition_fun=partition_by_hclust))
     } else {
   
       r=rownames(similarity_matrix)
@@ -331,7 +330,7 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
           
      if (select_cutoff){
         ConsensusClustering_result=ConsensusClusterPlus(similarity_matrix,clusterAlg='hc',maxK=maxK,
-                       distance='euclidean',innerLinkage="ward.D2",finalLinkage="ward.D2",title=,'./',
+                       distance='euclidean',innerLinkage="ward.D2",finalLinkage="ward.D2",title='ConsensusClusteringResult',
                        verbose=FALSE,plot='pdf')
         return(ConsensusClustering_result)
     } else if (cluster_num!=0) {
@@ -342,8 +341,6 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
              
         col_type=col_type[1:max(as.numeric(c))]
         names(col_type)=1:max(as.numeric(c))
-        r=rownames(similarity_matrix)
-        or=r[order(c)]
         c=as.factor(c)
 
         print( Heatmap(clustering_matrix,cluster_rows=FALSE,cluster_columns=FALSE,
