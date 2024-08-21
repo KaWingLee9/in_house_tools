@@ -227,13 +227,12 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
 }
                               
 # SimilarityHeatmap - Blocks division in similarity heatmap
-# Required packages: simplifyEnrichment, ComplexHeatmap                      
+# Required packages: NbClust, simplifyEnrichment, ComplexHeatmap, ConsensusClusterPlus
 SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
                            min.nc=2,max.nc=15,cluster_num=0,
                            cutoff_seq=seq(0.6,0.98,by=0.01),cutoff=0.85,
                            maxK=10,...){
         
-  library(simplifyEnrichment)
   library(ComplexHeatmap)
 
   if ((!(mode=='ConsensusClusterPlus') & (select_cutoff==FALSE))) {
@@ -248,6 +247,9 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
 
 
   if (mode=='automatic'){
+          
+    library(simplifyEnrichment)
+          
     if (select_cutoff){
       select_cutoff(similarity_matrix,cutoff=cutoff_seq,verbose=FALSE,partition_fun=partition_by_hclust)
       return('')
@@ -274,9 +276,36 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
         
   if (mode=='maunal'){
     if (select_cutoff){
-      NbClust()
+        test_index_1=c("kl","ch","hartigan","ccc","scott","marriot","trcovw","tracew","friedman","rubin",
+                        "cindex", "db", "silhouette", 
+                        "duda", "pseudot2", "beale", 
+                        "ratkowsky", "ball", "ptbiserial", "gap", "frey", "mcclain", 
+                        "gamma", "gplus", "tau", "dunn","sdindex","sdbw")
+        
+        test_index_2=c("hubert","dindex")
+            
+        sapply(test_index_1,function(x){
+            res=try({
+                y=NbClust::NbClust(data=df,distance='euclidean',min.nc=min.nc,max.nc=max.nc, 
+                                   method='ward.D2',alphaBeale=0.1,index=x)
+            },silent=TRUE)
+            if (inherits(res,'try-error')) {return(NULL)}
+            return(y$Best.nc[['Number_clusters']])
+        })
+
+        sapply(test_index_2,function(x){
+            res=try({
+                y=NbClust::NbClust(data=df,distance='euclidean',min.nc=min.nc,max.nc=max.nc, 
+                                   method='ward.D2',alphaBeale=0.1,index=x)
+            },silent=TRUE)
+            if (inherits(res,'try-error')) {return(NULL)}
+            return(NULL)
+        })
+            
+      return(NULL)
+
     } else if (cluster_num!=0){
-      hc=hclust(as.dist(1-similarity_matrix),method='ward.D2')
+      hc=hclust(dist(df),method='ward.D2')
       hc=dendsort::dendsort(hc)
       c=cutree(hc,cluster_num)
   
@@ -297,6 +326,9 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
   }
         
   if (mode=='ConsensusClusterPlus'){
+     
+     library(ConsensusClusterPlus)
+          
      if (select_cutoff){
         ConsensusClustering_result=ConsensusClusterPlus(similarity_matrix,clusterAlg='hc',maxK=maxK,
                        distance='euclidean',innerLinkage="ward.D2",finalLinkage="ward.D2",title=,'./',
