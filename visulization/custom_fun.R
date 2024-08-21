@@ -114,12 +114,6 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     library(dplyr)
     library(ComplexHeatmap)
     
-    if (scale){
-        df_1=df %>% group_by(!!!syms(variable.col)) %>% mutate(value.col=scale(!!!syms(value.col)))
-        df_1[,value.col]=df_1[,'value.col']
-        df=data.frame(df_1)
-    }
-    
     if (test.method=='t.test'){
         agg.fun=mean
     } else {
@@ -129,7 +123,13 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=agg.fun) %>% 
         data.frame(row.names=1,check.names=FALSE)
 
-
+    if (scale){
+        # df_1=df %>% group_by(!!!syms(variable.col)) %>% mutate(value.col=scale(!!!syms(value.col)))
+        # df_1[,value.col]=df_1[,'value.col']
+        # df=data.frame(df_1)
+        heatmap_matrix=scale(heatmap_matrix)
+    }
+        
     p_matrix=lapply(unique(df[,variable.col]),function(x){
         
         m=unique(df[,group.col])
