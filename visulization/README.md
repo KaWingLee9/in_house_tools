@@ -125,7 +125,7 @@ c1=SimilarityHeatmap(df,mode='manual',cluster_num=4)
   <img height="400" src="pct/SimilarityHeatmap_c1.png">
 </p>
 
-__The second mode__: Automatically blocks division. Clstering effects are assessed by `simplifyEnrichment`.  
+__The second mode__: (Default) Automatically blocks division. Clstering effects are assessed by `simplifyEnrichment`.  
 Clustering performance with different cutoff. Lower cutoff -> More clusters.
 ``` r
 SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
