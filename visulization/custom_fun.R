@@ -1,11 +1,11 @@
 # CorPlot - Correlation bubble plot with significance test
 # Required packages: ggplot2, Hmisc, dendsort
-CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
+CorPlot=function(data,cor.method='pearson', # 'pearson', 'spearman'
         size='p.value', # 'p.value', 'p.adj'
         p.adj.method='fdr',
         sig.level=0.05,
         tri='whole', # 'whole', 'lower', 'upper'
-        sig.circle=TRUE,stroke=1){
+        sig.circle=TRUE,stroke=1,maxK=20){
     
     library(ggplot2)
 
@@ -228,14 +228,16 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                               
 # SimilarityHeatmap - Blocks division in similarity heatmap
 # Required packages: simplifyEnrichment, ComplexHeatmap                      
-SimilarityHeatmap=function(df,cutoff=0.85,mode='automatic',
+SimilarityHeatmap=function(data,cutoff=0.85,mode='automatic',
                            select_cutoff=FALSE,cutoff_seq=seq(0.6,0.98,by=0.01),
                            cluster_num=0,...){
         
   library(simplifyEnrichment)
   library(ComplexHeatmap)
 
-  similarity_matrix=cor(t(df))
+  if ((!(mode=='ConsensusClusterPlus') & (select_cutoff==FALSE))) {
+      similarity_matrix=cor(t(data))
+  }
 
   col_type=c('#5050FFFF','#CE3D32FF','#749B58FF','#F0E685FF','#466983FF','#BA6338FF','#5DB1DDFF','#802268FF','#6BD76BFF','#D595A7FF','#924822FF',
     '#837B8DFF','#C75127FF','#D58F5CFF','#7A65A5FF','#E4AF69FF','#3B1B53FF','#CDDEB7FF','#612A79FF','#AE1F63FF','#E7C76FFF','#5A655EFF',
@@ -259,7 +261,7 @@ SimilarityHeatmap=function(df,cutoff=0.85,mode='automatic',
       names(col_type)=1:max(as.numeric(c))
       
       print(  Heatmap(similarity_matrix,cluster_rows=FALSE,cluster_columns=FALSE,row_order=or,column_order=or,
-              show_row_names=FALSE,show_column_names=FALSE,
+              show_row_names=FALSE,show_column_names=FALSE,name='Similarity\nmatrix',
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
               top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...)  )
@@ -284,7 +286,7 @@ SimilarityHeatmap=function(df,cutoff=0.85,mode='automatic',
       names(col_type)=1:max(as.numeric(c))
       
       print(  Heatmap(similarity_matrix,cluster_rows=FALSE,cluster_columns=FALSE,row_order=or,column_order=or,
-              show_row_names=FALSE,show_column_names=FALSE,
+              show_row_names=FALSE,show_column_names=FALSE,name='Similarity\nmatrix',
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
               top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...) )
@@ -294,7 +296,31 @@ SimilarityHeatmap=function(df,cutoff=0.85,mode='automatic',
   }
         
   if (mode=='ConsensusClusterPlus'){
-          
+     if (select_cutoff){
+        ConsensusClustering_result=ConsensusClusterPlus(similarity_matrix,clusterAlg='hc',maxK=maxK,
+                       distance='euclidean',innerLinkage="ward.D2",finalLinkage="ward.D2",title=,'./',
+                       verbose=FALSE,plot='pdf')
+        return(ConsensusClustering_result)
+    } else if (cluster_num!=0) {
+        ConsensusClustering_result=data
+        clustering_result=ConsensusClustering_result[[cluster_num]]
+        clustering_matrix=clustering_result[['consensusMatrix']]
+        c=clustering_result[['consensusClass']]
+             
+        col_type=col_type[1:max(as.numeric(c))]
+        names(col_type)=1:max(as.numeric(c))
+        r=rownames(similarity_matrix)
+        or=r[order(c)]
+        c=as.factor(c)
+
+        Heatmap(clustering_matrix,cluster_rows=FALSE,cluster_columns=FALSE,
+              show_row_names=FALSE,show_column_names=FALSE,name='Consensus\nmatrix',
+              row_split=c,column_split=c,
+              left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
+              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE) )
+
+        return (c)   
+    }     
   }
         
 }
