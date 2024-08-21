@@ -117,7 +117,8 @@ GSM330171.CEL	3.598589	3.307543	9.863687	5.779449	3.352696
 The following codes are for samples clustering. You can input transposed expression matrix for genes clustering.  
 There are three `mode`s for blocks identification with similarity matrix: `mode`=c(`manual`, `automatic`, `ConsunsusClusterPlus`). For each mode, `select_cutoff=TRUE` presents the effects under different cluster assignment parameters.
 
-__The first mode__: `mode='manual'`; Manually determine cluster number using `ward.D2` hierarchical clustering method. Clstering effects are assessed by `NbClust`.
+__The first mode__: `mode='manual'`; Manually determine cluster number using `ward.D2` hierarchical clustering method. Clstering effects are assessed by `NbClust`.  
++ `min.kc`, `max.kc`: minimum and maximum cluster number for `NbClust`
 + `cluster_num`: cluster number
 ```r
 # return the cluster assignment
@@ -145,18 +146,17 @@ c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.5
 </p>
 
 __The third mode__: `mode='ConsunsusClusterPlus'`; Blocks identification using `ConsensusClusterPlus`.  
-
++ `maxK`: maximum cluster number for ConsunsusClusterPlus
++ `cluster_num`: cluster number
 ``` r
 # return the ConsensusClustering object and a pdf file under the newly generated directory 'ConsensusClusteringResult'
-ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
+ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=TRUE,maxK=15)
 ```
-
 ``` r
 # return the cluster assignment
-ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=FALSE,cluster_num=11)
+c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus,select_cutoff=FALSE,cluster_num=13)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c3.png">
 </p>
 
-The function shows the similarity heatmap and returns a vector of the cluster assignment of each sample.
