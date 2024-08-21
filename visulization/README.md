@@ -120,6 +120,7 @@ There are three `mode`s for blocks identification with similarity matrix: `mode`
 __The first mode__: `mode='manual'`; Manually determine cluster number using `ward.D2` hierarchical clustering method. Clstering effects are assessed by `NbClust`.
 + `cluster_num`: cluster number
 ```r
+# return the cluster assignment
 c1=SimilarityHeatmap(df,mode='manual',cluster_num=4)
 ```
 <p align="center">
@@ -136,6 +137,7 @@ SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq
 </p>
 
 ``` r
+# return the cluster assignment
 c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.52)
 ```
 <p align="center">
@@ -145,10 +147,12 @@ c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.5
 __The third mode__: `mode='ConsunsusClusterPlus'`; Blocks identification using `ConsensusClusterPlus`.  
 
 ``` r
+# return the ConsensusClustering object and a pdf file under the newly generated directory 'ConsensusClusteringResult'
 ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
 ```
 
 ``` r
+# return the cluster assignment
 ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=FALSE,cluster_num=11)
 ```
 
