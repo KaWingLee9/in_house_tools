@@ -104,121 +104,136 @@ CorPlot=function(data,cor.method='pearson', # 'pearson', 'spearman'
 
 # SHeatmap - Summarized heatmap with significance test
 # Required packages: dplyr, coin, ComplexHeatmap
-SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
+SumHeatmap=function(df,group.col,variable.col,value.col,heatmap.aggr.fun=mean,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
-                    sig.level=c(0.01,0.05),sig.label=c('**','*'),
+                    show.significance=TRUE,sig.level=c(0.01,0.05),sig.label=c('**','*'),
                     p.adj=FALSE,p.adj.method='fdr',scale=TRUE,transpose=FALSE,...){
-    
+
+    library(ComplexHeatmap)
+        
     options(warn=-1)
     
     library(dplyr)
-    library(ComplexHeatmap)
     
-    if (test.method=='t.test'){
-        agg.fun=mean
-    } else {
-        agg.fun=median
-    }
+#     if (scale){
+#         df_1=df %>% group_by(!!!syms(variable.col)) %>% mutate(value.col=scale(!!!syms(value.col)))
+#         df_1[,value.col]=df_1[,'value.col']
+#         df=data.frame(df_1)
+#         # heatmap_matrix=scale(heatmap_matrix)
+#     }
     
-    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=agg.fun) %>% 
+#     if (test.method=='t.test'){
+#         heatmap.aggr.fun=mean
+#     } else {
+#         heatmap.aggr.fun=median
+#     }
+    
+    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=heatmap.aggr.fun) %>% 
         data.frame(row.names=1,check.names=FALSE)
-
+    
     if (scale){
-        # df_1=df %>% group_by(!!!syms(variable.col)) %>% mutate(value.col=scale(!!!syms(value.col)))
-        # df_1[,value.col]=df_1[,'value.col']
-        # df=data.frame(df_1)
         heatmap_matrix=scale(heatmap_matrix)
     }
-        
-    p_matrix=lapply(unique(df[,variable.col]),function(x){
-        
-        m=unique(df[,group.col])
-        df=sapply(m,function(y){
-
-            if (test.mode=='ONEvsVALUE'){
-                x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
-                x2=mean(df[ df[,variable.col] %in% x ,value.col])
-
-                if (test.method=='t.test'){
-                    x2=mean(df[ df[,variable.col] %in% x ,value.col])
-                    p=t.test(x1,mu=x2)$p.value
-                }
-
-                if (test.method=='wilcox.test'){
-                    x2=median(df[ df[,variable.col] %in% x ,value.col])
-                    p=wilcox.test(x1,mu=x2)$p.value
-                }
-                
-                return(p)
-            }
-
-            if (test.mode=='ONEvsOTHER'){
-                x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
-                x2=df[ (!df[,group.col] %in% y) & ((df[,variable.col] %in% x)) ,value.col ]
-            }
-
-            if (test.mode=='ONEvsALL'){
-                x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
-                x2=df[ df[,variable.col] %in% x ,value.col]
-            }
-            
-            if (permutated){
-                
-                df_test=data.frame(value=c(x1,x2),
-                group=as.factor(c(rep('A',length.out=length(x1)),rep('B',length.out=length(x2)))))
-                colnames(df_test)=c('value','group')
-                df_test=data.frame(df_test)
-                
-                if (test.method=='oneway.test'){
-                    p=coin::pvalue(coin::oneway_test(value~group,df_test))
-                }
-                
-                if (test.method=='wilcox.test'){
-                    p=coin::pvalue(coin::wilcox_test(value~group,df_test))
-                }
-            }
-            
-            if (!permutated){
-                if (test.method=='t.test'){
-                    p=t.test(x1,x2)$p.value
-                }
-                
-                if (test.method=='wilcox.test'){
-                    p=wilcox.test(x1,x2)$p.value
-                }
-            }
-            
-            return(p)
-
-        },USE.NAMES=TRUE) %>% data.frame()
-        
-        rownames(df)=m
-        colnames(df)=x
-        return(df)
-        
-    }) %>% dplyr::bind_cols()
-
-    p_matrix=p_matrix[rownames(heatmap_matrix),colnames(heatmap_matrix)]
     
-    if (p.adj){
-        p_matrix_adj=unlist(p_matrix) %>% p.adjust(method=p.adj.method) %>% matrix(c(nrow(p_matrix),ncol(p_matrix)))
-        rownames(p_matrix_adj)=rownames(p_matrix)
-        colnames(p_matrix_adj)=colnames(p_matrix)
-        p_matrix=p_matrix_adj
+    if (show.significance){
+        p_matrix=lapply(unique(df[,variable.col]),function(x){
+
+            m=unique(df[,group.col])
+            df=sapply(m,function(y){
+
+                if (test.mode=='ONEvsVALUE'){
+                    x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
+                    x2=mean(df[ df[,variable.col] %in% x ,value.col])
+
+                    if (test.method=='t.test'){
+                        x2=mean(df[ df[,variable.col] %in% x ,value.col])
+                        p=t.test(x1,mu=x2)$p.value
+                    }
+
+                    if (test.method=='wilcox.test'){
+                        x2=median(df[ df[,variable.col] %in% x ,value.col])
+                        p=wilcox.test(x1,mu=x2)$p.value
+                    }
+
+                    return(p)
+                }
+
+                if (test.mode=='ONEvsOTHER'){
+                    x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
+                    x2=df[ (!df[,group.col] %in% y) & ((df[,variable.col] %in% x)) ,value.col ]
+                }
+
+                if (test.mode=='ONEvsALL'){
+                    x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
+                    x2=df[ df[,variable.col] %in% x ,value.col]
+                }
+
+                if (permutated){
+
+                    df_test=data.frame(value=c(x1,x2),
+                    group=as.factor(c(rep('A',length.out=length(x1)),rep('B',length.out=length(x2)))))
+                    colnames(df_test)=c('value','group')
+                    df_test=data.frame(df_test)
+
+                    if (test.method=='oneway.test'){
+                        p=coin::pvalue(coin::oneway_test(value~group,df_test))
+                    }
+
+                    if (test.method=='wilcox.test'){
+                        p=coin::pvalue(coin::wilcox_test(value~group,df_test))
+                    }
+                }
+
+                if (!permutated){
+                    if (test.method=='t.test'){
+                        p=t.test(x1,x2)$p.value
+                    }
+
+                    if (test.method=='wilcox.test'){
+                        p=wilcox.test(x1,x2)$p.value
+                    }
+                }
+
+                return(p)
+
+            },USE.NAMES=TRUE) %>% data.frame()
+
+            rownames(df)=m
+            colnames(df)=x
+            return(df)
+
+        }) %>% dplyr::bind_cols()
+
+        p_matrix=p_matrix[rownames(heatmap_matrix),colnames(heatmap_matrix)]
+
+        if (p.adj){
+            p_matrix_adj=unlist(p_matrix) %>% p.adjust(method=p.adj.method) %>% matrix(c(nrow(p_matrix),ncol(p_matrix)))
+            rownames(p_matrix_adj)=rownames(p_matrix)
+            colnames(p_matrix_adj)=colnames(p_matrix)
+            p_matrix=p_matrix_adj
+        }
     }
-        
+    
     if (transpose){
         heatmap_matrix=t(heatmap_matrix)
-        p_matrix=t(p_matrix)
-    }
         
+        if (show.significance){
+            p_matrix=t(p_matrix)
+        }
+    }
+
     ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
-        q=min(which(p_matrix[i,j]<=sig.level))
-        if (q<=length(sig.level)){
-            grid.text(sig.label[q],x,y)
-        } else{
+        if (show.significance){
+            q=min(which(p_matrix[i,j]<=sig.level))
+            if (q<=length(sig.level)){
+                grid.text(sig.label[q],x,y)
+            } else{
+                grid.text('',x,y)
+            }
+        } else {
             grid.text('',x,y)
         }
+
     },...)
     
     options(warn=1)
