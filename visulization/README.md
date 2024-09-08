@@ -83,6 +83,7 @@ Parameters of `SHeatmap`:
 + `group.col`: column name represents sample group
 + `variable.col`: column name represents variable
 + `value.col`: column name represents values
++ `show.significance`: whether to show significance labels
 + `test.mode`: one of  `ONEvsVALUE`, `ONEvsOTHER` and `ONEvsALL`
 + `permutated`: whether to use permutation-based method. Permutation-based methods are from `coin` package
 + `test.method`: one of `t.test`, `wilcox.test` and `oneway.test`
