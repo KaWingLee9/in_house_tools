@@ -94,7 +94,7 @@ Parameters of `SHeatmap`:
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
 <p align="center">
-  <img height="400" src="pct/SHeatmap_description.jpg">
+  <img height="400" src="pct/SHeatmap_description.png">
 </p>
 
 ## <a name="heatmap2">SimilarityHeatmap - Blocks division in similarity heatmap</a>
