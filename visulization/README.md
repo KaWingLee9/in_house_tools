@@ -151,7 +151,7 @@ __The third mode__: `mode='ConsunsusClusterPlus'`; Blocks identification using `
 + `cluster_num`: cluster number
 ``` r
 # return the ConsensusClustering object and a pdf file under the newly generated directory 'ConsensusClusteringResult'
-ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus,select_cutoff=TRUE,maxK=15)
+ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus',select_cutoff=TRUE,maxK=15)
 ```
 ``` r
 # return the cluster assignment
