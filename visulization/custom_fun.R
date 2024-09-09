@@ -122,11 +122,11 @@ SumHeatmap=function(df,group.col,variable.col,value.col,heatmap.aggr.fun=mean,te
 #         # heatmap_matrix=scale(heatmap_matrix)
 #     }
     
-#     if (test.method=='t.test'){
-#         heatmap.aggr.fun=mean
-#     } else {
-#         heatmap.aggr.fun=median
-#     }
+    if (test.method=='wilcox.test'){
+        heatmap.aggr.fun=median
+    } else {
+        heatmap.aggr.fun=mean
+    }
     
     heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=heatmap.aggr.fun) %>% 
         data.frame(row.names=1,check.names=FALSE)
