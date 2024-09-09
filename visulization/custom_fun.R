@@ -104,7 +104,7 @@ CorPlot=function(data,cor.method='pearson', # 'pearson', 'spearman'
 
 # SHeatmap - Summarized heatmap with significance test
 # Required packages: dplyr, coin, ComplexHeatmap
-SumHeatmap=function(df,group.col,variable.col,value.col,heatmap.aggr.fun=mean,test.mode='ONEvsVALUE',
+SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
                     show.significance=TRUE,sig.level=c(0.01,0.05),sig.label=c('**','*'),
                     p.adj=FALSE,p.adj.method='fdr',scale=TRUE,transpose=FALSE,...){
