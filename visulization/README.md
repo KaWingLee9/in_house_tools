@@ -4,7 +4,7 @@
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
-+ [Tips for cluster result](#heatmap3)  
++ [Tips for clustering result](#heatmap3)  
   Reorder row/column order of the table  
   Combine clusters  
 
@@ -164,7 +164,7 @@ c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus',sele
   <img height="400" src="pct/SimilarityHeatmap_c3.png">
 </p>
 
-## <a name="heatmap3">Tips for cluster result</a>
+## <a name="heatmap3">Tips for clustering result</a>
 `ResetOrder`: Reorder row/column order of the table
 ``` r
 # raw matrix
