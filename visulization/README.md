@@ -174,13 +174,13 @@ p1=Heatmap(df,name='Percantage',clustering_method_rows='ward.D2',cluster_columns
                                  c('#F4FAED','#D6EFD0','#B2E1B9','#77CAC5','#42A6CB','#1373B2','#084384')))
 # reordered matrix
 df_2=ResetOrder(df,by='row')
-p2=Heatmap(df_1,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
+p2=Heatmap(df_2,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
         show_row_names=FALSE,show_column_names=FALSE,
         col=circlize::colorRamp2(c(seq(0,0.1,length.out=3),c(seq(0.2,0.5,length.out=4))),
                                  c('#F4FAED','#D6EFD0','#B2E1B9','#77CAC5','#42A6CB','#1373B2','#084384')))
 
 df_3=ResetOrder(df,by='row')
-df_3=ResetOrder(df_2,by='col')
+df_3=ResetOrder(df_3,by='col')
 p3=Heatmap(df_3,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
         show_row_names=FALSE,show_column_names=FALSE,
         col=circlize::colorRamp2(c(seq(0,0.1,length.out=3),c(seq(0.2,0.5,length.out=4))),
