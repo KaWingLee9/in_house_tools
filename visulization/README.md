@@ -4,9 +4,9 @@
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
-+ [Tips for cluster result](#heatmap3)
-  Reorder row/column order of the table
-  Combine clusters 
++ [Tips for cluster result](#heatmap3)  
+  Reorder row/column order of the table  
+  Combine clusters  
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
