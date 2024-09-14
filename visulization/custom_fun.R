@@ -1,11 +1,11 @@
 # CorPlot - Correlation bubble plot with significance test
 # Required packages: ggplot2, Hmisc, dendsort
-CorPlot=function(data,cor.method='pearson', # 'pearson', 'spearman'
+CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
         size='p.value', # 'p.value', 'p.adj'
         p.adj.method='fdr',
         sig.level=0.05,
         tri='whole', # 'whole', 'lower', 'upper'
-        sig.circle=TRUE,stroke=1,maxK=20){
+        sig.circle=TRUE){
     
     library(ggplot2)
 
@@ -45,7 +45,7 @@ CorPlot=function(data,cor.method='pearson', # 'pearson', 'spearman'
     if(sig.circle){
         p=ggplot(test_result,aes_string(x='x',y='y',fill='Correlation',size=size,color='sig'))+
           scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'),na.value='#FFFFFF00',limits=c(TRUE,FALSE))+
-          geom_point(shape=21,stroke=stroke)
+          geom_point(shape=21,stroke=1)
     }
 
     p=p+
@@ -104,13 +104,11 @@ CorPlot=function(data,cor.method='pearson', # 'pearson', 'spearman'
 
 # SHeatmap - Summarized heatmap with significance test
 # Required packages: dplyr, coin, ComplexHeatmap
-SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
+SumHeatmap=function(df,group.col,variable.col,value.col,heatmap.aggr.fun=mean,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
                     show.significance=TRUE,sig.level=c(0.01,0.05),sig.label=c('**','*'),
                     p.adj=FALSE,p.adj.method='fdr',scale=TRUE,transpose=FALSE,...){
-
-    library(ComplexHeatmap)
-        
+    
     options(warn=-1)
     
     library(dplyr)
@@ -222,6 +220,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
         }
     }
 
+    library(ComplexHeatmap)
     ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
         if (show.significance){
             q=min(which(p_matrix[i,j]<=sig.level))
@@ -240,18 +239,21 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     return(ht)
 
 }
+
                               
 # SimilarityHeatmap - Blocks division in similarity heatmap
 # Required packages: NbClust, simplifyEnrichment, ComplexHeatmap, ConsensusClusterPlus
-SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
+SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method='pearson',
+                           provided_label=NA,
                            min.nc=2,max.nc=15,cluster_num=0,
-                           cutoff_seq=seq(0.6,0.98,by=0.01),cutoff=0.85,
-                           maxK=10,...){
+                           cutoff.seq=seq(0.6,0.98,by=0.01),cutoff=0.85,
+                           maxK=10,use.fastcluster=FALSE,hc.method='ward.D2',...){
         
   library(ComplexHeatmap)
 
-  if (!((mode=='ConsensusClusterPlus') & (select_cutoff==FALSE))) {
-      similarity_matrix=cor(t(data))
+  if (!((mode=='ConsensusClusterPlus') & (select.cutoff==FALSE))) {
+      similarity_matrix=cor(t(data),method=cor.method)
+      similarity_matrix[is.na(similarity_matrix)]=0
   }
 
   col_type=c('#5050FFFF','#CE3D32FF','#749B58FF','#F0E685FF','#466983FF','#BA6338FF','#5DB1DDFF','#802268FF','#6BD76BFF','#D595A7FF','#924822FF',
@@ -260,13 +262,16 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
     '#FFC20AFF','#FFD147FF','#990033FF','#991A00FF','#996600FF','#809900FF','#339900FF','#00991AFF','#009966FF','#008099FF','#003399FF',
     '#1A0099FF','#660099FF','#990080FF','#D60047FF','#FF1463FF','#00D68FFF','#14FFB1FF')
 
+  if (use.fastcluster){
+    library(fastcluster)
+  }
 
   if (mode=='automatic'){
           
     library(simplifyEnrichment)
           
-    if (select_cutoff){
-      return(select_cutoff(similarity_matrix,cutoff=cutoff_seq,verbose=FALSE,partition_fun=partition_by_hclust))
+    if (select.cutoff){
+      return(select_cutoff(similarity_matrix,cutoff=cutoff.seq,verbose=FALSE,partition_fun=partition_by_hclust))
     } else {
   
       r=rownames(similarity_matrix)
@@ -289,7 +294,7 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
   } 
         
   if (mode=='manual'){
-    if (select_cutoff){
+    if (select.cutoff){
         test_index_1=c("kl","ch","hartigan","ccc","scott","marriot","trcovw","tracew","friedman","rubin",
                         "cindex", "db", "silhouette", 
                         "duda", "pseudot2", "beale", 
@@ -297,11 +302,12 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
                         "gamma", "gplus", "tau", "dunn","sdindex","sdbw")
         
         test_index_2=c("hubert","dindex")
-            
         sapply(test_index_1,function(x){
             res=try({
-                y=NbClust::NbClust(data=df,distance='euclidean',min.nc=min.nc,max.nc=max.nc, 
-                                   method='ward.D2',alphaBeale=0.1,index=x)
+#                 y=NbClust::NbClust(data=df,distance='euclidean',min.nc=min.nc,max.nc=max.nc, 
+#                                    method=hc.method,alphaBeale=0.1,index=x)
+                y=NbClust::NbClust(data=df,diss=as.dist(1-similarity_matrix),min.nc=min.nc,max.nc=max.nc, 
+                                   method=hc.method,alphaBeale=0.1,index=x)                
             },silent=TRUE)
             if (inherits(res,'try-error')) {return(NULL)}
             return(y$Best.nc[['Number_clusters']])
@@ -309,8 +315,10 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
 
         sapply(test_index_2,function(x){
             res=try({
-                y=NbClust::NbClust(data=df,distance='euclidean',min.nc=min.nc,max.nc=max.nc, 
-                                   method='ward.D2',alphaBeale=0.1,index=x)
+#                 y=NbClust::NbClust(data=df,distance='euclidean',min.nc=min.nc,max.nc=max.nc, 
+#                                    method=hc.method,alphaBeale=0.1,index=x)
+                  y=NbClust::NbClust(data=df,diss=as.dist(1-similarity_matrix),min.nc=min.nc,max.nc=max.nc, 
+                     method=hc.method,alphaBeale=0.1,index=x)
             },silent=TRUE)
             if (inherits(res,'try-error')) {return(NULL)}
             return(NULL)
@@ -318,37 +326,58 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
             
       return(NULL)
 
-    } else if (cluster_num!=0){
-      hc=hclust(dist(df),method='ward.D2')
-      hc=dendsort::dendsort(hc)
-      c=cutree(hc,cluster_num)
-  
-      r=rownames(similarity_matrix)
-      or=hc[['labels']][hc[['order']]]
-      c=as.factor(c)
-      col_type=col_type[1:max(as.numeric(c))]
-      names(col_type)=1:max(as.numeric(c))
+    } else {
+#       hc=hclust(dist(df),method=hc.method)
       
-      print(  Heatmap(similarity_matrix,cluster_rows=FALSE,cluster_columns=FALSE,row_order=or,column_order=or,
+      
+      if (!is.na(provided_label)){
+          c=as.factor(provided_label)
+          col_type=col_type[1:length(unique(c))]
+          names(col_type)=unique(c)
+          print(  Heatmap(similarity_matrix,cluster_rows=FALSE,cluster_columns=FALSE,
               show_row_names=FALSE,show_column_names=FALSE,name='Similarity\nmatrix',
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
               top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...) )
+          print(SumHeatmap2(similarity_matrix,c))
+          
+      } else if (cluster_num!=0) {
+          
+          hc=hclust(as.dist(1-similarity_matrix),method=hc.method)
+          c=cutree(hc,cluster_num)
+          hc=dendsort::dendsort(hc)
+          or=hc[['labels']][hc[['order']]]
+          r=rownames(similarity_matrix)
+          c=as.factor(c)
+          col_type=col_type[1:max(as.numeric(c))]
+          names(col_type)=1:max(as.numeric(c))
+          print(  Heatmap(similarity_matrix,cluster_rows=FALSE,cluster_columns=FALSE,row_order=or,column_order=or,
+              show_row_names=FALSE,show_column_names=FALSE,name='Similarity\nmatrix',
+              row_split=c,column_split=c,
+              left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
+              top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...) )
+          print(SumHeatmap2(similarity_matrix,c))
+          
+      }
+        
+
       
+
+
       return(c)
+      }    
     }
-  }
         
   if (mode=='ConsensusClusterPlus'){
      
      library(ConsensusClusterPlus)
           
-     if (select_cutoff){
+     if (select.cutoff){
         ConsensusClustering_result=ConsensusClusterPlus(similarity_matrix,clusterAlg='hc',maxK=maxK,
-                       distance='euclidean',innerLinkage="ward.D2",finalLinkage="ward.D2",title='ConsensusClusteringResult',
+                       distance='euclidean',innerLinkage=hc.method,finalLinkage=hc.method,title='ConsensusClusteringResult',
                        verbose=FALSE,plot='pdf')
         return(ConsensusClustering_result)
-    } else if (cluster_num!=0) {
+     } else if (cluster_num!=0) {
         ConsensusClustering_result=data
         clustering_result=ConsensusClustering_result[[cluster_num]]
         clustering_matrix=clustering_result[['consensusMatrix']]
@@ -365,7 +394,131 @@ SimilarityHeatmap=function(data,mode='automatic',select_cutoff=FALSE,
               top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),... ) )
 
         return (c)   
-    }     
+    }  
   }
         
+}
+                              
+SumHeatmap2=function(similarity_matrix,c){
+    
+    similarity_matrix_melted=reshape2::melt(similarity_matrix,varnames=c('sample_1','sample_2'),value.name='similarity')
+    similarity_matrix_melted=similarity_matrix_melted %>% filter(sample_1!=sample_2)
+#     SumHeatmap(similarity_matrix_melted,group.col='group_1',variable.col='group_2',value.col='similarity')
+    similarity_matrix_melted$group_1=c[similarity_matrix_melted$sample_1]
+    similarity_matrix_melted$group_2=c[similarity_matrix_melted$sample_2]
+
+    df=similarity_matrix_melted
+#     p_matrix=lapply(unique(df[,variable.col]),function(x){
+
+#         m=unique(df[,group.col])
+#         df=sapply(m,function(y){
+
+#             x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% y) ,value.col]
+#             x2=df[ (df[,group.col] %in% y) & ((df[,variable.col] %in% x)) ,value.col ]
+
+
+#             df_test=data.frame(value=c(x1,x2),
+#             group=as.factor(c(rep('A',length.out=length(x1)),rep('B',length.out=length(x2)))))
+#             colnames(df_test)=c('value','group')
+#             df_test=data.frame(df_test)
+
+#             p=coin::pvalue(coin::oneway_test(value~group,df_test))
+
+#             return(p)
+
+#         },USE.NAMES=TRUE) %>% data.frame()
+
+#         rownames(df)=m
+#         colnames(df)=x
+#         return(df)
+
+#     }) %>% dplyr::bind_cols()
+
+    group.col='group_1'
+    variable.col='group_2'
+    value.col='similarity'
+    
+    heatmap_matrix=reshape2::dcast(df,as.formula(paste0(group.col,'~',variable.col)),value.var=value.col,fun.aggregate=mean) %>% 
+        data.frame(row.names=1,check.names=FALSE)
+
+#     p_matrix=p_matrix[rownames(heatmap_matrix),colnames(heatmap_matrix)]
+
+#     p.adj.method='bonferroni'
+#     p_matrix_adj=unlist(p_matrix) %>% p.adjust(method=p.adj.method) %>% matrix(c(nrow(p_matrix),ncol(p_matrix)))
+#     rownames(p_matrix_adj)=rownames(p_matrix)
+#     colnames(p_matrix_adj)=colnames(p_matrix)
+
+#     sig.level=c(0.01,0.05)
+#     sig.label=c('**','*')
+
+#     sig.level=c(0.01,0.05)
+#     sig.label=c('**','*')
+
+    Heatmap(heatmap_matrix,# cluster_rows=FALSE,cluster_columns=FALSE,
+#                cell_fun=function(j,i,x,y,w,h,fill){
+#         q=min(which(p_matrix_adj[i,j]<=sig.level))
+#         if (q<=length(sig.level)){
+#             grid.text(sig.label[q],x,y)
+#         } else{
+#             grid.text('',x,y)
+#         }
+#     }
+           )
+}
+
+                              
+ClusterCombine=function(c,l,reorder=TRUE){
+    
+    if ( sum(duplicated( unlist(l) ))!=0 ) {
+        stop('Duplicated clusters among combinations!')
+    }
+    
+    for (x in l){
+        c[c %in% x]=x[1]
+    }
+    if (reorder){
+        c=factor(c,labels=1:length(unique(c)))
+    }
+    return(c)
+}
+                              
+ResetOrder=function(df,by='row'){
+    
+    if (by=='row'){
+        o1=apply(df,1,function(x){
+            x=scale(x)
+            which(x==max(x))
+            }) %>% sort()
+        o2=setNames(1:length(o1),names(o1))
+        duplicated_num=o1[duplicated(o1)] %>% unique()
+        for (i in duplicated_num){
+            duplicated_item=o1[i==o1] %>% names()
+            options(warn=-1)
+            duplicated_item=df[duplicated_item,i,drop=FALSE]  %>% t() %>% .[1,] %>% sort(decreasing=TRUE) %>% names()
+            o2[duplicated_item]=sort(o2[duplicated_item])
+        }
+        o2=sort(o2)
+        o2=names(o2)
+        return(df[o2,])
+    }
+    
+    if (by=='col'){
+        o1=apply(df,2,function(x){
+            x=scale(x)
+            which(x==max(x))
+        }) %>% sort()
+        o2=setNames(1:length(o1),names(o1))
+        duplicated_num=o1[duplicated(o1)] %>% unique()
+
+        for (i in duplicated_num){
+            duplicated_item=o1[i==o1] %>% names()
+            options(warn=-1)
+            duplicated_item=df[i,duplicated_item,drop=FALSE]  %>% .[1,] %>% sort(decreasing=TRUE) %>% names()
+            o2[duplicated_item]=sort(o2[duplicated_item])
+        }
+        o2=sort(o2)
+        o2=names(o2)
+        return(df[,o2])
+    }
+
 }
