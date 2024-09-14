@@ -4,6 +4,7 @@
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
++ [Tips for cluster result](#heatmap3)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 Required packages: Hmisc, dendsort  
@@ -161,3 +162,41 @@ c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus',sele
   <img height="400" src="pct/SimilarityHeatmap_c3.png">
 </p>
 
+## <a name="heatmap3">Tips for cluster result</a>
+`ResetOrder`: Reorder row/column order of the table
+``` r
+# raw matrix
+p1=Heatmap(df,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
+        show_row_names=FALSE,show_column_names=FALSE,
+        col=circlize::colorRamp2(c(seq(0,0.1,length.out=3),c(seq(0.2,0.5,length.out=4))),
+                                 c('#F4FAED','#D6EFD0','#B2E1B9','#77CAC5','#42A6CB','#1373B2','#084384')))
+# reordered matrix
+df_2=ResetOrder(df,by='row')
+p2=Heatmap(df_1,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
+        show_row_names=FALSE,show_column_names=FALSE,
+        col=circlize::colorRamp2(c(seq(0,0.1,length.out=3),c(seq(0.2,0.5,length.out=4))),
+                                 c('#F4FAED','#D6EFD0','#B2E1B9','#77CAC5','#42A6CB','#1373B2','#084384')))
+
+df_3=ResetOrder(df,by='row')
+df_3=ResetOrder(df_2,by='col')
+p3=Heatmap(df_3,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
+        show_row_names=FALSE,show_column_names=FALSE,
+        col=circlize::colorRamp2(c(seq(0,0.1,length.out=3),c(seq(0.2,0.5,length.out=4))),
+                                 c('#F4FAED','#D6EFD0','#B2E1B9','#77CAC5','#42A6CB','#1373B2','#084384')))
+
+df_4=ResetOrder(df,by='col')
+p4=Heatmap(df_4,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
+        show_row_names=FALSE,show_column_names=FALSE,
+        col=circlize::colorRamp2(c(seq(0,0.1,length.out=3),c(seq(0.2,0.5,length.out=4))),
+                                 c('#F4FAED','#D6EFD0','#B2E1B9','#77CAC5','#42A6CB','#1373B2','#084384')))
+
+df_5=ResetOrder(df,by='row')
+df_5=ResetOrder(df_5,by='col')
+p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
+        show_row_names=FALSE,show_column_names=FALSE,
+        col=circlize::colorRamp2(c(seq(0,0.1,length.out=3),c(seq(0.2,0.5,length.out=4))),
+                                 c('#F4FAED','#D6EFD0','#B2E1B9','#77CAC5','#42A6CB','#1373B2','#084384')))
+```
+<p align="center">
+  <img height="400" src="pct/Reorder_cluster.png">
+</p>
