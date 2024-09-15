@@ -5,7 +5,7 @@
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
 + [Tips for clustering result](#heatmap3)  
-  Reorder row/column order of the table  
+  Reorder row/column order of the table for heatmap visualization  
   Combine clusters  
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
