@@ -72,3 +72,6 @@ __Reference__: Windhager, J., Zanotelli, V.R.T., Schulz, D. et al. An end-to-end
 
 ## Citation
 Wang H, Li J, Jing S, et al. SOAPy: a Python package to dissect spatial architecture, dynamics and communication[J]. bioRxiv, 2023: 2023.12. 21.572725.
+
+## Acknowledgement
+Thank you for  Wenwen Zhang, Heqi Wang, Zhixuan Tang and Jiao Yuan for their contribution.
