@@ -165,7 +165,7 @@ c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus',sele
 </p>
 
 ## <a name="heatmap3">Tips for clustering result</a>
-`ResetOrder`: Reorder row/column order of the table
+`ResetOrder`: Reorder row/column order of the table for heatmap visualization (to make the heatmap more "diagonal").
 ``` r
 # raw matrix
 p1=Heatmap(df,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
