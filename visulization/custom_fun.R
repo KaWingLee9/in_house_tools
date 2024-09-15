@@ -339,7 +339,7 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
               top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...) )
-          print(SumHeatmap2(similarity_matrix,c))
+          # print(SumHeatmap2(similarity_matrix,c))
           
       } else if (cluster_num!=0) {
           
@@ -356,14 +356,10 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
               top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...) )
-          print(SumHeatmap2(similarity_matrix,c))
+          # print(SumHeatmap2(similarity_matrix,c))
           
       }
-        
-
-      
-
-
+            
       return(c)
       }    
     }
