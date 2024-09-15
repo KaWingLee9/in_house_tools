@@ -4,7 +4,7 @@
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
-+ [Tips for clustering result](#heatmap3)  
++ [Other tips for clustering](#heatmap3)  
   Reorder row/column order of the table for heatmap visualization  
   Combine clusters  
 
@@ -122,8 +122,8 @@ The following codes are for samples clustering. You can input transposed express
 There are three `mode`s for blocks identification with similarity matrix: `mode`=c(`manual`, `automatic`, `ConsunsusClusterPlus`). For each mode, `select_cutoff=TRUE` presents the effects under different cluster assignment parameters.
 
 __The first mode__: `mode='manual'`; Manually determine cluster number using `ward.D2` hierarchical clustering method. Clstering effects are assessed by `NbClust`.  
-+ `min.kc`, `max.kc`: minimum and maximum cluster number for `NbClust`
-+ `cluster_num`: cluster number
++ `min.nc`, `max.nc`: minimum and maximum cluster number for `NbClust`
++ `cluster_num`: cluster number  
 ```r
 # return the cluster assignment
 c1=SimilarityHeatmap(df,mode='manual',cluster_num=4)
@@ -164,7 +164,11 @@ c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus',sele
   <img height="400" src="pct/SimilarityHeatmap_c3.png">
 </p>
 
-## <a name="heatmap3">Tips for clustering result</a>
+Other important parameters:  
++ `similarity.method`: method to generate similartity matrix, one of `euclidean`, `pearson`, `spearman`
++ `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
+
+## <a name="heatmap3">Other tips for clustering</a>
 `ResetOrder`: Reorder row/column order of the table for heatmap visualization (to make the heatmap more "diagonal").
 ``` r
 # raw matrix
