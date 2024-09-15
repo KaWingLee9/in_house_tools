@@ -1,5 +1,9 @@
 # Custom R visualization functions
 
+``` r
+source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
+```
+
 ## Table of Contents
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
@@ -13,7 +17,6 @@ __Required packages__: Hmisc, dendsort
 ``` r
 library(ggplot2)
 library(patchwork)
-source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
 
 # load dataset
 data(mtcars)
