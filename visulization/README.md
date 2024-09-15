@@ -173,8 +173,8 @@ Other important parameters:
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
 __Reference__: 
-[1] Gu, Zuguang. 2022. “ Complex Heatmap Visualization.” iMeta 1, e43. https://doi.org/10.1002/imt2.43
-[2] Charrad, M., Ghazzali, . N., Boiteau, V., & Niknafs, A. (2014). NbClust: An R Package for Determining the Relevant Number of Clusters in a Data Set. Journal of Statistical Software, 61(6), 1–36. https://doi.org/10.18637/jss.v061.i06
+[1] Gu, Zuguang. 2022. Complex Heatmap Visualization. iMeta 1, e43. https://doi.org/10.1002/imt2.43
+[2] Charrad, M., Ghazzali, . N., Boiteau, V., & Niknafs, A. 2014. NbClust: An R Package for Determining the Relevant Number of Clusters in a Data Set. Journal of Statistical Software, 61(6), 1–36. https://doi.org/10.18637/jss.v061.i06
 [3] Zuguang Gu, Daniel Hübschmann, SimplifyEnrichment: A Bioconductor Package for Clustering and Visualizing Functional Enrichment Results, Genomics, Proteomics & Bioinformatics, Volume 21, Issue 1, February 2023, Pages 190–202, https://doi.org/10.1016/j.gpb.2022.04.008
 [4] Matthew D. Wilkerson, D. Neil Hayes, ConsensusClusterPlus: a class discovery tool with confidence assessments and item tracking, Bioinformatics, Volume 26, Issue 12, June 2010, Pages 1572–1573, https://doi.org/10.1093/bioinformatics/btq170
 
