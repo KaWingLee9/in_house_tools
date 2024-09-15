@@ -9,7 +9,7 @@
   Combine clusters  
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
-Required packages: Hmisc, dendsort  
+__Required packages__: Hmisc, dendsort  
 ``` r
 library(ggplot2)
 library(patchwork)
@@ -40,7 +40,7 @@ Parameters of `CorPlot`:
 + `stroke`: outline thickness of the circle
 
 ## <a name="heatmap1">SHeatmap - Summarized heatmap of grouped data with significance test</a>
-Required packages: dplyr, ComplexHeatmap  
+__Required packages__: dplyr, ComplexHeatmap  
 ``` r
 # load dataset
 data(iris)
