@@ -170,6 +170,7 @@ c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus',sele
 Other important parameters:  
 + `similarity.method`: method to generate similartity matrix, one of `euclidean`, `pearson`, `spearman`
 + `hc.method`: method for clustering, passed on to `hclust(method=...)`
++ `use.fastcluster`: whether to use `fastcluster::hclust` instead
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
 __Reference__:  
