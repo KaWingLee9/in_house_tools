@@ -37,7 +37,7 @@ img_multipledxed=tifffile.imread(file)
 # remove the highest and lowest 2% of the pixels
 img_norm=Denoise_img(img_multipledxed,98)
 img_mesmer=Generate_mesmer_input(img_norm,marker_list,in_nuc_marker_kwargs,in_mem_marker_kwargs)
-segmentation_predictions=app.predict(img_mesmer,preprocess_kwargs={'percentile':99.9},image_mpp=0.5,compartment='whole-cell')
+segmentation_predictions=app.predict(img_mesmer,preprocess_kwargs={'percentile':1},image_mpp=0.5,compartment='whole-cell')
 # save mask file
 tifffile.imwrite(file.split('.')[0]+'_mask.tiff', segmentation_predictions[0,:,:,0])
 ```
