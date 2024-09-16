@@ -325,14 +325,14 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,similarity.
                         "gamma", "gplus", "tau", "dunn","sdindex","sdbw")
         
         test_index_2=c("hubert","dindex")
-        sapply(test_index_1,function(x){
+        print(sapply(test_index_1,function(x){
             res=try({
                 y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
                                    method=hc.method,alphaBeale=0.1,index=x)                
             },silent=TRUE)
             if (inherits(res,'try-error')) {return(NULL)}
             return(y$Best.nc[['Number_clusters']])
-        })
+        }))
 
         sapply(test_index_2,function(x){
             res=try({
