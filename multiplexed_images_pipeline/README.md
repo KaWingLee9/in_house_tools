@@ -42,7 +42,7 @@ segmentation_predictions=app.predict(img_mesmer,preprocess_kwargs={'percentile':
 tifffile.imwrite(file.split('.')[0]+'_mask.tiff', segmentation_predictions[0,:,:,0])
 ```
 
-__Note__: Parameter `iamge_mpp` in `app.predict` specifies the resolution of the image (aka $\mu m$ of each pixel).  
+__Note__: `iamge_mpp` in `app.predict` specifies the resolution of the image (aka $\mu m$ of each pixel).  
 IMC: 1, MIBI_TOF: 0.5  
 __Reference__: Greenwald, N.F., Miller, G., Moen, E. et al. Whole-cell segmentation of tissue images with human-level performance using large-scale data annotation and deep learning. Nat Biotechnol 40, 555–565 (2022). https://doi.org/10.1038/s41587-021-01094-0
 ## Expression quantification, cell type classification and in-situ visualization
