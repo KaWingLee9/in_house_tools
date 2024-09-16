@@ -9,8 +9,8 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
 + [Other tips for clustering](#heatmap3)  
-  Reorder row/column order of the table for heatmap visualization  
-  Combine clusters  
+++ Reorder row/column order of the table for heatmap visualization  
+++ Combine clusters  
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 __Required packages__: Hmisc, dendsort  
