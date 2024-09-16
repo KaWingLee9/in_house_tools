@@ -243,7 +243,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                               
 # SimilarityHeatmap - Blocks division in similarity heatmap
 # Required packages: NbClust, simplifyEnrichment, ComplexHeatmap, ConsensusClusterPlus
-SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method='pearson',
+SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,similarity.method='pearson',
                            provided_label=NA,
                            min.nc=2,max.nc=15,cluster_num=0,
                            cutoff.seq=seq(0.6,0.98,by=0.01),cutoff=0.85,
@@ -252,7 +252,14 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
   library(ComplexHeatmap)
 
   if (!((mode=='ConsensusClusterPlus') & (select.cutoff==FALSE))) {
-      similarity_matrix=cor(t(data),method=cor.method)
+      
+      if (similarity.method=='euclidean') {
+          similarity_matrix=dist(data,method='euclidean') %>% as.matrix()
+          similarity_matrix=-similarity_matrix
+      }
+      if (similarity.method %in% c('pearson','spearman')){
+          similarity_matrix=cor(t(data),method=similarity.method)
+      }
       similarity_matrix[is.na(similarity_matrix)]=0
   }
 
@@ -271,7 +278,20 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
     library(simplifyEnrichment)
           
     if (select.cutoff){
+        
+        if (hc.method=='kmeans'){
+            partition_by_kmeans=function(mat,n_repeats=10) {
+                partition_list=lapply(seq_len(n_repeats),function(i) {
+                    as.cl_hard_partition(kmeans(mat,2))
+                })
+            }
+        } else {
+            partition_fun=function(mat) {
+                cutree(hclust(dist(mat),method=hc.method),2)
+            }
+        }
       return(select_cutoff(similarity_matrix,cutoff=cutoff.seq,verbose=FALSE,partition_fun=partition_by_hclust))
+        
     } else {
   
       r=rownames(similarity_matrix)
@@ -294,6 +314,9 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
   } 
         
   if (mode=='manual'){
+      
+    diss_mat=-similarity_matrix
+      
     if (select.cutoff){
         test_index_1=c("kl","ch","hartigan","ccc","scott","marriot","trcovw","tracew","friedman","rubin",
                         "cindex", "db", "silhouette", 
@@ -304,9 +327,7 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
         test_index_2=c("hubert","dindex")
         sapply(test_index_1,function(x){
             res=try({
-#                 y=NbClust::NbClust(data=df,distance='euclidean',min.nc=min.nc,max.nc=max.nc, 
-#                                    method=hc.method,alphaBeale=0.1,index=x)
-                y=NbClust::NbClust(data=df,diss=as.dist(1-similarity_matrix),min.nc=min.nc,max.nc=max.nc, 
+                y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
                                    method=hc.method,alphaBeale=0.1,index=x)                
             },silent=TRUE)
             if (inherits(res,'try-error')) {return(NULL)}
@@ -315,9 +336,7 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
 
         sapply(test_index_2,function(x){
             res=try({
-#                 y=NbClust::NbClust(data=df,distance='euclidean',min.nc=min.nc,max.nc=max.nc, 
-#                                    method=hc.method,alphaBeale=0.1,index=x)
-                  y=NbClust::NbClust(data=df,diss=as.dist(1-similarity_matrix),min.nc=min.nc,max.nc=max.nc, 
+                  y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
                      method=hc.method,alphaBeale=0.1,index=x)
             },silent=TRUE)
             if (inherits(res,'try-error')) {return(NULL)}
@@ -339,11 +358,11 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
               top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...) )
-          # print(SumHeatmap2(similarity_matrix,c))
+          print(SumHeatmap2(similarity_matrix,c))
           
       } else if (cluster_num!=0) {
           
-          hc=hclust(as.dist(1-similarity_matrix),method=hc.method)
+          hc=hclust(as.dist(diss_mat),method=hc.method)
           c=cutree(hc,cluster_num)
           hc=dendsort::dendsort(hc)
           or=hc[['labels']][hc[['order']]]
@@ -356,10 +375,10 @@ SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,cor.method=
               row_split=c,column_split=c,
               left_annotation=rowAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),
               top_annotation=HeatmapAnnotation(' '=c,col=list(' '=col_type),show_legend=FALSE),...) )
-          # print(SumHeatmap2(similarity_matrix,c))
+          print(SumHeatmap2(similarity_matrix,c))
           
       }
-            
+        
       return(c)
       }    
     }
