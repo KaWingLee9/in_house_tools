@@ -1,5 +1,5 @@
 # In-house tools/pipelines by Kelvin Lee
-Any questions, please contact me:  
+For any questions, please contact:  
 https://github.com/KaWingLee9
 
 ## Table of Contents
