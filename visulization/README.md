@@ -7,7 +7,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 ## Table of Contents
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
-+ [SimilarityHeatmap - Blocks division in similarity heatmap](#heatmap2)
++ [SimilarityClustering - Blocks division in similarity heatmap](#heatmap2)
 + [Other tips for clustering](#heatmap3)  
   Reorder row/column order of the table for heatmap visualization  
   Combine clusters  
@@ -103,7 +103,7 @@ Parameters of `SHeatmap`:
   <img height="400" src="pct/SHeatmap_description.png">
 </p>
 
-## <a name="heatmap2">SimilarityHeatmap - Blocks division in similarity heatmap</a>
+## <a name="heatmap2">SimilarityClustering - Blocks division in similarity heatmap</a>
 __Required packages__: simplifyEnrichment, ComplexHeatmap
 ``` r
 library(simplifyEnrichment)
@@ -129,7 +129,7 @@ __The first mode__: `mode='manual'`; Manually determine cluster number using `wa
 + `cluster_num`: cluster number  
 ```r
 # return the cluster assignment
-c1=SimilarityHeatmap(df,mode='manual',cluster_num=4)
+c1=SimilarityClustering(df,mode='manual',cluster_num=4)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c1.png">
@@ -138,7 +138,7 @@ c1=SimilarityHeatmap(df,mode='manual',cluster_num=4)
 __The second mode__: (Default) `mode='automatic'`; Automatically blocks division. Clstering effects are assessed by `simplifyEnrichment`.  
 Clustering performance with different cutoff. Lower cutoff -> More clusters.
 ``` r
-SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
+SimilarityClustering(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_select_cutoff.png">
@@ -146,7 +146,7 @@ SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq
 
 ``` r
 # return the cluster assignment
-c2=SimilarityHeatmap(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.52)
+c2=SimilarityClustering(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.52)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c2.png">
@@ -157,11 +157,11 @@ __The third mode__: `mode='ConsunsusClusterPlus'`; Blocks identification using `
 + `cluster_num`: cluster number
 ``` r
 # return the ConsensusClustering object and a pdf file under the newly generated directory 'ConsensusClusteringResult'
-ConsensusClustering_result=SimilarityHeatmap(df,mode='ConsunsusClusterPlus',select_cutoff=TRUE,maxK=15)
+ConsensusClustering_result=SimilarityClustering(df,mode='ConsunsusClusterPlus',select_cutoff=TRUE,maxK=15)
 ```
 ``` r
 # return the cluster assignment
-c3=SimilarityHeatmap(ConsensusClustering_result,mode='ConsunsusClusterPlus',select_cutoff=FALSE,cluster_num=13)
+c3=SimilarityClustering(ConsensusClustering_result,mode='ConsunsusClusterPlus',select_cutoff=FALSE,cluster_num=13)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c3.png">
