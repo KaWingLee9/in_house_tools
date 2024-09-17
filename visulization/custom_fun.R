@@ -241,9 +241,9 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
 }
 
                               
-# SimilarityHeatmap - Blocks division in similarity heatmap
+# SimilarityClustering - Blocks division in similarity heatmap
 # Required packages: NbClust, simplifyEnrichment, ComplexHeatmap, ConsensusClusterPlus
-SimilarityHeatmap=function(data,mode='automatic',select.cutoff=FALSE,similarity.method='pearson',
+SimilarityClustering=function(data,mode='automatic',select.cutoff=FALSE,similarity.method='pearson',
                            provided_label=NA,
                            min.nc=2,max.nc=15,cluster_num=0,
                            cutoff.seq=seq(0.6,0.98,by=0.01),cutoff=0.85,
