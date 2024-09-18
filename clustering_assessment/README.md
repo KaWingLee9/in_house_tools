@@ -1,8 +1,8 @@
 # Clustering result assessment
 
 ## Sensitivity analysis
-Author: Zhixuan Tang, Jiarong Li
 
+__Author__: Zhixuan Tang, Jiarong Li  
 __Reference__: Petralia F, Ma W, Yaron TM, et al. Pan-cancer proteogenomics characterization of tumor immunity. Cell. 2024;187(5):1255-1277.e27. doi:10.1016/j.cell.2024.01.027
 ```
 Sensitivity analysis to assess the impact of estimation errors in the decomposition results on immune subtype clustering
