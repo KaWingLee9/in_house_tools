@@ -129,7 +129,7 @@ __The first mode__: `mode='manual'`; Manually determine cluster number using `wa
 + `cluster_num`: cluster number
 
 ``` r
-# cluster number evaluation through simplifyEnrichment
+# cluster number evaluation through NbClust
 SimilarityClustering(df,mode='manual',select_cutoff=TRUE,min.nc=2,max.nc=20)
 ```
 
@@ -163,7 +163,8 @@ __The third mode__: `mode='ConsunsusClusterPlus'`; Blocks identification using `
 + `maxK`: maximum cluster number for ConsunsusClusterPlus
 + `cluster_num`: cluster number
 ``` r
-# return the ConsensusClustering object and a pdf file under the newly generated directory 'ConsensusClusteringResult'
+# cluster number evaluation through NbClust
+# return the ConsensusClustering object and a pdf file under the newly generated directory 'ConsensusClusteringResult', required for the next step
 ConsensusClustering_result=SimilarityClustering(df,mode='ConsunsusClusterPlus',select_cutoff=TRUE,maxK=15)
 ```
 ``` r
