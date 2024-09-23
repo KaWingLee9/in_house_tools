@@ -243,11 +243,11 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                               
 # SimilarityClustering - Blocks division in similarity heatmap
 # Required packages: NbClust, simplifyEnrichment, ComplexHeatmap, ConsensusClusterPlus
-SimilarityClustering=function(data,mode='automatic',select.cutoff=FALSE,similarity.method='pearson',
-                           provided_label=NA,
-                           min.nc=2,max.nc=15,cluster_num=0,
-                           cutoff.seq=seq(0.6,0.98,by=0.01),cutoff=0.85,
-                           maxK=10,use.fastcluster=FALSE,hc.method='ward.D2',...){
+SimilarityClustering=function(data,mode='automatic',select.cutoff=FALSE,
+                              similarity.method='pearson',use.fastcluster=FALSE,hc.method='ward.D2',
+                              provided_label=NA,min.nc=2,max.nc=15,show_index_result=NA,cluster_num=0,
+                              cutoff.seq=seq(0.6,0.98,by=0.01),cutoff=0.85,
+                              maxK=10,...){
         
   library(ComplexHeatmap)
 
@@ -315,39 +315,51 @@ SimilarityClustering=function(data,mode='automatic',select.cutoff=FALSE,similari
         
   if (mode=='manual'){
       
-    diss_mat=-similarity_matrix
+    diss_mat=1-similarity_matrix
       
     if (select.cutoff){
-        test_index_1=c("kl","ch","hartigan","ccc","scott","marriot","trcovw","tracew","friedman","rubin",
-                        "cindex", "db", "silhouette", 
-                        "duda", "pseudot2", "beale", 
-                        "ratkowsky", "ball", "ptbiserial", "gap", "frey", "mcclain", 
-                        "gamma", "gplus", "tau", "dunn","sdindex","sdbw")
         
-        test_index_2=c("hubert","dindex")
-        print(sapply(test_index_1,function(x){
-            res=try({
-                y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
-                                   method=hc.method,alphaBeale=0.1,index=x)                
-            },silent=TRUE)
-            if (inherits(res,'try-error')) {return(NULL)}
-            return(y$Best.nc[['Number_clusters']])
-        }))
-
-        sapply(test_index_2,function(x){
-            res=try({
-                  y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
-                     method=hc.method,alphaBeale=0.1,index=x)
-            },silent=TRUE)
-            if (inherits(res,'try-error')) {return(NULL)}
-            return(NULL)
-        })
+        if (is.na(show_index_result)){
             
-      return(NULL)
+            test_index_1=c("kl","ch","hartigan","ccc","scott","marriot","trcovw","tracew","friedman","rubin",
+                            "cindex", "db", "silhouette", 
+                            "duda", "pseudot2", "beale", 
+                            "ratkowsky", "ball", "ptbiserial", "gap", "frey", "mcclain", 
+                            "gamma", "gplus", "tau", "dunn","sdindex","sdbw")
+            
+
+            test_index_2=c("hubert","dindex")
+            
+            print(sapply(test_index_1,function(x){
+                res=try({
+                    y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
+                                       method=hc.method,alphaBeale=0.1,index=x)                
+                },silent=TRUE)
+                if (inherits(res,'try-error')) {return(NULL)}
+                return(y$Best.nc[['Number_clusters']])
+            }))
+
+            sapply(test_index_2,function(x){
+                res=try({
+                      y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
+                         method=hc.method,alphaBeale=0.1,index=x)
+                },silent=TRUE)
+                if (inherits(res,'try-error')) {return(NULL)}
+                return(NULL)
+            })
+
+          return(NULL)
+        } else {
+            
+            y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
+                   method=hc.method,alphaBeale=0.1,index=show_index_result)
+            plot(min.nc:max.nc,y[['All.index']],xlab='Cluster number',ylab=show_index_result)
+            
+        }
+        
+        
 
     } else {
-#       hc=hclust(dist(df),method=hc.method)
-      
       
       if (!is.na(provided_label)){
           c=as.factor(provided_label)
