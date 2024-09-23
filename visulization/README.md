@@ -127,10 +127,12 @@ There are three `mode`s for blocks identification with similarity matrix: `mode`
 __The first mode__: `mode='manual'`; Manually determine cluster number using `ward.D2` hierarchical clustering method. Clstering effects are assessed by `NbClust`.  
 + `min.nc`, `max.nc`: minimum and maximum cluster number for `NbClust`
 + `cluster_num`: cluster number
-  ``` r
+
+``` r
 # cluster number evaluation through simplifyEnrichment
 SimilarityClustering(df,mode='manual',select_cutoff=TRUE,min.nc=2,max.nc=20)
 ```
+
 ```r
 # return the cluster assignment
 c1=SimilarityClustering(df,mode='manual',cluster_num=4)
