@@ -135,7 +135,7 @@ SimilarityClustering(df,mode='manual',select_cutoff=TRUE,min.nc=2,max.nc=20)
 
 ```r
 # return the cluster assignment
-c1=SimilarityClustering(df,mode='manual',cluster_num=4)
+c1=SimilarityClustering(df,mode='manual',select_cutoff=FALSE,cluster_num=4)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c1.png">
