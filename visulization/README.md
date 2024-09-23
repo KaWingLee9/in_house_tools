@@ -163,7 +163,7 @@ __The third mode__: `mode='ConsunsusClusterPlus'`; Blocks identification using `
 + `maxK`: maximum cluster number for ConsunsusClusterPlus
 + `cluster_num`: cluster number
 ``` r
-# cluster number evaluation through NbClust
+# cluster number evaluation through ConsunsusClusterPlus
 # return the ConsensusClustering object and a pdf file under the newly generated directory 'ConsensusClusteringResult', required for the next step
 ConsensusClustering_result=SimilarityClustering(df,mode='ConsunsusClusterPlus',select_cutoff=TRUE,maxK=15)
 ```
