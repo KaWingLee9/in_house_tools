@@ -126,7 +126,11 @@ There are three `mode`s for blocks identification with similarity matrix: `mode`
 
 __The first mode__: `mode='manual'`; Manually determine cluster number using `ward.D2` hierarchical clustering method. Clstering effects are assessed by `NbClust`.  
 + `min.nc`, `max.nc`: minimum and maximum cluster number for `NbClust`
-+ `cluster_num`: cluster number  
++ `cluster_num`: cluster number
+  ``` r
+# cluster number evaluation through simplifyEnrichment
+SimilarityClustering(df,mode='manual',select_cutoff=TRUE,min.nc=2,max.nc=20)
+```
 ```r
 # return the cluster assignment
 c1=SimilarityClustering(df,mode='manual',cluster_num=4)
@@ -138,7 +142,8 @@ c1=SimilarityClustering(df,mode='manual',cluster_num=4)
 __The second mode__: (Default) `mode='automatic'`; Automatically blocks division. Clstering effects are assessed by `simplifyEnrichment`.  
 Clustering performance with different cutoff. Lower cutoff -> More clusters.
 ``` r
-SimilarityClustering(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
+# cluster number evaluation through simplifyEnrichment
+SimilarityClustering(df,mode='automatic',select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_select_cutoff.png">
@@ -146,7 +151,7 @@ SimilarityClustering(df,automatic_clustering=TRUE,select_cutoff=TRUE,cutoff_seq=
 
 ``` r
 # return the cluster assignment
-c2=SimilarityClustering(df,automatic_clustering=TRUE,select_cutoff=FALSE,cutoff=0.52)
+c2=SimilarityClustering(df,mode='automatic',select_cutoff=FALSE,cutoff=0.52)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c2.png">
