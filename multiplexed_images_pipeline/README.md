@@ -50,7 +50,7 @@ Protein expression quantification, data normalization, cell type clustering, cel
 __Reference__: Rendeiro, A.F., Ravichandran, H., Bram, Y. et al. The spatial landscape of lung pathology during COVID-19 progression. Nature 593, 564–569 (2021). https://doi.org/10.1038/s41586-021-03475-6  
 
 
-Next, `SOAPy` could be used for further spatial-related analysis.  
+__Next, `SOAPy` could be used for further spatial-related analysis!__  
 
 ## Data generation from different plaforms
 ### IMC (Imaging mass cytometry)
