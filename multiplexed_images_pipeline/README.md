@@ -32,7 +32,7 @@ in_mem_marker_kwargs = {'mem_channel_1': ['PanCK','CK6','CK17','EGFR','Beta_cate
                         'mem_channel_3':['SMA','Vimentin','CD31'],
                         'mem_channel_2': ['CD45','CD3', 'CD68',  'CD8A', 'MPO']}
 
-file='./Point4.tiff'
+file='./Point28.tiff'
 img_multipledxed=tifffile.imread(file)
 # remove the highest and lowest 2% of the pixels
 img_norm=Denoise_img(img_multipledxed,98)
@@ -49,6 +49,28 @@ __Reference__: Greenwald, N.F., Miller, G., Moen, E. et al. Whole-cell segmentat
 Protein expression quantification, data normalization, cell type clustering, cell location, cell morphology, in-situ visualization etc. could be done using this pipeline (See `.ipynb`). Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input.  
 __Reference__: Rendeiro, A.F., Ravichandran, H., Bram, Y. et al. The spatial landscape of lung pathology during COVID-19 progression. Nature 593, 564–569 (2021). https://doi.org/10.1038/s41586-021-03475-6  
 
+```r
+# Visualization
+# show staining image with or without cell boundary
+color_panel={'red': 'CD3',
+             'green':'Vimentin',
+             'blue':'PanCK'}
+pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=True)
+pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=False)
+
+# show cell types assignment
+
+```
+
+Parameters of `plot_pixel`:  
++ `adata`
++ `color_panel`: a dictionary for color assignment. Keys could only be `red`, `green`, `blue`, `magenta`, `cyan`, `yellow`, `white`  
++ `max_quantile`: the maximum quantile signals to filter out
++ `show_boundary`: whether to show cell boundary
+Parameters of `plot_cell`:
++ `adata`
++ `tag`: column name of `adata.obs`
++ `col`: a dictionary for color assignment to the cell type
 
 __Next, `SOAPy` could be used for further spatial-related analysis!__  
 
@@ -62,7 +84,7 @@ import numpy as np
 import tifffile
 from readimc import TXTFile
 
-file='./Point4.tiff'
+file='./Point28.tiff'
 with TXTFile(file) as f:
     img=f.read_acquisition()
 tifffile.imwrite(file.split('.')[0]+'_mask.tiff',data=img)
