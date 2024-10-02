@@ -62,9 +62,9 @@ pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=False)
 
 ```
 <div align="center">
-  <img height="400" width="250" src="Visualization1.png">
-  <img height="400" width="250" src="Visualization2.png">
-  <img height="400" width="250" src="Visualization3.png">
+  <img height="250" width="250" src="Visualization1.png">
+  <img height="250" width="250" src="Visualization2.png">
+  <img height="250" width="250" src="Visualization3.png">
 </div>
 
 Parameters of `plot_pixel`:  
