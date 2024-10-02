@@ -61,12 +61,19 @@ pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=False)
 # show cell types assignment
 
 ```
+<p align="center">
+  <img height="400" src="Visualization1.png">
+</p><p align="center">
+  <img height="400" src="Visualization2.png">
+</p><p align="center">
+  <img height="400" src="Visualization3.png">
+</p>
 
 Parameters of `plot_pixel`:  
 + `adata`
 + `color_panel`: a dictionary for color assignment. Keys could only be `red`, `green`, `blue`, `magenta`, `cyan`, `yellow`, `white`  
 + `max_quantile`: the maximum quantile signals to filter out
-+ `show_boundary`: whether to show cell boundary
++ `show_boundary`: whether to show cell boundary  
 Parameters of `plot_cell`:
 + `adata`
 + `tag`: column name of `adata.obs`
