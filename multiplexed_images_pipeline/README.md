@@ -61,13 +61,11 @@ pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=False)
 # show cell types assignment
 
 ```
-<p align="center">
-  <img height="400" src="Visualization1.png">
-</p><p align="center">
-  <img height="400" src="Visualization2.png">
-</p><p align="center">
-  <img height="400" src="Visualization3.png">
-</p>
+<div align="center">
+  <img height="400" width="380" src="Visualization1.png">
+  <img height="400" width="380" src="Visualization2.png">
+  <img height="400" width="380" src="Visualization3.png">
+</div>
 
 Parameters of `plot_pixel`:  
 + `adata`
