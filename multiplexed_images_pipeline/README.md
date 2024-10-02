@@ -71,8 +71,9 @@ Parameters of `plot_pixel`:
 + `adata`
 + `color_panel`: a dictionary for color assignment. Keys could only be `red`, `green`, `blue`, `magenta`, `cyan`, `yellow`, `white`  
 + `max_quantile`: the maximum quantile signals to filter out
-+ `show_boundary`: whether to show cell boundary  
-Parameters of `plot_cell`:
++ `show_boundary`: whether to show cell boundary
+
+Parameters of `plot_cell`:  
 + `adata`
 + `tag`: column name of `adata.obs`
 + `col`: a dictionary for color assignment to the cell type
