@@ -59,7 +59,7 @@ pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=True)
 pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=False)
 
 # show cell types assignment
-
+plot_cell(adata,tag='cluster')
 ```
 <div align="center">
   <img height="255" width="250" src="Visualization1.png">
