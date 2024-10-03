@@ -14,8 +14,6 @@ import tifffile
 from PIL import Image
 from deepcell.utils.plot_utils import create_rgb_image, make_outline_overlay
 from deepcell_toolbox import erode_edges
-# from skimage.exposure import rescale_intensity
-# from skimage.measure import label, regionprops, regionprops_table
 
 from mesmer_function import *
 from deepcell.applications import Mesmer
