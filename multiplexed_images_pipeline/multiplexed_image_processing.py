@@ -1,3 +1,5 @@
+# Author: Jiarong Li, Zhixuan Tang, Jiao Yuan, Heqi Wang
+
 # Tutorial
 # colors could be used for `pseudo_color`, `plot_pixel`: white, red, green, blue, yellow, magenta, cyan
 # `show_legend` in `plot_pixel`: whether to show legend of the markers; if False, the output image has the same size with the raw one
