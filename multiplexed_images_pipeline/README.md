@@ -42,7 +42,7 @@ tifffile.imwrite(file.split('.')[0]+'_mask.tiff', segmentation_predictions[0,:,:
 ```
 
 __Note__: `iamge_mpp` in `app.predict` specifies the resolution of the image (aka $\mu m$ of each pixel).  
-IMC: 1, MIBI_TOF: 0.5  
+`IMC`: 1, `MIBI_TOF`: 0.5  
 __Reference__: Greenwald, N.F., Miller, G., Moen, E. et al. Whole-cell segmentation of tissue images with human-level performance using large-scale data annotation and deep learning. Nat Biotechnol 40, 555–565 (2022). https://doi.org/10.1038/s41587-021-01094-0
 ## Expression quantification, cell type classification and in-situ visualization
 Protein expression quantification, data normalization, cell type clustering, cell location, cell morphology, in-situ visualization etc. could be done using this pipeline (See `.ipynb`). Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input.  
