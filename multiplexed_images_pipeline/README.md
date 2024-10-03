@@ -14,9 +14,10 @@ import tifffile
 import skimage
 from deepcell.utils.plot_utils import create_rgb_image, make_outline_overlay
 from deepcell_toolbox import erode_edges
-
-from mesmer_function import *
 from deepcell.applications import Mesmer
+# import in-house defined functions
+from mesmer_function import *
+
 app = Mesmer()
 
 # The order of the image and the marker_list must be the same
