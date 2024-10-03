@@ -109,7 +109,8 @@ Parameters of `pct2adata`:
 + `mask`: single cell segmentation tiff file  
 + `channel_names`: marker list for the multiplexed image
 + `exp_removed`: marker order to remove
-+ `max_quantile`: filter out the highest quantile of cell expression  
++ `max_quantile`: filter out the highest quantile of cell expression
+
 Return adata object: `adata.X` expression matrix; `adata.obs` cell morphology indicators (area, axis_major_length, axis_minor_length, eccentricity, solidity); `adata.obsm['spatial']` centroid coordinates of the cells.
 
 Parameters of `plot_pixel`:  
