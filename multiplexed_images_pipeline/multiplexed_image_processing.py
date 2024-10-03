@@ -1,4 +1,4 @@
-# Author: Jiarong Li, Zhixuan Tang, Jiao Yuan, Heqi Wang
+# Author: Jiarong Li (Kelvin Lee), Zhixuan Tang, Jiao Yuan, Heqi Wang
 
 # Tutorial
 # colors could be used for `pseudo_color`, `plot_pixel`: white, red, green, blue, yellow, magenta, cyan
