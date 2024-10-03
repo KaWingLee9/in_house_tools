@@ -79,6 +79,7 @@ Parameters of `plot_cell`:
 + `col`: a dictionary for color assignment to the cell type
 
 __Next, `SOAPy` could be used for further spatial-related analysis!__  
+https://github.com/LiHongCSBLab/SOAPy  
 
 ## Data generation from different plaforms
 ### IMC (Imaging mass cytometry)
