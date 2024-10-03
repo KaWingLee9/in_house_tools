@@ -69,11 +69,12 @@ adata=pct2adata(img,mask,channel_names=channel_names,
 # https://scanpy.readthedocs.io/en/stable/tutorials/basics/clustering-2017.html
 # https://scanpy.readthedocs.io/en/stable/tutorials/basics/clustering.html
 # https://scanpy.readthedocs.io/en/stable/tutorials/plotting/core.html
+
+# select markers for clustering
 var_for_clustering=['PanCK','CK6','CK17','EGFR','Beta_catenin',
                     'Vimentin','SMA','CD31',
                     'CD45','CD3','CD4','CD8','CD20','CD56',
                     'CD68','CD11b','CD11c','CD16','MPO','CD209']
-
 adata.uns['var_for_clustering']=var_for_clustering
 adata.var['highly_variable']=[True if i in var_for_clustering else False for i in adata.var_names]
 
