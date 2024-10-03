@@ -101,7 +101,7 @@ plot_cell(adata,tag='cluster')
 
 <div align="center">
   <img height="255" width="250" src="Visualization4.png">
-  <img height="255" width="250" src="Visualization5.png">
+  <img height="250" width="350" src="Visualization5.png">
 </div>
 
 <div align="center">
