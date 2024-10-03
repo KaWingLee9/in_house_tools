@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import tifffile
-from PIL import Image
+import skimage
 from deepcell.utils.plot_utils import create_rgb_image, make_outline_overlay
 from deepcell_toolbox import erode_edges
 
