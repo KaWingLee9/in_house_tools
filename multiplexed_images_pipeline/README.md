@@ -55,14 +55,13 @@ import matplotlib.pyplot as plt
 from multiplexed_image_processing import *
 plt.rcParams['figure.figsize']=(6,6)
 
+# generate anndata object, which could be adapted to scanpy based packages
 img=tifffile.imread('./Point28.tiff')
 mask=tifffile.imread('./Point28_mask.tiff')
-
 channel_names=['Au','Background','Beta_catenin','Ca','CD11b','CD11c','CD138','CD16','CD20','CD209','CD3',
  'CD31','CD4','CD45','CD45RO','CD56','CD63','CD68','CD8','dsDNA','EGFR','Fe','FoxP3','H3K27me3',
  'H3K9ac','HLA-DR','HLA-I','IDO','CK17','CK6','Ki67','Lag3','MPO','Na','P','p53','PanCK','PD-L1',
  'PD-1','pS6','Si','SMA','Ta','Vimentin']
-
 adata=pct2adata(img,mask,channel_names=channel_names,
                 exp_removed=[0,1,3,19,21,23,33,34,40,42])
 
