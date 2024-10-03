@@ -49,13 +49,51 @@ Protein expression quantification, data normalization, cell type clustering, cel
 __Reference__: Rendeiro, A.F., Ravichandran, H., Bram, Y. et al. The spatial landscape of lung pathology during COVID-19 progression. Nature 593, 564–569 (2021). https://doi.org/10.1038/s41586-021-03475-6  
 
 ```python
-# Visualization
-# show staining image with or without cell boundary
+import scanpy as sc
+import matplotlib.pyplot as plt
+# import in-house defined functions
+from multiplexed_image_processing import *
+plt.rcParams['figure.figsize']=(6,6)
+
+img=tifffile.imread('./Point28.tiff')
+mask=tifffile.imread('./Point28_mask.tiff')
+
+channel_names=['Au','Background','Beta_catenin','Ca','CD11b','CD11c','CD138','CD16','CD20','CD209','CD3',
+ 'CD31','CD4','CD45','CD45RO','CD56','CD63','CD68','CD8','dsDNA','EGFR','Fe','FoxP3','H3K27me3',
+ 'H3K9ac','HLA-DR','HLA-I','IDO','CK17','CK6','Ki67','Lag3','MPO','Na','P','p53','PanCK','PD-L1',
+ 'PD-1','pS6','Si','SMA','Ta','Vimentin']
+
+adata=pct2adata(img,mask,channel_names=channel_names,
+                exp_removed=[0,1,3,19,21,23,33,34,40,42])
+
+# cell type clustering and visualization in single-cell way; For details, refer to:
+# https://scanpy.readthedocs.io/en/stable/tutorials/basics/clustering-2017.html
+# https://scanpy.readthedocs.io/en/stable/tutorials/basics/clustering.html
+# https://scanpy.readthedocs.io/en/stable/tutorials/plotting/core.html
+var_for_clustering=['PanCK','CK6','CK17','EGFR','Beta_catenin',
+                    'Vimentin','SMA','CD31',
+                    'CD45','CD3','CD4','CD8','CD20','CD56',
+                    'CD68','CD11b','CD11c','CD16','MPO','CD209']
+
+adata.uns['var_for_clustering']=var_for_clustering
+adata.var['highly_variable']=[True if i in var_for_clustering else False for i in adata.var_names]
+
+sc.pp.scale(adata, max_value=10)
+sc.tl.pca(adata, svd_solver='arpack',use_highly_variable=True)
+sc.pp.neighbors(adata, n_neighbors=20, n_pcs=15)
+sc.tl.leiden(adata,resolution=0.5)
+sc.tl.umap(adata)
+
+# in-situ visualization (scanpy, recommended for extremely large image)
+sc.pl.spatial(adata,color='cluster',spot_size=15)
+sc.pl.spatial(adata,color='PanCK',spot_size=15)
+
+# staining image with or without cell boundary
 color_panel={'red': 'CD3',
              'green':'Vimentin',
              'blue':'PanCK'}
-pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=True)
-pseudo_color(adata,color_panel,max_quantile=0.98,show_boundary=False)
+plot_pixel(adata,color_panel,max_quantile=0.98,show_boundary=True)
+plot_pixel(adata,color_panel,max_quantile=0.98,show_boundary=False)
 
 # show cell types assignment
 plot_cell(adata,tag='cluster')
@@ -65,6 +103,13 @@ plot_cell(adata,tag='cluster')
   <img height="255" width="250" src="Visualization2.png">
   <img height="250" width="350" src="Visualization3.png">
 </div>
+
+Parameters of `pct2adata`:
++ `img`: multiplexed marker image tiff file  
++ `mask`: single cell segmentation tiff file  
++ `channel_names`: marker list for the multiplexed image
++ `exp_removed`: marker order to remove
++ `max_quantile`: filter out the highest quantile of cell expression  
 
 Parameters of `plot_pixel`:  
 + `adata`
