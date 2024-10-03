@@ -94,7 +94,6 @@ color_panel={'red': 'CD3',
              'blue':'PanCK'}
 plot_pixel(adata,color_panel,max_quantile=0.98,show_boundary=True)
 plot_pixel(adata,color_panel,max_quantile=0.98,show_boundary=False)
-
 # show cell types assignment
 plot_cell(adata,tag='cluster')
 ```
