@@ -116,7 +116,7 @@ Parameters of `pct2adata`:
 + `exp_removed`: marker order to remove
 + `max_quantile`: filter out the highest quantile of cell expression
 
-Return adata object: `adata.X` expression matrix; `adata.obs` cell morphology indicators (area, axis_major_length, axis_minor_length, eccentricity, solidity), which could be used for quality filter; `adata.obsm['spatial']` centroid coordinates of the cells.
+Return adata object: `adata.X` expression matrix; `adata.obs` cell morphology indicators (area, axis_major_length, axis_minor_length, eccentricity, solidity), which could be used for quality control; `adata.obsm['spatial']` centroid coordinates of the cells.
 
 Parameters of `plot_pixel`:  
 + `adata`
