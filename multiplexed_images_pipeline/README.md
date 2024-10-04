@@ -67,7 +67,7 @@ channel_names=['Au','Background','Beta_catenin','Ca','CD11b','CD11c','CD138','CD
 adata=pct2adata(img,mask,channel_names=channel_names,
                 exp_removed=[0,1,3,19,21,23,33,34,40,42])
 
-# cell type clustering and visualization in single-cell way; For details, refer to:
+# cell type clustering and visualization like scRNA-Seq data analysis; For details, refer to:
 # https://scanpy.readthedocs.io/en/stable/tutorials/basics/clustering-2017.html
 # https://scanpy.readthedocs.io/en/stable/tutorials/basics/clustering.html
 # https://scanpy.readthedocs.io/en/stable/tutorials/plotting/core.html
