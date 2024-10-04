@@ -38,7 +38,8 @@ CombnP=function(pval,ES,min_num=5,min_ratio=0.8,method='z.transform'){
     # return(c(con_length,length(pval),length(p_pos),length(p_neg)))
 }
 
-CombnP_DFLs=function(l,p_col='p_val',ES_col='log_fc',min_num=5,min_ratio=0.8,method='z.transform'){
+CombnP_DFLs=function(l,p_col='p_val',ES_col='log_fc',min_num=5,
+                     min_ratio=0.8,method='z.transform',ncores=30){
     
     # l: list of data frames
     # p_col: column name of p_val
@@ -49,13 +50,13 @@ CombnP_DFLs=function(l,p_col='p_val',ES_col='log_fc',min_num=5,min_ratio=0.8,met
     
     gene_names=unique(unlist(lapply(l,rownames)))
 
-    gene_test_result=lapply(gene_names,function(x){
+    gene_test_result=parallel::mclapply(gene_names,function(x){
         z=sapply(l,function(y){
             y=data.frame(y)
             y[x,c(p_col,ES_col)] %>% unlist
         }) %>% t() %>% data.frame()
         return(z)
-    })
+    },mc.cores=ncores)
 
     names(gene_test_result)=gene_names
     
