@@ -1,4 +1,73 @@
-# RankSum, RankProd
+# P-value combination
+CombnP=function(pval,ES,min_num=5,min_ratio=0.8,method='z.transform'){
+    
+    # pval: vector with pvals
+    # ES: vector with effect size (with sign)
+    # min_num: minimal study number with test result
+    # min_ratio: % of the results (ignoring NA) have consistent effect would be considered
+    # method: "fisher", "z.transform", "logit". Parameter passing to survcomp::combine.test
+    
+    # if (method=='z.transform'){
+    #     pval[pval==1]=0.99
+    # }
+    
+    pval_with_na=pval
+    
+    pval_without_na=pval[!is.na(pval)]
+    p_pos=pval[(ES>0) & (!is.na(pval))]
+    p_neg=pval[(ES<0) & (!is.na(pval))]
+    
+    if (length(p_pos)>=length(p_neg)){
+        con_length=length(p_pos)
+        p_sign=p_pos
+    }else{
+        con_length=length(p_neg)
+        p_sign=p_neg
+    }
+    
+    if ((length(pval_without_na)<min_num) | (con_length<length(pval_without_na)*min_ratio)){
+        combined_p=1
+    }else{
+        combined_p=survcomp::combine.test(p_sign,method=method)
+    }
+        
+    return(c('total_study'=length(pval_with_na),'available_study'=length(pval_without_na),
+             'sig_study'=con_length,
+             'percent_same_dir'=con_length/length(pval_without_na),
+             'mean_ES'=mean(ES,na.rm=TRUE),'combined_p'=combined_p))
+    # return(c(con_length,length(pval),length(p_pos),length(p_neg)))
+}
+
+CombnP_DFLs=function(l,p_col='p_val',ES_col='log_fc',min_num=5,min_ratio=0.8,method='z.transform'){
+    
+    # l: list of data frames
+    # p_col: column name of p_val
+    # ES_col: column name of ES
+    # min_num: minimal study number with result
+    # min_ratio: % of the results have consistent effect would be considered
+    # method: "fisher", "z.transform", "logit". Parameter passing to survcomp::combine.test
+    
+    gene_names=unique(unlist(lapply(l,rownames)))
+
+    gene_test_result=lapply(gene_names,function(x){
+        z=sapply(l,function(y){
+            y=data.frame(y)
+            y[x,c(p_col,ES_col)] %>% unlist
+        }) %>% t() %>% data.frame()
+        return(z)
+    })
+
+    names(gene_test_result)=gene_names
+    
+    test_result=sapply(gene_test_result,function(x){
+        CombnP(pval=x[,p_col],ES=x[,ES_col],min_num=min_num,min_ratio=min_ratio,method=method)
+    },USE.NAMES=TRUE) %>% t() %>% data.frame()
+    
+    return(test_result)
+    
+}
+
+# Rank combination
 CombRank=function(ES,up_rank,down_rank,min_num=5,min_ratio=0.8,method='RankProd'){
     
     # ES: vector with effect size (with sign)
