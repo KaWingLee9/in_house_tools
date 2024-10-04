@@ -9,4 +9,4 @@ https://github.com/KaWingLee9
 + [Custom R visualization functions](https://github.com/KaWingLee9/in_house_tools/tree/main/visulization)  
 + [Conver Seurat object (v4) to scanpy object (for both __single-cell__ and __spatial-omics__ data)](https://github.com/KaWingLee9/in_house_tools/tree/main/Seurat2Scanpy)
 + Clustering result assessment
-+ Meta analysis
++ [Meta analysis](https://github.com/KaWingLee9/in_house_tools/tree/main/meta_analysis)
