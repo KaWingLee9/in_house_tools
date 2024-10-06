@@ -1,5 +1,5 @@
 # Custom R visualization functions
-
+First import the customized functions.
 ``` r
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
 ```
