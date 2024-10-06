@@ -550,8 +550,6 @@ ResetOrder=function(df,by='row'){
 
 }
 
-
-# Volcano plot for single conditions
 # Volcano plot for single conditions
 DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
                         y='p_val',pCutoff=0.05,
