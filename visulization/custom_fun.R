@@ -549,3 +549,70 @@ ResetOrder=function(df,by='row'){
     }
 
 }
+
+
+# Volcano plot for single conditions
+# Volcano plot for single conditions
+DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
+                        y='p_val',pCutoff=0.05,
+                        col=c('red2','royalblue','grey30'), #
+                        selectLab=NULL){
+    library(ggplot2)
+    library(ggrepel)
+    library(EnhancedVolcano)
+    
+    keyvals=rep(col[3],length.out=nrow(deg_result))
+    names(keyvals)=rep('Unchaged',nrow(deg_result))
+
+    keyvals[which((deg_result[,x]>=FCcutoff) & (deg_result[,y]<=pCutoff))]=col[1]
+    names(keyvals)[which((deg_result[,x]>=FCcutoff) & (deg_result[,y]<=pCutoff))]='Higher expressed'
+
+    keyvals[which((deg_result[,x]<=FCcutoff) & (deg_result[,y]<=pCutoff))]=col[2]
+    names(keyvals)[which((deg_result[,x]<=-FCcutoff) & (deg_result[,y]<=pCutoff))]='Lower expressed'
+
+    p=EnhancedVolcano(deg_result,
+                lab=rownames(deg_result),
+                x=x,FCcutoff=FCcutoff,
+                y=y,pCutoff=pCutoff,
+                colCustom=keyvals,
+               selectLab=selectLab,
+               drawConnectors = TRUE,arrowheads=FALSE,
+                    title=NULL,subtitle=NULL
+               )
+
+    p=p+scale_color_manual(limits=c('Lower expressed','Unchaged','Higher expressed'),values=c(col[2],col[3],col[1]))
+
+    return(p)
+}
+
+# Volcano plot for multiple conditions
+Draw_MVolcano=function(df,x_col,y_col,gene_col,cluster_col,selected_gene=NULL,yintercept=0,
+                       nudge_x=0.8,pnudge_y=0.25,nnudge_y=0,pforce=5,nforce=2.5,nrow=1){
+    
+    # this function is edited from scRNAtools::markerVolcano, all credits belongs to https://github.com/junjunlab/scRNAtoolVis
+    
+    library(ggplot2)
+    library(ggrepel)
+    
+    df_selected=df[ df[,gene_col] %in% selected_gene,]
+    
+    ggplot(df,aes_string(x=x_col,y=y_col))+
+        geom_point(color="grey80")+
+        geom_hline(yintercept=yintercept,lty="dashed",size=1,color='grey50')+
+#         ggrepel::geom_text_repel(data=toppos,aes_string(label=gene_col,color=cluster_col),
+#                                  show.legend=FALSE,direction="y",hjust=1,nudge_y=pnudge_y,
+#                                  force=pforce,nudge_x=-nudge_x-toppos[,x_col])+
+#         ggrepel::geom_text_repel(data=topneg,aes_string(label=gene_col,color=cluster_col),
+#                                  show.legend=FALSE,direction="y",hjust=0,nudge_y=nnudge_y,
+#                                  force=nforce,nudge_x=nudge_x-topneg[,x_col])+
+        ggrepel::geom_text_repel(data=df_selected,
+                                 aes_string(label=gene_col,color=cluster_col),
+                                 show.legend=FALSE,direction="y",hjust=1,nudge_y=nnudge_y,
+                                 force=nforce,# nudge_x=-nudge_x+df[,x_col]
+                                 max.overlaps=100
+                                )+
+        geom_point(data=df_selected,show.legend=FALSE,aes_string(color=cluster_col))+
+        facet_grid(eval(parse(text=".~get(cluster_col)")),scale="free")+
+        theme_bw(base_size=14)+
+        theme(panel.grid=element_blank(),axis.text.x=element_text(angle=45,hjust=1),strip.background=element_rect(color=NA,fill='white')) 
+}
