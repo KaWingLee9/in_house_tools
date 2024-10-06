@@ -11,7 +11,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [Other tips for clustering](#heatmap3)  
   Reorder row/column order of the table for heatmap visualization  
   Combine clusters
-+ [Differential expression visualization](#DEG)
++ [Differential expression visualization](#deg)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 __Required packages__: Hmisc, dendsort  
@@ -227,4 +227,4 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
   <img height="400" src="pct/Reorder_cluster.png">
 </p>
 
-## <a name="DEG">Differential expression visualization</a>
+## <a name="deg">Differential expression visualization</a>
