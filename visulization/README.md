@@ -227,4 +227,4 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
   <img height="400" src="pct/Reorder_cluster.png">
 </p>
 
-## <a name="DEG">CorPlot - Differential expression visualization</a>
+## <a name="DEG">Differential expression visualization</a>
