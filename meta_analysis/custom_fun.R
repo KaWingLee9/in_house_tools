@@ -112,7 +112,8 @@ CombRank=function(ES,up_rank,down_rank,min_num=5,min_ratio=0.8,method='RankProd'
     return(c('total_study'=total_num,'available_study'=na_removed_num,
              'sig_study'=con_length,
              'percent_same_dir'=con_length/na_removed_num,
-             'mean_ES'=mean(ES,na.rm=TRUE),'combined_rank'=rank_combined))
+             'mean_ES'=mean(ES,na.rm=TRUE),'combined_rank'=rank_combined,
+             'signed_combined_rank'=sign(mean(ES,na.rm=TRUE))*rank_combined))
     
 }
 
