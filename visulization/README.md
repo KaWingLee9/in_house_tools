@@ -132,6 +132,7 @@ __The first mode__: `mode='manual'`; Manually determine cluster number using `wa
 ``` r
 # cluster number evaluation through NbClust
 SimilarityClustering(df,mode='manual',select_cutoff=TRUE,min.nc=2,max.nc=20)
+# SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20,show_index_result='dunn')
 ```
 
 ```r
