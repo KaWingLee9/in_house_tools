@@ -142,10 +142,10 @@ CombRank_DFLs=function(l,p_col='p_val',ES_col='log_fc',
         ES=sapply(l_niche,function(x){z=x[y,ES_col]})
         up_rank=sapply(rank_ls,function(x){z=x[y,'up_rank']})
         down_rank=sapply(rank_ls,function(x){z=x[y,'down_rank']})
-        CombRank(ES,up_rank,down_rank)
+        CombRank(ES,up_rank,down_rank,min_num=min_num,min_ratio=min_ratio,method=method)
     },mc.cores=ncores) %>% dplyr::bind_rows()
-
     rownames(test_result)=gene_names
+    
     return(test_result)
     
 }
