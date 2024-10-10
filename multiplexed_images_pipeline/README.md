@@ -86,7 +86,7 @@ sc.pp.neighbors(adata, n_neighbors=20, n_pcs=15)
 sc.tl.leiden(adata,resolution=0.5)
 sc.tl.umap(adata)
 
-# in-situ visualization (scanpy, recommended for extremely large image)
+# in-situ visualization (scanpy, recommended for extremely large images)
 sc.pl.spatial(adata,color='cluster',spot_size=15)
 sc.pl.spatial(adata,color='PanCK',spot_size=15)
 
@@ -99,6 +99,7 @@ plot_pixel(adata,color_panel,max_quantile=0.98,show_boundary=False)
 # show cell types assignment
 plot_cell(adata,tag='cluster')
 ```
+Results of in-situ visualization:  
 
 <div align="center">
   <img height="255" width="350" src="Visualization4.png">
