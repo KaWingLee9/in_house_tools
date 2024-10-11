@@ -151,6 +151,7 @@ CombRank_DFLs=function(l,p_col='p_val',ES_col='log_fc',
 }
 
 
+# The following codes are from ACAT (https://github.com/yaowuliu/ACAT/)
 #'
 #' Aggregated Cauchy Assocaition Test
 #'
@@ -319,7 +320,6 @@ ACAT_V<-function(G,obj,weights.beta=c(1,25),weights=NULL,mac.thresh=10){
     return(pval)
 }
 
-# The following codes are from ACAT (https://github.com/yaowuliu/ACAT/)
 #'
 #'
 #' Get parameters and residuals from the NULL model
