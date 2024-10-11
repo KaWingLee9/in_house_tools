@@ -150,8 +150,7 @@ CombRank_DFLs=function(l,p_col='p_val',ES_col='log_fc',
     
 }
 
-
-# The following codes are from ACAT (https://github.com/yaowuliu/ACAT/)
+# The following codes about ACAT are completely copied from (https://github.com/yaowuliu/ACAT/) for convenience, all credits goes to the author
 #'
 #' Aggregated Cauchy Assocaition Test
 #'
