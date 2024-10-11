@@ -193,7 +193,7 @@ __Reference__:
 [4] Matthew D. Wilkerson, D. Neil Hayes, ConsensusClusterPlus: a class discovery tool with confidence assessments and item tracking, Bioinformatics, Volume 26, Issue 12, June 2010, Pages 1572–1573, https://doi.org/10.1093/bioinformatics/btq170  
 
 ## <a name="heatmap3">Other tips for clustering</a>
-`ResetOrder`: Reorder row/column order of the table for heatmap visualization (to make the heatmap more "diagonal").
+`ResetOrder`: Reorder row/column order of the table for heatmap visualization (to make the heatmap more "diagonal"). Also suitable for alluvial plot.
 ``` r
 # raw matrix
 p1=Heatmap(df,name='Percantage',clustering_method_rows='ward.D2',cluster_columns=FALSE,cluster_rows=FALSE,
