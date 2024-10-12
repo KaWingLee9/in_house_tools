@@ -119,7 +119,7 @@ CombRank=function(ES,up_rank,down_rank,min_num=5,min_ratio=0.8,method='RankProd'
 
 CombRank_DFLs=function(l,p_col='p_val',ES_col='log_fc',
                        min_num=5,min_ratio=0.8,method='RankProd',
-                       ncores=30){
+                       ncores=30,quantile_est=1/3){
     
     # l: list of data frames
     # p_col: column name of p_val
@@ -145,14 +145,17 @@ CombRank_DFLs=function(l,p_col='p_val',ES_col='log_fc',
         CombRank(ES,up_rank,down_rank,min_num=min_num,min_ratio=min_ratio,method=method)
     },mc.cores=ncores) %>% dplyr::bind_rows()
 
-    test_result[,'median_pval']=parallel::mclapply(gene_names,function(y){
-        median( sapply(l,function(x){z=x[y,p_col]}) ,na.rm=TRUE)
+    test_result[,'quantile_pval']=parallel::mclapply(gene_names,function(y){
+        quantile( sapply(l,function(x){z=x[y,p_col]}), probs=quantile_est,na.rm=TRUE)
     },mc.cores=ncores)  %>% unlist()
-    
+
+    test_result[,'quantile_ES']=parallel::mclapply(gene_names,function(y){
+        quantile( sapply(l,function(x){z=x[y,ES_col]}), probs=quantile_est,na.rm=TRUE)
+    },mc.cores=ncores)  %>% unlist()
+
     rownames(test_result)=gene_names
     return(test_result)
     
-}
 
 # The following codes about ACAT are completely copied from (https://github.com/yaowuliu/ACAT/) for convenience, all credits goes to the author
 #'
