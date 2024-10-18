@@ -7,6 +7,7 @@ __Reference__:
 [2] Liu Y, Chen S, Li Z, Morrison AC, Boerwinkle E, Lin X. ACAT: A Fast and Powerful p Value Combination Method for Rare-Variant Analysis in Sequencing Studies. Am J Hum Genet. 2019 Mar 7;104(3):410-421. doi: 10.1016/j.ajhg.2019.01.002.  
 
 ## Rank combination
+Combine the rank of P-value.
 'Combined rank - Mean effect size' plot could be used for visualization, just as volcano plot:  
 
 `signed_combined_rank` could be used for GSEA.  
