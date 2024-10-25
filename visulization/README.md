@@ -237,3 +237,16 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
 ## <a name="forest">Forest plot for multiple types of regression model</a>
 
 ### Logistics regression model
+``` r
+# load data
+data(Affairs,package='AER')
+Affairs$ynaffairs[Affairs$affairs>0]<-1
+Affairs$ynaffairs[Affairs$affairs==0]<-0
+Affairs$ynaffairs <- factor(Affairs$ynaffairs,
+                            levels = c(0,1),
+                            labels = c("No","yes"))
+
+logistic_model=glm(ynaffairs~age+children+education+gender+occupation+rating+religiousness+yearsmarried,
+                   data=Affairs,
+                   family=binomial())
+```
