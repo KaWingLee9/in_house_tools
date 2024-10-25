@@ -12,6 +12,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
   Reorder row/column order of the table for heatmap visualization  
   Combine clusters
 + [Differential expression visualization](#deg)
++ [Forest plot for multiple types of regression model](#forest)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 __Required packages__: Hmisc, dendsort  
@@ -232,3 +233,5 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
 </p>
 
 ## <a name="deg">Differential expression visualization</a>
+
+## <a name="forest">Forest plot for multiple types of regression model</a>
