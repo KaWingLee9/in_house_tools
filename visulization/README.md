@@ -252,3 +252,8 @@ logistic_model=glm(ynaffairs~age+children+education+gender+occupation+rating+rel
 ```
 
 ### Cox regression model
+
+### For multiple models
+
+### For meta analysis result
+
