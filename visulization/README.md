@@ -235,3 +235,5 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
 ## <a name="deg">Differential expression visualization</a>
 
 ## <a name="forest">Forest plot for multiple types of regression model</a>
+
+### Logistics regression model
