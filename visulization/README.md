@@ -250,3 +250,5 @@ logistic_model=glm(ynaffairs~age+children+education+gender+occupation+rating+rel
                    data=Affairs,
                    family=binomial())
 ```
+
+### Cox regression model
