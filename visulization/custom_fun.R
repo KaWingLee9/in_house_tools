@@ -614,3 +614,66 @@ Draw_MVolcano=function(df,x_col,y_col,gene_col,cluster_col,selected_gene=NULL,yi
         theme_bw(base_size=14)+
         theme(panel.grid=element_blank(),axis.text.x=element_text(angle=45,hjust=1),strip.background=element_rect(color=NA,fill='white')) 
 }
+
+                              ForestPlot_single=function(reg_model,point.size=1){
+    
+    
+    coef_int=confint(reg_model)
+    colnames(coef_int)=c('lower_limit','higher_limit')
+    coef_int=data.frame(coef_int)
+    coef_int=na.omit(coef_int)
+
+    coef_int[,'coef']=coef(reg_model)[rownames(coef_int)]
+    
+    # model-specific settings
+    if (inherits(reg_model,'coxph')){
+        coef_int=exp(coef_int)
+        x_title='Hazard Ratio'
+        x_line=1
+    } else if (inherits(reg_model,'glm')){
+        
+        if (reg_model$family$family=='bionomial'){
+            
+        }
+     
+        
+    }
+    
+    coef_int[,'variable']=rownames(coef_int)
+    coef_int[,'pvalue']=summary(reg_model)$coefficients[rownames(coef_int),'Pr(>|z|)']
+    if (0 %in% coef_int[,'pvalue']){
+        coef_int[ coef_int[,'pvalue']==0 ,'pvalue']='<2e-16'
+    }
+    coef_int[,'pvalue']=paste0('P = ',coef_int[,'pvalue'])
+    coef_int[,'pvalue']=gsub('= <','< ',coef_int[,'pvalue'])
+    
+    x_min=min(coef_int[,'lower_limit'],na.rm=TRUE)
+    x_max=max(coef_int[,'higher_limit'],na.rm=TRUE)
+    coef_int[,'x_pvalue']=x_max+(x_max-x_min)*0.5
+    
+    # setting coordinates
+#     plotrange=c(x_min-(x_max-x_min)*2/3,x_max+(x_max-x_min)*0.15)
+    
+    p1=ggplot(coef_int)+
+        geom_segment(aes(x=lower_limit,xend=higher_limit,y=variable,yend=variable),
+                     arrow=arrow(ends='both',angle=90,length=unit(0.1,'cm')) )+
+        geom_point(aes(x=coef,y=variable),size=point.size,shape=15)+
+        geom_text(aes(x=x_pvalue,y=variable,label=pvalue),hjust=0)+
+        xlab(x_title)+
+        ylab('')+
+        geom_vline(xintercept=x_line,color='red',linetype='dashed')+
+        scale_x_log10(breaks=scales::trans_breaks('log10',function(x){10^x}),
+                      labels=scales::trans_format('log10',scales::math_format(10^.x))
+                      )+
+        theme_bw()+
+        coord_cartesian(xlim=c(x_min,x_max+ ( (x_max-x_min)*(10^20) )))
+    
+#     p2=ggplot(coef_int)+
+#         geom_label(aes(y=variable,x=0,label=pvalue),)+
+#         xlim(c(-0.01,0.01))+
+#         theme_classic()+
+#         theme()
+    
+    return(p1)
+    
+}
