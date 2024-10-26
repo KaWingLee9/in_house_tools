@@ -124,7 +124,7 @@ GSM330157.CEL	3.459388	3.063286	9.591018	5.982854	4.619444
 GSM330171.CEL	3.598589	3.307543	9.863687	5.779449	3.352696
 ```
 The following codes are for samples clustering. You can input transposed expression matrix for genes clustering.  
-There are three `mode`s for blocks identification with similarity matrix: `mode`=c(`manual`, `automatic`, `ConsunsusClusterPlus`). For each mode, `select_cutoff=TRUE` presents the effects under different cluster assignment parameters.
+There are three `mode`s for blocks identification with similarity matrix: `mode`=c(`manual`, `automatic`, `ConsunsusClusterPlus`). For each mode, `select.cutoff=TRUE` presents the effects under different cluster assignment parameters.
 
 __The first mode__: `mode='manual'`; Manually determine cluster number using `ward.D2` hierarchical clustering method. Clstering effects are assessed by `NbClust`.  
 + `min.nc`, `max.nc`: minimum and maximum cluster number for `NbClust`
@@ -132,16 +132,16 @@ __The first mode__: `mode='manual'`; Manually determine cluster number using `wa
 
 ``` r
 # cluster number evaluation through NbClust
-SimilarityClustering(df,mode='manual',select_cutoff=TRUE,min.nc=2,max.nc=20)
+SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20)
 # specific clustering result evaluation indicatior
-# SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20,show_index_result='dunn')
+# SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20,show.index.result='dunn')
 ```
 
 ```r
 # return the cluster assignment
 c1=SimilarityClustering(df,mode='manual',select_cutoff=FALSE,cluster_num=4)
 # plot using provided label
-# c1=SimilarityClustering(df,mode='manual',select.cutoff=FALSE,provided_label=c1)
+# c1=SimilarityClustering(df,mode='manual',select.cutoff=FALSE,provided.label=c1)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c1.png">
@@ -151,7 +151,7 @@ __The second mode__: (Default) `mode='automatic'`; Automatically blocks division
 Clustering performance with different cutoff. Lower cutoff -> More clusters.
 ``` r
 # cluster number evaluation through simplifyEnrichment
-SimilarityClustering(df,mode='automatic',select_cutoff=TRUE,cutoff_seq=seq(0.5,0.8,by=0.01))
+SimilarityClustering(df,mode='automatic',select.cutoff=TRUE,cutoff.seq=seq(0.5,0.8,by=0.01))
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_select_cutoff.png">
@@ -159,7 +159,7 @@ SimilarityClustering(df,mode='automatic',select_cutoff=TRUE,cutoff_seq=seq(0.5,0
 
 ``` r
 # return the cluster assignment
-c2=SimilarityClustering(df,mode='automatic',select_cutoff=FALSE,cutoff=0.52)
+c2=SimilarityClustering(df,mode='automatic',select.cutoff=FALSE,cutoff=0.52)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c2.png">
@@ -171,11 +171,11 @@ __The third mode__: `mode='ConsunsusClusterPlus'`; Blocks identification using `
 ``` r
 # cluster number evaluation through ConsunsusClusterPlus
 # return the ConsensusClustering object and a pdf file under the newly generated directory 'ConsensusClusteringResult', required for the next step
-ConsensusClustering_result=SimilarityClustering(df,mode='ConsunsusClusterPlus',select_cutoff=TRUE,maxK=15)
+ConsensusClustering_result=SimilarityClustering(df,mode='ConsunsusClusterPlus',select.cutoff=TRUE,maxK=15)
 ```
 ``` r
 # return the cluster assignment
-c3=SimilarityClustering(ConsensusClustering_result,mode='ConsunsusClusterPlus',select_cutoff=FALSE,cluster_num=13)
+c3=SimilarityClustering(ConsensusClustering_result,mode='ConsunsusClusterPlus',select.cutoff=FALSE,cluster.num=13)
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c3.png">
