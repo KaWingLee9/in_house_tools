@@ -2,7 +2,7 @@
 
 ## Rank combination
 Combine the rank of P-value.
-'Combined rank - Mean effect size' plot could be used for visualization, just as volcano plot:  
+'Combined rank - Median effect size' plot could be used for visualization, just as volcano plot:  
 
 `signed_combined_rank` could be used for GSEA.  
 __Citation__: -  
