@@ -93,6 +93,7 @@ CombRank=function(ES,up_rank,down_rank,min_num=5,min_ratio=0.8,method='RankProd'
     # if ((na_removed_num<10) | (con_length<(na_removed_num*min_ratio))){
     #     rank_c=0
     # }else 
+    
     if (pos_num>=neg_num){
         rank_c=up_rank
     }else if (pos_num<neg_num){
@@ -105,15 +106,15 @@ CombRank=function(ES,up_rank,down_rank,min_num=5,min_ratio=0.8,method='RankProd'
         rank_combined=prod(rank_c)^(1/length(rank_c))
     }
     if (method=='RankSum'){
-        rank_combined=mean(rank_c)
+        rank_combined=median(rank_c)
     }
     
     # percent_same_dir: samples percentage with the same direction of the main trend, divided by samples number of detected result
     return(c('total_study'=total_num,'available_study'=na_removed_num,
              'sig_study'=con_length,
              'percent_same_dir'=con_length/na_removed_num,
-             'mean_ES'=mean(ES,na.rm=TRUE),'combined_rank'=rank_combined,
-             'signed_combined_rank'=sign(mean(ES,na.rm=TRUE))*rank_combined))
+             'median_ES'=median(ES,na.rm=TRUE),'combined_rank'=rank_combined,
+             'signed_combined_rank'=sign(median(ES,na.rm=TRUE))*rank_combined))
     
 }
 
@@ -146,15 +147,26 @@ CombRank_DFLs=function(l,p_col='p_val',ES_col='log_fc',
     },mc.cores=ncores) %>% dplyr::bind_rows()
 
     test_result[,'quantile_pval']=parallel::mclapply(gene_names,function(y){
-        quantile( sapply(l,function(x){z=x[y,p_col]}), probs=quantile_est,na.rm=TRUE)
+
+        s=sapply(l,function(x) { x[y,ES_col] })
+
+        if (sum(sign(s),na.rm=TRUE)>=0){
+            quantile_est=1-quantile_est
+        }
+        k=quantile( sapply(l,function(x){ z= -log2(x[y,p_col]) * sign(x[y,ES_col]) }), probs=quantile_est,na.rm=TRUE)
+        k=2^(-sign(k)*k)*sign(k)
+        
     },mc.cores=ncores)  %>% unlist()
 
-    test_result[,'quantile_ES']=parallel::mclapply(gene_names,function(y){
-        quantile( sapply(l,function(x){z=x[y,ES_col]}), probs=quantile_est,na.rm=TRUE)
-    },mc.cores=ncores)  %>% unlist()
+    # test_result[,'quantile_ES']=parallel::mclapply(gene_names,function(y){
+    #     quantile( sapply(l,function(x){z=x[y,ES_col]}), probs=quantile_est,na.rm=TRUE)
+    # },mc.cores=ncores)  %>% unlist()
 
+    test_result=data.frame(test_result)
     rownames(test_result)=gene_names
     return(test_result)
+    
+}
     
 
 # The following codes about ACAT are completely copied from (https://github.com/yaowuliu/ACAT/) for convenience, all credits goes to the author
