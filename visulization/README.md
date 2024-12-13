@@ -13,7 +13,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
   Combine clusters
 + [Differential expression visualization](#deg)
 + [Forest plot for multiple types of regression model](#forest)
-+ [Heatmap/Bubble plot with links](#link)
++ [LinkedPlot - Heatmap/Bubble plot with links](#link)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 __Required packages__: Hmisc, dendsort  
@@ -257,4 +257,4 @@ logistic_model=glm(ynaffairs~age+children+education+gender+occupation+rating+rel
 
 ### For meta analysis result
 
-## <a name="link">Heatmap/Bubble plot with links</a>
+## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
