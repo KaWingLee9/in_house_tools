@@ -677,3 +677,131 @@ Draw_MVolcano=function(df,x_col,y_col,gene_col,cluster_col,selected_gene=NULL,yi
     return(p1)
     
 }
+
+
+# LinkedPlot - Heatmap/Bubble plot with links
+# Required packages: ggplot2, aplot
+LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
+                    color_column=0,
+                    widths=c(3,1,3),
+                    align='bottom'){
+    library(ggplot2)
+    library(aplot)
+        
+    colnames(link_df)=c('y1_name','y2_name')
+    
+    df_1=df %>% filter( !!sym(y_col) %in% unique(link_df[,1]) )
+    df_2=df %>% filter( !!sym(y_col) %in% unique(link_df[,2]) )
+
+    link_df[,'x1']=2
+    link_df[,'x2']=3
+
+    l1=unique(c(link_df[,'y1_name']))
+    l2=unique(c(link_df[,'y2_name']))
+
+    ll1=length(l1)-1
+    ll2=length(l2)-1
+
+    l=max(length(l1),length(l2))
+
+    coord_1=(0:ll1)/l
+    if (align=='bottom'){
+        coord_2=(0:ll2)/l
+    }
+    if (align=='top'){
+        coord_2=((0:ll2)-ll2+ll1)/l
+    }
+    if (align=='center'){
+        m=median(0:ll1)
+        coord_2=seq(m-ll2/2,m+ll2/2,length.out=ll2+1)/l
+    }
+    
+
+    link_df[,'y1_coord']=coord_1[sapply(link_df[,'y1_name'],function(x){which(x==l1)})]
+    link_df[,'y2_coord']=coord_2[sapply(link_df[,'y2_name'],function(x){which(x==l2)})]
+    link_df[,'col']='1'
+
+    df_1[,'y_coord']=coord_1[sapply(df_1[,y_col],function(x){which(x==l1)})]
+    df_2[,'y_coord']=coord_2[sapply(df_2[,y_col],function(x){which(x==l2)})]
+    
+    if (! is.null(size_col)){
+        p1=ggplot(df_1,aes_string(x=x_col,y='y_coord'))+
+            geom_point(aes_string(size=size_col,fill=fill_col),shape=21)
+        p2=ggplot(df_2,aes_string(x=x_col,y='y_coord'))+
+            geom_point(aes_string(size=size_col,fill=fill_col),shape=21)
+    } else {
+        p1=ggplot(df_1,aes_string(x=x_col,y='y_coord'))+
+            geom_tile(aes_string(fill=fill_col))
+        p2=ggplot(df_2,aes_string(x=x_col,y='y_coord'))+
+            geom_tile(aes_string(fill=fill_col))
+    }
+
+    p1=p1+
+        scale_y_continuous(position='right',breaks=coord_1,labels=l1,minor_breaks=NULL)+
+        # coord_cartesian(ylim=c(0,max(coord_1)))+
+        theme_bw()+
+        xlab('')+
+        ylab('')+
+        theme(# legend.position='left',
+              axis.title.x=element_blank(),axis.title.y=element_blank())
+
+    p2=p2+
+        scale_y_continuous(position='left',breaks=coord_2,labels=l2,minor_breaks=NULL)+
+        # coord_cartesian(ylim=c(0,max(coord_2)))+
+        theme_bw()+
+        xlab('')+
+        ylab('')+
+        theme(# legend.position='right',
+              axis.title.x=element_blank(),axis.title.y=element_blank())
+    
+    if (color_column==0){
+        p3=ggplot(link_df)+
+            geom_segment(aes(x=x1,xend=x2,
+                             y=y1_coord,yend=y2_coord,color=col))+
+            scale_color_manual(values=c('1'='black'))
+    }
+    
+    if (color_column==1) {
+        col_1=setNames(rep(ggsci::pal_d3(palette='category10')(10),length.out=length(l1)),
+                     l1)
+        link_df[,'col']=link_df[,'y1_name']
+        
+        p1=p1+
+            theme(axis.text.y=element_text(color=col_1))
+        
+        p3=ggplot(link_df)+
+            geom_segment(aes(x=x1,xend=x2,
+                             y=y1_coord,yend=y2_coord,color=col))+
+            scale_color_manual(values=col_1)
+    }
+    
+    if (color_column==2) {
+        col_2=setNames(rep(ggsci::pal_d3(palette='category10')(10),length.out=length(l2)),
+                     l2)
+        link_df[,'col']=link_df[,'y2_name']
+        
+        p2=p2+
+            theme(axis.text.y=element_text(color=col_2))
+        
+        p3=ggplot(link_df)+
+            geom_segment(aes(x=x1,xend=x2,
+                             y=y1_coord,yend=y2_coord,color=col))+
+            scale_color_manual(values=col_2)
+    }
+    
+    p3=p3+
+        xlab('')+
+        ylab('')+
+        coord_cartesian(xlim=c(2,3))+
+        theme_void()+
+        theme(axis.line.x=element_blank(),axis.line.y=element_blank(),
+              axis.title.x=element_blank(),axis.title.y=element_blank(),
+              axis.text.x=element_blank(),axis.text.y=element_blank(),
+              axis.ticks.x=element_blank(),axis.ticks.y=element_blank())+
+        guides(color='none')
+    
+    # p=p1+p3+p2+plot_layout(widths=widths)
+    p=p1 %>% insert_right(p3,width=0.2) %>% insert_right(p2)
+    return(p)
+    
+}
