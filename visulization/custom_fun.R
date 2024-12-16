@@ -554,13 +554,13 @@ ResetOrder=function(df,by='row'){
 DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
                         y='p_val',pCutoff=0.05,
                         col=c('red2','royalblue','grey30'), #
-                        selectLab=NULL){
+                        selectLab=NULL,alpha=0.5){
     library(ggplot2)
     library(ggrepel)
     library(EnhancedVolcano)
     
     keyvals=rep(col[3],length.out=nrow(deg_result))
-    names(keyvals)=rep('Unchaged',nrow(deg_result))
+    names(keyvals)=rep('Unchanged',nrow(deg_result))
 
     keyvals[which((deg_result[,x]>=FCcutoff) & (deg_result[,y]<=pCutoff))]=col[1]
     names(keyvals)[which((deg_result[,x]>=FCcutoff) & (deg_result[,y]<=pCutoff))]='Higher expressed'
@@ -573,12 +573,14 @@ DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
                 x=x,FCcutoff=FCcutoff,
                 y=y,pCutoff=pCutoff,
                 colCustom=keyvals,
-               selectLab=selectLab,
+                      selectLab=selectLab,
                drawConnectors = TRUE,arrowheads=FALSE,
-                    title=NULL,subtitle=NULL
+                title=NULL,subtitle=NULL,colAlpha=alpha
                )
 
-    p=p+scale_color_manual(limits=c('Lower expressed','Unchaged','Higher expressed'),values=c(col[2],col[3],col[1]))
+    p=p+scale_color_manual(limits=c('Lower expressed','Unchanged','Higher expressed'),values=c(col[2],col[3],col[1]))+
+        xlab(expression(log[2]~FC))+
+        ylab(expression(-log[10]~P))
 
     return(p)
 }
