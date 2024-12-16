@@ -258,3 +258,4 @@ logistic_model=glm(ynaffairs~age+children+education+gender+occupation+rating+rel
 ### For meta analysis result
 
 ## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
+__Required packages__: ggplot2, aplot  
