@@ -685,9 +685,10 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
                     color_column=0,
                     widths=c(3,1,3),
                     align='bottom'){
+    
     library(ggplot2)
     library(aplot)
-        
+    
     colnames(link_df)=c('y1_name','y2_name')
     
     df_1=df %>% filter( !!sym(y_col) %in% unique(link_df[,1]) )
@@ -715,7 +716,6 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
         m=median(0:ll1)
         coord_2=seq(m-ll2/2,m+ll2/2,length.out=ll2+1)/l
     }
-    
 
     link_df[,'y1_coord']=coord_1[sapply(link_df[,'y1_name'],function(x){which(x==l1)})]
     link_df[,'y2_coord']=coord_2[sapply(link_df[,'y2_name'],function(x){which(x==l2)})]
@@ -800,8 +800,12 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
               axis.ticks.x=element_blank(),axis.ticks.y=element_blank())+
         guides(color='none')
     
-    # p=p1+p3+p2+plot_layout(widths=widths)
-    p=p1 %>% insert_right(p3,width=0.2) %>% insert_right(p2)
+    if (ll1>=ll2){
+        p=p1 %>% insert_right(p3,width=0.2) %>% insert_right(p2)
+    } else if (ll1<ll2) {
+        p=p2 %>% insert_left(p3,width=0.2) %>% insert_left(p1)
+    }
+    
     return(p)
     
 }
