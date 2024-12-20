@@ -14,6 +14,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [Differential expression visualization](#deg)
 + [Forest plot for multiple types of regression model](#forest)
 + [LinkedPlot - Heatmap/Bubble plot with links](#link)
++ [AnnotatedPlot - Draw annotation bar in ggplot2](#annotation)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 __Required packages__: Hmisc, dendsort  
@@ -259,3 +260,6 @@ logistic_model=glm(ynaffairs~age+children+education+gender+occupation+rating+rel
 
 ## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
 __Required packages__: ggplot2, aplot  
+
+## <a name="annotation">AnnotatedPlot - Draw annotation bar in ggplot2</a>
+__Required packages__: ggplot2, aplot, RColorBrewer
