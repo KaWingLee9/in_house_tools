@@ -11,10 +11,10 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [Other tips for clustering](#heatmap3)  
   Reorder row/column order of the table for heatmap visualization  
   Combine clusters
-+ [Differential expression visualization](#deg)
-+ [Forest plot for multiple types of regression model](#forest)
 + [LinkedPlot - Heatmap/Bubble plot with links](#link)
 + [AnnotatedPlot - Draw annotation bar in ggplot2](#annotation)
++ [Forest plot for multiple types of regression model](#forest)
++ [Differential expression visualization](#deg)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 __Required packages__: Hmisc, dendsort  
