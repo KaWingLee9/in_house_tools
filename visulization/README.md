@@ -234,7 +234,11 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
   <img height="400" src="pct/Reorder_cluster.png">
 </p>
 
-## <a name="deg">Differential expression visualization</a>
+## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
+__Required packages__: ggplot2, aplot  
+
+## <a name="annotation">AnnotatedPlot - Draw annotation bar in ggplot2</a>
+__Required packages__: ggplot2, aplot, RColorBrewer
 
 ## <a name="forest">Forest plot for multiple types of regression model</a>
 
@@ -258,8 +262,4 @@ logistic_model=glm(ynaffairs~age+children+education+gender+occupation+rating+rel
 
 ### For meta analysis result
 
-## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
-__Required packages__: ggplot2, aplot  
-
-## <a name="annotation">AnnotatedPlot - Draw annotation bar in ggplot2</a>
-__Required packages__: ggplot2, aplot, RColorBrewer
+## <a name="deg">Differential expression visualization</a>
