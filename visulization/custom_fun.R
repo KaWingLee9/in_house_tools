@@ -1111,8 +1111,9 @@ layout_circular_community=function(community_labels,R=20,k=0.5){
     )
 
     for (pos in 1:length(node_order)) {
+        
+        # center coordinates of each community
         i=node_order[pos] 
-
         theta_center=2 * pi * (pos - 1) / length(node_order)
         x_center=R * cos(theta_center)
         y_center=R * sin(theta_center)
