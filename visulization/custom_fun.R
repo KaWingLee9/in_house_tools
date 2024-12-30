@@ -680,9 +680,7 @@ Draw_MVolcano=function(df,x_col,y_col,gene_col,cluster_col,selected_gene=NULL,yi
     
 }
 
-
-# LinkedPlot - Heatmap/Bubble plot with links
-# Required packages: ggplot2, aplot
+# marker expression of ligand and receptor
 LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
                     color_column=0,
                     widths=c(3,1,3),
@@ -691,7 +689,7 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
     library(ggplot2)
     library(aplot)
     
-    colnames(link_df)=c('y1_name','y2_name')
+    colnames(link_df)[1:2]=c('y1_name','y2_name')
     
     df_1=df %>% filter( !!sym(y_col) %in% unique(link_df[,1]) )
     df_2=df %>% filter( !!sym(y_col) %in% unique(link_df[,2]) )
@@ -774,10 +772,10 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
         p3=ggplot(link_df)+
             geom_segment(aes(x=x1,xend=x2,
                              y=y1_coord,yend=y2_coord,color=col))+
-            scale_color_manual(values=col_1)
-    }
-    
-    if (color_column==2) {
+            scale_color_manual(values=col_1)+
+            guides(color='none')
+        
+    } else if (color_column==2) {
         col_2=setNames(rep(ggsci::pal_d3(palette='category10')(10),length.out=length(l2)),
                      l2)
         link_df[,'col']=link_df[,'y2_name']
@@ -788,7 +786,15 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
         p3=ggplot(link_df)+
             geom_segment(aes(x=x1,xend=x2,
                              y=y1_coord,yend=y2_coord,color=col))+
-            scale_color_manual(values=col_2)
+            scale_color_manual(values=col_2)+
+            guides(color='none')
+        
+    } else if (! is.null(color_column)){
+        link_df[,'col']=link_df[,color_column]
+        p3=ggplot(link_df)+
+            geom_segment(aes(x=x1,xend=x2,
+                             y=y1_coord,yend=y2_coord,color=col))+
+            labs(color=color_column)
     }
     
     p3=p3+
@@ -799,8 +805,7 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
         theme(axis.line.x=element_blank(),axis.line.y=element_blank(),
               axis.title.x=element_blank(),axis.title.y=element_blank(),
               axis.text.x=element_blank(),axis.text.y=element_blank(),
-              axis.ticks.x=element_blank(),axis.ticks.y=element_blank())+
-        guides(color='none')
+              axis.ticks.x=element_blank(),axis.ticks.y=element_blank())
     
     if (ll1>=ll2){
         p=p1 %>% insert_right(p3,width=0.2) %>% insert_right(p2)
@@ -809,5 +814,323 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
     }
     
     return(p)
+    
+}
+
+# AnnotatedPlot - Bar-annotated ggplot
+AnnotatedPlot=function(p,
+                       df_anno_x=NULL,top_anno_var=NULL,bottom_anno_var=NULL,row_order=NULL,heights=0.1,
+                       df_anno_y=NULL,right_anno_var=NULL,left_anno_var=NULL,col_order=NULL,widths=0.1,
+                       anno_colors=list()){
+    
+    library(dplyr)
+    library(ggplot2)
+    library(RColorBrewer)
+    library(aplot)
+    
+    # reset row order
+    if (! is.null(row_order)){
+        p_row_order=df_anno_x %>% arrange(!!sym(row_order)) %>% rownames()
+        p=p+scale_x_discrete(limits=p_row_order)
+    }
+    # reset column order
+    if (! is.null(col_order)){
+        p_col_order=df_anno_y %>% arrange(!!sym(col_order)) %>% rownames()
+        p=p+scale_y_discrete(limits=p_col_order)
+    }
+    
+    j=0
+    # annotation on the left
+    if (! is.null(left_anno_var)){
+        for (i in 1:length(left_anno_var)){
+            color_pal=anno_colors[[ left_anno_var[i] ]]
+            j=j+1
+            assign(paste0('p',j),
+                   ggplot(df_anno_y,aes_q(x=0,y=rownames(df_anno_y),fill=df_anno_y[,left_anno_var[i]]))+
+                        geom_tile()+
+                        theme_classic()+
+                        theme(axis.line.x=element_blank(),axis.line.y=element_blank(),
+                              axis.title.x=element_blank(),
+                              axis.title.y=element_blank(),
+                              axis.text.x=element_blank(),axis.text.y=element_blank(),
+                              axis.ticks.x=element_blank(),axis.ticks.y=element_blank())+
+                        set_color_ggplot(df_anno_y[,left_anno_var[i]],color_pal,legend_name=left_anno_var[i])
+                   )
+
+            p=p %>% insert_left(get(paste0('p',j)),width=widths)
+        }
+    }
+    
+    # annotation on the right
+    if (! is.null(right_anno_var)){
+        for (i in 1:length(right_anno_var)){
+            color_pal=anno_colors[[ right_anno_var[i] ]]
+            j=j+1
+            assign(paste0('p',j),
+                ggplot(df_anno_y,aes_q(x=0,y=rownames(df_anno_y),fill=df_anno_y[,right_anno_var[i]]))+
+                    geom_tile()+
+                    theme_classic()+
+                    xlab(right_anno_var[i])+
+                    theme(axis.line.x=element_blank(),axis.line.y=element_blank(),
+                          axis.title.x=element_blank(),
+                          axis.title.y=element_blank(),
+                          axis.text.x=element_blank(),axis.text.y=element_blank(),
+                          axis.ticks.x=element_blank(),axis.ticks.y=element_blank())+
+                    set_color_ggplot(df_anno_y[,right_anno_var[i]],color_pal,legend_name=right_anno_var[i])
+                )
+
+            p=p %>% insert_right(get(paste0('p',j)),width=widths)
+        }
+    }
+    
+    # annotation on the bottom
+    if (! is.null(bottom_anno_var)){
+        for (i in 1:length(bottom_anno_var)){
+            color_pal=anno_colors[[ bottom_anno_var[i] ]]
+            
+            assign(paste0('p',j),
+                   ggplot(df_anno_x,aes_q(x=0,y=rownames(df_anno_x),fill=df_anno_x[,bottom_anno_var[i]]))+
+                        geom_tile()+
+                        theme_classic()+
+                        theme(axis.line.x=element_blank(),axis.line.y=element_blank(),
+                              axis.title.x=element_blank(),axis.title.y=element_blank(),
+                              axis.text.x=element_blank(),axis.text.y=element_blank(),
+                              axis.ticks.x=element_blank(),axis.ticks.y=element_blank())+
+                        set_color_ggplot(df_anno_x[,bottom_anno_var[i]],color_pal,legend_name=bottom_anno_var[i])
+                  )
+
+            p=p %>% insert_bottom(get(paste0('p',j)),height=widths)
+            j=j+1
+        }
+    }
+    
+    # annotation on the bottom
+    if (! is.null(top_anno_var)){
+        for (i in 1:length(top_anno_var)){
+            color_pal=anno_colors[[ top_anno_var[i] ]]
+            assign(paste0('p',j),
+                   ggplot(df_anno_x,aes_q(x=0,y=rownames(df_anno_x),fill=df_anno_x[,top_anno_var[i]]))+
+                        geom_tile()+
+                        theme_classic()+
+                        theme(axis.line.x=element_blank(),axis.line.y=element_blank(),
+                              axis.title.x=element_blank(),axis.title.y=element_blank(),
+                              axis.text.x=element_blank(),axis.text.y=element_blank(),
+                              axis.ticks.x=element_blank(),axis.ticks.y=element_blank())+
+                        set_color_ggplot(df_anno_x[,top_anno_var[i]],color_pal,legend_name=top_anno_var[i])
+                   )
+            p=p %>% insert_top(get(paste0('p',j)),height=heights)
+            j=j+1
+        }
+    }
+
+    return(p)
+}
+
+set_color_ggplot=function(value,color_pal,legend_name){
+    if (is.numeric(value)){
+        if (! is.null(color_pal)){
+            if (! is.colors(color_pal)){
+                n=brewer.pal.info[color_pal,][[1]]
+                color_pal=brewer.pal(n,color_pal)
+            }
+        } else {
+            color_pal=c("#9a133d", "#b93961", "#d8527c", "#f28aaa", "#f9b4c9", "#f9e0e8", "#ffffff",
+            "#eaf3ff", "#c5daf6", "#a1c2ed", "#6996e3", "#4060c8", "#1a318b")
+        }
+        color_pal=c(color_pal[1],color_pal,color_pal[length(color_pal)])
+        p_scale=scale_fill_gradientn(colours=color_pal,
+                                     values=scales::rescale(
+                                         c(min(value),
+                                           seq(quantile(value,0.01),quantile(value,0.99),length.out=length(color_pal)-2),
+                                           max(value))
+                                     ),name=legend_name)
+    } else if (is.character(value)){
+        n=length(unique(value))
+        if (! is.null(color_pal)){
+            if (! is.colors(color_pal)){
+                color_pal=brewer.pal(n,color_pal)
+            }
+        } else {
+            color_pal=ggsci::pal_npg(palette='nrc')(n)
+        }
+        p_scale=scale_fill_manual(values=color_pal,name=legend_name)
+    }
+    
+    return (p_scale)
+}
+
+is.colors <- function(x) {
+    sapply(x,function(X) {
+        tryCatch(is.matrix(col2rgb(X)),error=function(e) FALSE)
+    })
+}
+
+# OrderedPlot - x-/y- ordered ggplot with or without dendrogram
+# Required packages: dplyr, ggplot2, ggtree, aplot
+OrderedPlot=function(p,x,y,cluster_value,cluster_var=NULL,
+                     cluster_row=FALSE,show_row_dend=FALSE,row_dend_direction='left',row_dend_width=0.1,
+                     cluster_column=FALSE,show_column_dend=TRUE,column_dend_direction='top',column_dend_height=0.1,
+                     ...){
+    
+    library(dplyr)
+    library(ggplot2)
+    library(ggtree)
+    library(aplot)
+    
+    d=p$data
+    p1=p
+    
+    if (cluster_row & (! show_row_dend)){
+        if (is.null(cluster_var)){
+            d1=reshape2::dcast(d,formula=formula(paste0(y,'~',x)),value.var=cluster_value) %>% data.frame(row.names=1,check.names=FALSE)
+        } else {
+            d1=reshape2::dcast(d,formula=formula(paste0(y,'~',cluster_var)),value.var=cluster_value) %>% data.frame(row.names=1,check.names=FALSE)
+        }
+        d1[is.na(d1)]=0
+        hc1=hclust(dist(d1),...) %>% dendsort::dendsort()
+        hc1.order=hc1[['labels']][hc1[['order']]]
+        
+        p1=p1+scale_y_discrete(limits=hc1.order)
+    }
+    
+    if (cluster_column & (! show_column_dend)){
+        if (is.null(cluster_var)){
+            d2=reshape2::dcast(d,formula=formula(paste0(x,'~',y)),value.var=cluster_value) %>% data.frame(row.names=1,check.names=FALSE)
+        } else {
+            d2=reshape2::dcast(d,formula=formula(paste0(x,'~',cluster_var)),value.var=cluster_value) %>% data.frame(row.names=1,check.names=FALSE)
+        }
+        d2[is.na(d2)]=0
+        hc2=hclust(dist(d2),...) %>% dendsort::dendsort()
+        hc2.order=hc2[['labels']][hc2[['order']]]
+        
+        p1=p1+scale_x_discrete(limits=hc2.order)
+    }
+    
+    if (cluster_row & show_row_dend){
+        if (is.null(cluster_var)){
+            d1=reshape2::dcast(d,formula=formula(paste0(y,'~',x)),value.var=cluster_value) %>% data.frame(row.names=1,check.names=FALSE)
+        } else {
+            d1=reshape2::dcast(d,formula=formula(paste0(y,'~',cluster_var)),value.var=cluster_value) %>% data.frame(row.names=1,check.names=FALSE)
+        }
+        
+        d1[is.na(d1)]=0
+        hc1=hclust(dist(d1),...) %>% dendsort::dendsort()
+        hc1.order=hc1[['labels']][hc1[['order']]]
+        
+        p2=ggtree(hc1)
+        if (row_dend_direction=='left'){
+            p1=p1 |> insert_left(p2,width=row_dend_width)
+        } else if (row_dend_direction=='right'){
+            p1=p1 |> insert_right(p2,width=row_dend_width)
+        }
+    }
+    
+    if (cluster_column & show_column_dend){
+        if (is.null(cluster_var)){
+            d2=reshape2::dcast(d,formula=formula(paste0(x,'~',y)),value.var=cluster_value) %>% data.frame(row.names=1,check.names=FALSE)
+        } else {
+            d2=reshape2::dcast(d,formula=formula(paste0(x,'~',cluster_var)),value.var=cluster_value) %>% data.frame(row.names=1,check.names=FALSE)
+        }
+        d2[is.na(d2)]=0
+        hc2=hclust(dist(d2),...) %>% dendsort::dendsort()
+        hc2.order=hc2[['labels']][hc2[['order']]]
+        
+        p3=ggtree(hc2)+layout_dendrogram()
+        if (column_dend_direction=='top'){
+            p1=p1 |> insert_top(p3,height=column_dend_height)
+        } else if (column_dend_direction=='right'){
+            p1=p1 |> insert_bottom(p3,height=column_dend_height)
+        }
+    }
+    
+    return(p1)
+    
+}
+
+# SunburstPlot - Sunburst 
+SunburstPlot=function(df,dims,r=rep(1,length.out=length(dims)),
+                      scale=NULL,circular=TRUE,column_keep=NULL,color=NULL){
+    
+    library(dplyr)
+    library(ggplot2)
+    library(ggnewscale)
+
+    # dims=rev(dims)
+    df_sta=df[,c(dims,column_keep)]
+    dims_ordered=sapply(dims,function(x){df_sta[,x] %>% unique() %>% length()}) %>% 
+        sort() %>% names()
+    df_sta=df_sta %>% arrange_at(dims_ordered)
+    # return(df_sta)
+    for (i in dims){
+        df_sta[,i]=factor(df_sta[,i],levels=unique(df_sta[,i]))
+    }
+
+    r=c(0,r)
+    if (is.null(scale)){
+        scale=vector('list',length(dims))
+    }
+    
+    if (is.null(scale)){
+        color=rep(NA,length.out=length(dims))
+    }
+
+    p=ggplot()
+    for (i in 1:length(dims)){
+        df_sta_tmp=df_sta %>% group_by_at(dims[i]) %>% count(name='sunburst_n') %>% data.frame()
+        df_sta_tmp[,'sunburst_n']=Reduce(`+`,df_sta_tmp[,'sunburst_n'],accumulate=TRUE)
+        df_sta_tmp[,'sunburst_nm']=c(0,df_sta_tmp[-nrow(df_sta_tmp),'sunburst_n'])
+        # return(df_tmp)
+        assign(paste0('df_sta_',i),df_sta_tmp)
+        
+        p=p+geom_rect(data=get(paste0('df_sta_',i)),
+                      aes_string(xmin=sum(r[1:i]),xmax=sum(r[1:i+1]),ymin='sunburst_nm',ymax='sunburst_n',fill=dims[i]),
+                      color=color[i])+
+            scale[[i]]+new_scale_fill()
+    }
+    p=p+theme_void()
+
+    if (circular){
+        p=p+coord_polar(theta='y')
+    }
+    return(p)
+
+}
+
+# layout_circular_community - Network for each community as a circle (like cytoscape)
+layout_circular_community=function(community_labels,R=20,k=0.5){
+    commnituies_label=unique(community_labels) %>% sort()
+    n_communities=length(commnituies_label)
+    nodes_per_community=c(table(community_labels))
+    
+    node_coords <- data.frame(
+      node = 1:length(community_labels),
+      community = community_labels,
+      x = rep(NA,length.out=length(community_labels)),
+      y = rep(NA,length.out=length(community_labels))
+    )
+
+    for (i in 1:n_communities) {
+        
+        theta_center <- 2 * pi * (i - 1) / n_communities
+        x_center <- R * cos(theta_center)
+        y_center <- R * sin(theta_center)
+
+        m <- nodes_per_community[i]
+        r <- k * sqrt(m)  
+
+        community_nodes <- which(community_labels == i)
+
+        for (j in 1:length(community_nodes)) {
+            theta_node <- 2 * pi * (j - 1) / length(community_nodes)
+            x_node <- x_center + r * cos(theta_node)
+            y_node <- y_center + r * sin(theta_node)
+
+
+            node_coords[community_nodes[j], "x"] <- x_node
+            node_coords[community_nodes[j], "y"] <- y_node
+            }
+        }
+    
+    return (node_coords[,c('x','y')])
     
 }
