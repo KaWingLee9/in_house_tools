@@ -1101,36 +1101,37 @@ layout_circular_community=function(community_labels,R=20,k=0.5){
     commnituies_label=unique(community_labels) %>% sort()
     n_communities=length(commnituies_label)
     nodes_per_community=c(table(community_labels))
+    node_order=levels(commnituies_label)
     
-    node_coords <- data.frame(
-      node = 1:length(community_labels),
-      community = community_labels,
-      x = rep(NA,length.out=length(community_labels)),
-      y = rep(NA,length.out=length(community_labels))
+    node_coords=data.frame(
+      node=1:length(community_labels),
+      community=community_labels,
+      x=rep(NA,length.out=length(community_labels)),
+      y=rep(NA,length.out=length(community_labels))
     )
 
-    for (i in 1:n_communities) {
-        
-        theta_center <- 2 * pi * (i - 1) / n_communities
-        x_center <- R * cos(theta_center)
-        y_center <- R * sin(theta_center)
+    for (pos in 1:length(node_order)) {
+        i=node_order[pos] 
 
-        m <- nodes_per_community[i]
-        r <- k * sqrt(m)  
+        theta_center=2 * pi * (pos - 1) / length(node_order)
+        x_center=R * cos(theta_center)
+        y_center=R * sin(theta_center)
 
-        community_nodes <- which(community_labels == i)
+        m=nodes_per_community[i]
+        r=k * sqrt(m)
+
+        community_nodes=which(community_labels == i)
 
         for (j in 1:length(community_nodes)) {
-            theta_node <- 2 * pi * (j - 1) / length(community_nodes)
-            x_node <- x_center + r * cos(theta_node)
-            y_node <- y_center + r * sin(theta_node)
+            theta_node=2 * pi * (j - 1) / length(community_nodes)
+            x_node=x_center + r * cos(theta_node)
+            y_node=y_center + r * sin(theta_node)
 
-
-            node_coords[community_nodes[j], "x"] <- x_node
-            node_coords[community_nodes[j], "y"] <- y_node
-            }
+            node_coords[community_nodes[j], "x"]=x_node
+            node_coords[community_nodes[j], "y"]=y_node
         }
-    
+    }
+
     return (node_coords[,c('x','y')])
     
 }
