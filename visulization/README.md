@@ -13,6 +13,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
   Combine clusters
 + [LinkedPlot - Heatmap/Bubble plot with links](#link)
 + [AnnotatedPlot - Draw annotation bar in ggplot2](#annotation)
++ [layout_circular_community - Network for each community as a circle (like cytoscape)](#circular)
 + [Forest plot for multiple types of regression model](#forest)
 + [Differential expression visualization](#deg)
 
@@ -239,6 +240,8 @@ __Required packages__: ggplot2, aplot
 
 ## <a name="annotation">AnnotatedPlot - Draw annotation bar in ggplot2</a>
 __Required packages__: ggplot2, aplot, RColorBrewer
+
+## <a name="circular">layout_circular_community - Network for each community as a circle (like cytoscape)</a>
 
 ## <a name="forest">Forest plot for multiple types of regression model</a>
 
