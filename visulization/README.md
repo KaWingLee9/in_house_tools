@@ -46,6 +46,7 @@ Parameters of `CorPlot`:
 + `sig.circle`: whether to show outlines of the bubbles if significant
 + `sig.level`: significance level for hypothesis test, reflected in sig.circle
 + `stroke`: outline thickness of the circle
++ `reorder.method`: method for reorder hierarchy, could be one of `reorder.dendrogram`, `dendsort`, `none`
 
 ## <a name="heatmap1">SHeatmap - Summarized heatmap of grouped data with significance test</a>
 __Required packages__: dplyr, ComplexHeatmap  
