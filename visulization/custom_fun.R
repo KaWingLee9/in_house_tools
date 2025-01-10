@@ -5,7 +5,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
         p.adj.method='fdr',
         sig.level=0.05,
         tri='whole', # 'whole', 'lower', 'upper'
-        sig.circle=TRUE){
+        sig.circle=TRUE,reorder.method='reorder.dendrogram'){
     
     library(ggplot2)
 
@@ -16,7 +16,17 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
 
     # clustering 
     hc=hclust(as.dist(1-cor_matrix),method='ward.D2')
-    hc=dendsort::dendsort(hc)
+
+    # reorder hierarchy
+    if (reorder.method=='reorder.dendrogram'){
+        hc=reorder(as.dendrogram(hc),-rowMeans(cor_matrix))
+        hc=as.hclust(hc)
+    } else if (reorder.method=='dendsort'){
+        hc=dendsort::dendsort(hc)
+    } else if (reorder.method=='none'){
+        hc=hc
+    }
+    
     ord.order=hc[['labels']][hc[['order']]]
     cor_matrix=cor_matrix[ord.order,ord.order]
 
