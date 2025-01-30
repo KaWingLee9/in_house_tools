@@ -979,7 +979,7 @@ is.colors <- function(x) {
 # Required packages: dplyr, ggplot2, ggtree, aplot
 OrderedPlot=function(p,x,y,cluster_value,cluster_var=NULL,
                      cluster_row=FALSE,show_row_dend=FALSE,row_dend_direction='left',row_dend_width=0.1,
-                     cluster_column=FALSE,show_column_dend=TRUE,column_dend_direction='top',column_dend_height=0.1,
+                     cluster_column=FALSE,show_column_dend=FALSE,column_dend_direction='top',column_dend_height=0.1,
                      ...){
     
     library(dplyr)
