@@ -848,6 +848,14 @@ AnnotatedPlot=function(p,
         p_col_order=df_anno_y %>% arrange(!!sym(col_order)) %>% rownames()
         p=p+scale_y_discrete(limits=p_col_order)
     }
+
+    # reset order of df_anno_x and df_anno_y
+    if (! (is.null(top_anno_var) | is.null(bottom_anno_var))){
+        df_anno_x=df_anno_x[ggplot_build(p)$layout$panel_params[[1]]$x$get_labels(),]
+    }
+    if (! (is.null(left_anno_var) | is.null(right_anno_var))){
+        df_anno_y=df_anno_x[ggplot_build(p)$layout$panel_params[[1]]$y$get_labels(),]
+    }
     
     j=0
     # annotation on the left
