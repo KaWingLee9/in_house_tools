@@ -240,7 +240,13 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
 __Required packages__: ggplot2, aplot  
 
 ## <a name="annotation">AnnotatedPlot - Draw annotation bar in ggplot2</a>
-__Required packages__: ggplot2, aplot, RColorBrewer
+__Required packages__: ggplot2, aplot, RColorBrewer  
+
+Parameters for `AnnotatedPlot`:  
++ `p`: a ggplot object  
++ `row_order`, `col_order`: reorder the order of x-axis or y-axis with the given order  
++ `df_anno_x`, `df_anno_y`: data frame for annotation with rownames as  
++ ``, ``:   
 
 ## <a name="circular">layout_circular_community - Network for each community as a circle (like cytoscape)</a>
 
