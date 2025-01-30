@@ -12,6 +12,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
   Reorder row/column order of the table for heatmap visualization  
   Combine clusters
 + [LinkedPlot - Heatmap/Bubble plot with links](#link)
++ [OrderedPlot - Reset the order of x/y-axis or show dendrogram in ggplot2](#order)
 + [AnnotatedPlot - Draw annotation bar in ggplot2](#annotation)
 + [layout_circular_community - Network for each community as a circle (like cytoscape)](#circular)
 + [Forest plot for multiple types of regression model](#forest)
@@ -239,6 +240,11 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
 ## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
 __Required packages__: ggplot2, aplot  
 
+## <a name="order">OrderedPlot - Reset the order of x/y-axis or show dendrogram in ggplot2</a>
+__Required packages__: ggplot2, aplot, RColorBrewer  
+Parameters for `OrderedPlot`:  
+
+
 ## <a name="annotation">AnnotatedPlot - Draw annotation bar in ggplot2</a>
 __Required packages__: ggplot2, aplot, RColorBrewer  
 
@@ -248,6 +254,8 @@ Parameters for `AnnotatedPlot`:
 + `df_anno_x`, `df_anno_y`: data frame for annotation with rownames as the the x-axis or y-axis of the plot
 + `top_anno_var`, `bottom_anno_var`, `right_anno_var`, `left_anno_var`: variables for plot annotation, should be colnames of `df_anno_x` or `df_anno_y`  
 + `heights`, `widths`: the heights or widths of each annotation bar  
++ `df_anno_x`, `top_anno_var`, `bottom_anno_var`, `row_order`, `heights`: add annotation bar at the top or bottom  
++ `df_anno_y`, `right_anno_var`, `left_anno_var`, `col_order`, `widths`: add annotation bar at the left or right  
 
 ## <a name="circular">layout_circular_community - Network for each community as a circle (like cytoscape)</a>
 
