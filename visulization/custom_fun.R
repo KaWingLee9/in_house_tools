@@ -519,46 +519,46 @@ ClusterCombine=function(c,l,reorder=TRUE){
     return(c)
 }
                               
-ResetOrder=function(df,by='row'){
+# ResetOrder=function(df,by='row'){
     
-    if (by=='row'){
-        o1=apply(df,1,function(x){
-            x=scale(x)
-            which(x==max(x))
-            }) %>% sort()
-        o2=setNames(1:length(o1),names(o1))
-        duplicated_num=o1[duplicated(o1)] %>% unique()
-        for (i in duplicated_num){
-            duplicated_item=o1[i==o1] %>% names()
-            options(warn=-1)
-            duplicated_item=df[duplicated_item,i,drop=FALSE]  %>% t() %>% .[1,] %>% sort(decreasing=TRUE) %>% names()
-            o2[duplicated_item]=sort(o2[duplicated_item])
-        }
-        o2=sort(o2)
-        o2=names(o2)
-        return(df[o2,])
-    }
+#     if (by=='row'){
+#         o1=apply(df,1,function(x){
+#             x=scale(x)
+#             which(x==max(x))
+#             }) %>% sort()
+#         o2=setNames(1:length(o1),names(o1))
+#         duplicated_num=o1[duplicated(o1)] %>% unique()
+#         for (i in duplicated_num){
+#             duplicated_item=o1[i==o1] %>% names()
+#             options(warn=-1)
+#             duplicated_item=df[duplicated_item,i,drop=FALSE]  %>% t() %>% .[1,] %>% sort(decreasing=TRUE) %>% names()
+#             o2[duplicated_item]=sort(o2[duplicated_item])
+#         }
+#         o2=sort(o2)
+#         o2=names(o2)
+#         return(df[o2,])
+#     }
     
-    if (by=='col'){
-        o1=apply(df,2,function(x){
-            x=scale(x)
-            which(x==max(x))
-        }) %>% sort()
-        o2=setNames(1:length(o1),names(o1))
-        duplicated_num=o1[duplicated(o1)] %>% unique()
+#     if (by=='col'){
+#         o1=apply(df,2,function(x){
+#             x=scale(x)
+#             which(x==max(x))
+#         }) %>% sort()
+#         o2=setNames(1:length(o1),names(o1))
+#         duplicated_num=o1[duplicated(o1)] %>% unique()
 
-        for (i in duplicated_num){
-            duplicated_item=o1[i==o1] %>% names()
-            options(warn=-1)
-            duplicated_item=df[i,duplicated_item,drop=FALSE]  %>% .[1,] %>% sort(decreasing=TRUE) %>% names()
-            o2[duplicated_item]=sort(o2[duplicated_item])
-        }
-        o2=sort(o2)
-        o2=names(o2)
-        return(df[,o2])
-    }
+#         for (i in duplicated_num){
+#             duplicated_item=o1[i==o1] %>% names()
+#             options(warn=-1)
+#             duplicated_item=df[i,duplicated_item,drop=FALSE]  %>% .[1,] %>% sort(decreasing=TRUE) %>% names()
+#             o2[duplicated_item]=sort(o2[duplicated_item])
+#         }
+#         o2=sort(o2)
+#         o2=names(o2)
+#         return(df[,o2])
+#     }
 
-}
+# }
 
 # Volcano plot for single conditions
 DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
