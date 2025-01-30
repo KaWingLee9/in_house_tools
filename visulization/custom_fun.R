@@ -1066,12 +1066,18 @@ OrderedPlot=function(p,x,y,cluster_value,cluster_var=NULL,
 }
 
 # SunburstPlot - Sunburst 
-SunburstPlot=function(df,dims,r=rep(1,length.out=length(dims)),
+SunburstPlot=function(df,dims,value=NULL,r=rep(1,length.out=length(dims)),
                       scale=NULL,circular=TRUE,column_keep=NULL,color=NULL){
     
     library(dplyr)
     library(ggplot2)
     library(ggnewscale)
+
+    if (! is.null(value)){
+        df=lapply(1:nrow(df),function(x){
+            df[x,dims,drop=FALSE] %>% slice(rep(1,df[x,value]))
+        }) %>% dplyr::bind_rows()
+    }
 
     # dims=rev(dims)
     df_sta=df[,c(dims,column_keep)]
@@ -1088,7 +1094,7 @@ SunburstPlot=function(df,dims,r=rep(1,length.out=length(dims)),
         scale=vector('list',length(dims))
     }
     
-    if (is.null(scale)){
+    if (is.null(color)){
         color=rep(NA,length.out=length(dims))
     }
 

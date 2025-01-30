@@ -15,6 +15,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [OrderedPlot - Reset the order of x/y-axis or show dendrogram in ggplot2](#order)
 + [AnnotatedPlot - Draw annotation bar in ggplot2](#annotation)
 + [layout_circular_community - Network for each community as a circle (like cytoscape)](#circular)
++ [SunburstPlot - Sunburst plot](#sunburst)
 + [Forest plot for multiple types of regression model](#forest)
 + [Differential expression visualization](#deg)
 
@@ -265,6 +266,43 @@ Parameters for `AnnotatedPlot`:
 + `df_anno_y`, `right_anno_var`, `left_anno_var`, `col_order`, `widths`: add annotation bar at the left or right  
 
 ## <a name="circular">layout_circular_community - Network for each community as a circle (like cytoscape)</a>
+
+## <a name="sunburst">SunburstPlot - Sunburst plot</a>
+``` r
+df=data.frame(
+  blank=rep('blank',times=9),
+  labels=c("Eve","Cain","Seth","Enos","Noam","Abel","Awan","Enoch","Azura"),
+  parents=c("Carl","Eve","Eve","Seth","Seth","Eve","Eve","Awan","Eve"),
+  values=c(65,14,12,10,2,6,6,4,4)
+)
+
+p1=SunburstPlot(df,dims=c('parents','labels'),value='values',r=c(0.5,1))
+# add a nude circle in the center
+p2=SunburstPlot(df,dims=c('blank','parents','labels'),value='values',
+                scale=list(scale_fill_manual(values='white',guide='none'),
+                           NULL,NULL))
+
+# value=NULL, SunburstPlot could automatically count the number of each hierarchy
+df_long=lapply(1:nrow(df),function(x){
+    df[x,c('blank','parents','labels'),drop=FALSE] %>% slice(rep(1,df[x,'values']))
+}) %>% dplyr::bind_rows()
+head(df_long,20)
+p3=SunburstPlot(df_long,dims=c('blank','parents','labels'),r=c(0.5,1,1),
+                scale=list(scale_fill_manual(values='white',guide='none'),
+                           NULL,NULL),
+                color=c(NA,'black','black'))
+
+library(patchwork)
+p1+p2+p3
+```
+
+<p align="center">
+  <img height="400" src="pct/SunburstPlot.png">
+</p>
+
+Parameters of `SunburstPlot`:  
++ `df`: a wide data frame  
++ 
 
 ## <a name="forest">Forest plot for multiple types of regression model</a>
 
