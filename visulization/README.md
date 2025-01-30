@@ -245,8 +245,9 @@ __Required packages__: ggplot2, aplot, RColorBrewer
 Parameters for `AnnotatedPlot`:  
 + `p`: a ggplot object  
 + `row_order`, `col_order`: reorder the order of x-axis or y-axis with the given order  
-+ `df_anno_x`, `df_anno_y`: data frame for annotation with rownames as  
-+ ``, ``:   
++ `df_anno_x`, `df_anno_y`: data frame for annotation with rownames as the the x-axis or y-axis of the plot
++ `top_anno_var`, `bottom_anno_var`, `right_anno_var`, `left_anno_var`: variables for plot annotation, should be colnames of `df_anno_x` or `df_anno_y`  
++ `heights`, `widths`: the heights or widths of each annotation bar  
 
 ## <a name="circular">layout_circular_community - Network for each community as a circle (like cytoscape)</a>
 
