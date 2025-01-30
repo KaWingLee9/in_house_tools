@@ -854,7 +854,7 @@ AnnotatedPlot=function(p,
         df_anno_x=df_anno_x[ggplot_build(p)$layout$panel_params[[1]]$x$get_labels(),]
     }
     if (! (is.null(left_anno_var) | is.null(right_anno_var))){
-        df_anno_y=df_anno_x[ggplot_build(p)$layout$panel_params[[1]]$y$get_labels(),]
+        df_anno_y=df_anno_y[ggplot_build(p)$layout$panel_params[[1]]$y$get_labels(),]
     }
     
     j=0
@@ -907,7 +907,7 @@ AnnotatedPlot=function(p,
             color_pal=anno_colors[[ bottom_anno_var[i] ]]
             
             assign(paste0('p',j),
-                   ggplot(df_anno_x,aes_q(x=0,y=rownames(df_anno_x),fill=df_anno_x[,bottom_anno_var[i]]))+
+                   ggplot(df_anno_x,aes_q(y=0,x=rownames(df_anno_x),fill=df_anno_x[,bottom_anno_var[i]]))+
                         geom_tile()+
                         theme_classic()+
                         theme(axis.line.x=element_blank(),axis.line.y=element_blank(),
@@ -922,12 +922,12 @@ AnnotatedPlot=function(p,
         }
     }
     
-    # annotation on the bottom
+    # annotation on the top
     if (! is.null(top_anno_var)){
         for (i in 1:length(top_anno_var)){
             color_pal=anno_colors[[ top_anno_var[i] ]]
             assign(paste0('p',j),
-                   ggplot(df_anno_x,aes_q(x=0,y=rownames(df_anno_x),fill=df_anno_x[,top_anno_var[i]]))+
+                   ggplot(df_anno_x,aes_q(y=0,x=rownames(df_anno_x),fill=df_anno_x[,top_anno_var[i]]))+
                         geom_tile()+
                         theme_classic()+
                         theme(axis.line.x=element_blank(),axis.line.y=element_blank(),
