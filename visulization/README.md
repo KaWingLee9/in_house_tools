@@ -243,7 +243,14 @@ __Required packages__: ggplot2, aplot
 ## <a name="order">OrderedPlot - Reset the order of x/y-axis or show dendrogram in ggplot2</a>
 __Required packages__: ggplot2, aplot, RColorBrewer  
 Parameters for `OrderedPlot`:  
-
++ `p`: a ggplot object  
++ `x`, `y`: column name for x-axis and y-axis, should be found in `p$data`  
++ `cluster_value`: column name used for reorder (clustering), should be found in `p$data`  
++ `cluster_var`:   
++ `cluster_row`, `cluster_column`: whether to reorder the items of x/y-axis  
++ `show_row_dend`, `show_column_dend`: whether to show dendrogram in x/y-axis  
++ `row_dend_direction`, `column_dend_direction`: the site to place the dendrogram, could be `left`, `right`, `top`,  `bottom`  
++ `row_dend_width`, `column_dend_height`: size of the dendrogram  
 
 ## <a name="annotation">AnnotatedPlot - Draw annotation bar in ggplot2</a>
 __Required packages__: ggplot2, aplot, RColorBrewer  
