@@ -302,7 +302,11 @@ p1+p2+p3
 
 Parameters of `SunburstPlot`:  
 + `df`: a wide data frame  
-+ 
++ `dims`: colnames for each layer of the sunburst plot, should be ordered from inner to outer side  
++ `value`: colname refers to the number of each hierarchy; default: `value=NULL`  
++ `scale`: list of discrete or continuous scale of each layer (scale_*_* in ggplot2); could be NULL for a single layer  
++ `circular`: if TRUE, returns the traditional sunburst plot; if FALSE, returns the mosaic plot  
++ `color`: the outline color of each layer  
 
 ## <a name="forest">Forest plot for multiple types of regression model</a>
 
