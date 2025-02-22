@@ -1125,7 +1125,6 @@ layout_circular_community=function(community_labels,R=20,k=0.5){
     commnituies_label=unique(community_labels) %>% sort()
     n_communities=length(commnituies_label)
     nodes_per_community=c(table(community_labels))
-    node_order=levels(commnituies_label)
     
     node_coords=data.frame(
       node=1:length(community_labels),
@@ -1134,29 +1133,28 @@ layout_circular_community=function(community_labels,R=20,k=0.5){
       y=rep(NA,length.out=length(community_labels))
     )
 
-    for (pos in 1:length(node_order)) {
+    for (i in 1:n_communities) {
         
-        # center coordinates of each community
-        i=node_order[pos] 
-        theta_center=2 * pi * (pos - 1) / length(node_order)
-        x_center=R * cos(theta_center)
-        y_center=R * sin(theta_center)
+        theta_center=2*pi*(i-1)/n_communities
+        x_center=R*cos(theta_center)
+        y_center=R*sin(theta_center)
 
         m=nodes_per_community[i]
-        r=k * sqrt(m)
+        r=k*sqrt(m)  
 
-        community_nodes=which(community_labels == i)
+        community_nodes=which(community_labels==i)
 
         for (j in 1:length(community_nodes)) {
-            theta_node=2 * pi * (j - 1) / length(community_nodes)
-            x_node=x_center + r * cos(theta_node)
-            y_node=y_center + r * sin(theta_node)
+            theta_node=2*pi*(j-1)/length(community_nodes)
+            x_node=x_center+r*cos(theta_node)
+            y_node=y_center+r*sin(theta_node)
 
-            node_coords[community_nodes[j], "x"]=x_node
-            node_coords[community_nodes[j], "y"]=y_node
+
+            node_coords[ community_nodes[j], "x"]=x_node
+            node_coords[ community_nodes[j], "y"]=y_node
+            }
         }
-    }
-
+    
     return (node_coords[,c('x','y')])
     
 }
