@@ -303,6 +303,13 @@ Parameters for `layout_circular_community`:
 + `k`: radius adjustment of each community circle  
 returns a table of the coordinates of each vertex, which could be the input for ggraph, as shown in the example  
 
+
+Parameters for `layout_circular_community`:  
++ `layout_circular_community`: community label for each vertex  
++ `R`: radius of the main circle  
++ `k`: radius adjustment of each community circle  
+returns a table of the coordinates of each vertex, which could be the input for ggraph, as shown in the example  
+
 ## <a name="sunburst">SunburstPlot - Sunburst plot</a>
 ``` r
 df=data.frame(
