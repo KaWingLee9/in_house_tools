@@ -266,6 +266,42 @@ Parameters for `AnnotatedPlot`:
 + `df_anno_y`, `right_anno_var`, `left_anno_var`, `col_order`, `widths`: add annotation bar at the left or right  
 
 ## <a name="circular">layout_circular_community - Network for each community as a circle (like cytoscape)</a>
+``` r
+library(igraph)
+library(tidygraph)
+library(ggraph)
+
+# load required data
+# devtools::install_github('sctyner/geomnet')
+library(geomnet)
+data(lesmis)
+# network construction and community detection using Louvain algorithm
+edges=as.data.frame(lesmis[1])
+colnames(edges)=c("from", "to", "weight")
+g=graph_from_data_frame(edges,directed=FALSE)
+louvain_result=cluster_louvain(g)
+c=membership(louvain_result)[vertex_attr(g,'name')]
+vertex_attr(g,'Community')=c
+
+# assign coordinates to vertexes and visualize the network
+node_coords=layout_circular_community(c,R=10,k=0.8)
+
+p=ggraph(g,layout='manual',x=node_coords[,'x'],y=node_coords[,'y'])+
+    geom_edge_fan2(aes(color=weight,alpha=weight))+
+    geom_node_point(aes(color=as.factor(Community)),size=3)+
+    scale_edge_colour_continuous(low='grey',high='black')+
+    theme_void()
+p
+```
+<p align="center">
+  <img height="400" src="pct/circular_community.png">
+</p>
+
+Parameters for `layout_circular_community`:  
++ `layout_circular_community`: community label for each vertex  
++ `R`: radius of the main circle  
++ `k`: radius adjustment of each community circle  
+returns a table of the coordinates of each vertex, which could be the input for ggraph, as shown in the example  
 
 ## <a name="sunburst">SunburstPlot - Sunburst plot</a>
 ``` r
