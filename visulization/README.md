@@ -286,7 +286,7 @@ vertex_attr(g,'Community')=c
 # assign coordinates to vertexes and visualize the network
 node_coords=layout_circular_community(c,R=10,k=0.8)
 
-p=ggraph(g,layout='manual',x=node_coords[,'x'],y=node_coords[,'y'])+
+p=ggraph(g,layout='manual',x=node_coords[vertex_attr(g,'name'),'x'],y=node_coords[vertex_attr(g,'name'),'y'])+
     geom_edge_fan2(aes(color=weight,alpha=weight))+
     geom_node_point(aes(color=as.factor(Community)),size=3)+
     scale_edge_colour_continuous(low='grey',high='black')+
