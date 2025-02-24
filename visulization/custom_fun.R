@@ -1140,7 +1140,7 @@ layout_circular_community=function(community_labels,R=20,k=0.5){
         y_center=R*sin(theta_center)
 
         m=nodes_per_community[i]
-        r=k*sqrt(m)  
+        r=k*m  
 
         community_nodes=which(community_labels==i)
 
