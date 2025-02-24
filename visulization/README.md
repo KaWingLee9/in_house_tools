@@ -284,7 +284,7 @@ c=membership(louvain_result)[vertex_attr(g,'name')]
 vertex_attr(g,'Community')=c
 
 # assign coordinates to vertexes and visualize the network
-node_coords=layout_circular_community(c,R=10,k=0.8)
+node_coords=layout_circular_community(c,R=15,k=0.3)
 
 p=ggraph(g,layout='manual',x=node_coords[vertex_attr(g,'name'),'x'],y=node_coords[vertex_attr(g,'name'),'y'])+
     geom_edge_fan2(aes(color=weight,alpha=weight))+
