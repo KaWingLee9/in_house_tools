@@ -243,6 +243,25 @@ __Required packages__: ggplot2, aplot
 
 ## <a name="order">OrderedPlot - Reset the order of x/y-axis or show dendrogram in ggplot2</a>
 __Required packages__: ggplot2, aplot, RColorBrewer  
+``` r
+library(dplyr)
+library(ggplot2)
+library(aplot)
+library(gcookbook)
+
+hec=HairEyeColor[,,'Male']+HairEyeColor[,,'Female']
+hec=reshape2::melt(value.name='count')
+
+p1=ggplot(hec,aes(x=Eye,y=Hair))+
+    geom_point(aes(size=count),shape=21,fill='cornsilk')+
+    scale_size_area(max_size=20,guide='none')
+
+p2=OrderedPlot(p1,x='Eye',y='Hair',cluster_value='count',
+               cluster_column=TRUE,cluster_row=TRUE,
+               show_column_dend=TRUE,show_row_dend=TRUE)
+
+plot_list(p1,p2)
+```
 Parameters for `OrderedPlot`:  
 + `p`: a ggplot object  
 + `x`, `y`: column name for x-axis and y-axis, should be found in `p$data`  
@@ -252,6 +271,10 @@ Parameters for `OrderedPlot`:
 + `show_row_dend`, `show_column_dend`: whether to show dendrogram in x/y-axis  
 + `row_dend_direction`, `column_dend_direction`: the site to place the dendrogram, could be `left`, `right`, `top`,  `bottom`  
 + `row_dend_width`, `column_dend_height`: size of the dendrogram  
+
+<p align="center">
+  <img height="400" src="pct/OrderedPlot.png">
+</p>
 
 ## <a name="annotation">AnnotatedPlot - Draw annotation bar in ggplot2</a>
 __Required packages__: ggplot2, aplot, RColorBrewer  
