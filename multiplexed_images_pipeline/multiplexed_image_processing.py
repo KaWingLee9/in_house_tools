@@ -346,3 +346,24 @@ def pseudo_color(img,color_panel,max_quantile=0.98):
             for i in range(len(channel_name))]
     plt.legend(handles=legend_elements,loc='lower center',bbox_to_anchor=(0.45,0.98),frameon=False,
                labelcolor=color_name,ncol=min(len(color_name),4),columnspacing=0.5)
+
+
+def subcellular_exp_qc(img,cell_mask,nuclei_mask):
+
+    cell_mask[cell_mask!=0]=1
+    nuclei_mask[nuclei_mask!=0]=1
+
+    bkg_mask=cell_mask+nuclei_mask
+    bkg_mask[bkg_mask!=0]=3
+    bkg_mask[bkg_mask==0]=1
+    bkg_mask[bkg_mask==3]=0
+
+    cytoplasm_mask=cell_mask
+    cytoplasm_mask[nuclei_mask==1]=0
+
+    b=np.apply_along_axis(np.mean,1,img[:,bkg_mask==1])
+    c=np.apply_along_axis(np.mean,1,img[:,cytoplasm_mask==1])
+    n=np.apply_along_axis(np.mean,1,img[:,nuclei_mask==1])
+    
+    df=pd.DataFrame({'Background':b,'Cytoplasm':c,'Nuclei':n})
+    return(df)
