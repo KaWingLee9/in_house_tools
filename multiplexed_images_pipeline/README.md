@@ -43,7 +43,7 @@ img_mesmer=Generate_mesmer_input(img_norm,marker_list,in_nuc_marker_kwargs,
 # cell segmentation
 segmentation_predictions_cell=app.predict(img_mesmer,preprocess_kwargs={'percentile':1},
                                      image_mpp=0.5,compartment='whole-cell')
-cell_mask=segmentation_predictions[0,:,:,0]                                     
+cell_mask=segmentation_predictions_cell[0,:,:,0]                                     
 tifffile.imwrite(file.split('.')[0]+'_mask.tiff',cell_mask)
 
 # nuclei segmentation
