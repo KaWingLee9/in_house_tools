@@ -1,6 +1,8 @@
 # Data preprocessing of multiplexed imaging data (Python)
 This pipeline is used for data preprocessing and visualization for multiplexed imaging data, which could be perfectly adapted for scanpy and SOAPy.  
+
 ## Cell segmentation
+
 ### Mesmer
 To run Mesmer in docker, please refer to https://deepcell.readthedocs.io/en/master/.  
 __Required packages__: numpy, pandas, matplotlib, tifffile, deepcell
@@ -37,15 +39,27 @@ img_multipledxed=tifffile.imread(file)
 img_norm=Denoise_img(img_multipledxed,98)
 img_mesmer=Generate_mesmer_input(img_norm,marker_list,in_nuc_marker_kwargs,
                                  in_mem_marker_kwargs)
-segmentation_predictions=app.predict(img_mesmer,preprocess_kwargs={'percentile':1},
+# cell segmentation
+segmentation_predictions_cell=app.predict(img_mesmer,preprocess_kwargs={'percentile':1},
                                      image_mpp=0.5,compartment='whole-cell')
-# save mask file
 tifffile.imwrite(file.split('.')[0]+'_mask.tiff', segmentation_predictions[0,:,:,0])
+
+# nuclei segmentation
+segmentation_predictions_nuclear=app.predict(img_mesmer,preprocess_kwargs={'percentile':1},
+                                     image_mpp=0.5,compartment='nuclear')
+tifffile.imwrite(file.split('.')[0]+'_nuclei_mask.tiff', segmentation_predictions[0,:,:,0])
 ```
 
 __Note__: `iamge_mpp` in `app.predict` specifies the resolution of the image (aka $\mu m$ of each pixel).  
 `IMC`: 1, `MIBI_TOF`: 0.5  
 __Reference__: Greenwald, N.F., Miller, G., Moen, E. et al. Whole-cell segmentation of tissue images with human-level performance using large-scale data annotation and deep learning. Nat Biotechnol 40, 555–565 (2022). https://doi.org/10.1038/s41587-021-01094-0
+
+### Marker inspection
+We then inspected the markers expression according to their mean expression in __Background__, __Cytoplasm__ and __Nuclei__, respectively.  
+``` python
+qc_df=subcellular_exp_qc(img,cell_mask,nuclei_mask)
+```
+
 ## Expression quantification, cell type classification and in-situ visualization
 Protein expression quantification, data normalization, cell type clustering, cell location, cell morphology, in-situ visualization etc. could be done using this pipeline (See `.ipynb`). Raw multiplexed `.tiff` file and segmentation result `_mask.tiff` are used as input.  
 __Reference__: Rendeiro, A.F., Ravichandran, H., Bram, Y. et al. The spatial landscape of lung pathology during COVID-19 progression. Nature 593, 564–569 (2021). https://doi.org/10.1038/s41586-021-03475-6  
@@ -136,6 +150,7 @@ __Next, `SOAPy` could be used for further spatial-related analysis!__
 https://github.com/LiHongCSBLab/SOAPy  
 
 ## Data generation from different plaforms
+
 ### IMC (Imaging mass cytometry)
 Convert IMC `.txt` files to multiplexed `.tiff` files.  
 __Reaquired packages__: readimc
