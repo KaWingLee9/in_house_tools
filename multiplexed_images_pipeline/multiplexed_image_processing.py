@@ -348,7 +348,14 @@ def pseudo_color(img,color_panel,max_quantile=0.98):
                labelcolor=color_name,ncol=min(len(color_name),4),columnspacing=0.5)
 
 
-def subcellular_exp_qc(img,cell_mask,nuclei_mask):
+def subcellular_exp_qc(img,cell_mask,nuclei_mask,qthres=0.99):
+
+    scale_fun=lambda x: (x-np.mean(x))/np.std(x)
+    
+    def clip_fun(x,qthres=qthres):
+        q=np.quantile(x,qthres)
+        x[x>=q]=q
+        return(x)
 
     cell_mask[cell_mask!=0]=1
     nuclei_mask[nuclei_mask!=0]=1
@@ -360,6 +367,9 @@ def subcellular_exp_qc(img,cell_mask,nuclei_mask):
 
     cytoplasm_mask=cell_mask
     cytoplasm_mask[nuclei_mask==1]=0
+
+    img=np.apply_along_axis(clip_fun,0,img)
+    img=np.apply_along_axis(scale_fun,0,img)
 
     b=np.apply_along_axis(np.mean,1,img[:,bkg_mask==1])
     c=np.apply_along_axis(np.mean,1,img[:,cytoplasm_mask==1])
