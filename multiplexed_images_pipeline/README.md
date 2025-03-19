@@ -43,12 +43,14 @@ img_mesmer=Generate_mesmer_input(img_norm,marker_list,in_nuc_marker_kwargs,
 # cell segmentation
 segmentation_predictions_cell=app.predict(img_mesmer,preprocess_kwargs={'percentile':1},
                                      image_mpp=0.5,compartment='whole-cell')
-tifffile.imwrite(file.split('.')[0]+'_mask.tiff', segmentation_predictions[0,:,:,0])
+cell_mask=segmentation_predictions[0,:,:,0]                                     
+tifffile.imwrite(file.split('.')[0]+'_mask.tiff',cell_mask)
 
 # nuclei segmentation
 segmentation_predictions_nuclear=app.predict(img_mesmer,preprocess_kwargs={'percentile':1},
                                      image_mpp=0.5,compartment='nuclear')
-tifffile.imwrite(file.split('.')[0]+'_nuclei_mask.tiff', segmentation_predictions[0,:,:,0])
+nuclei_mask=segmentation_predictions_nuclear[0,:,:,0]   
+tifffile.imwrite(file.split('.')[0]+'_nuclei_mask.tiff',nuclei_mask)
 ```
 
 __Note__: `iamge_mpp` in `app.predict` specifies the resolution of the image (aka $\mu m$ of each pixel).  
@@ -58,7 +60,7 @@ __Reference__: Greenwald, N.F., Miller, G., Moen, E. et al. Whole-cell segmentat
 ### Marker inspection
 We then inspected the subcellular markers expression according to their mean expression in __Background__, __Cytoplasm__ and __Nuclei__, respectively.  
 ``` python
-qc_df=subcellular_exp_qc(img,cell_mask,nuclei_mask)
+qc_df=subcellular_exp_qc(img_multipledxed,cell_mask,nuclei_mask,qc_thres=0.99)
 ```
 
 ## Expression quantification, cell type classification and in-situ visualization
