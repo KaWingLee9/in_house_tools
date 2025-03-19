@@ -18,7 +18,8 @@ from deepcell.utils.plot_utils import create_rgb_image, make_outline_overlay
 from deepcell_toolbox import erode_edges
 from deepcell.applications import Mesmer
 # import in-house defined functions
-from mesmer_function import *
+# from mesmer_function import *
+exec(open('./mesmer_function.py').read())
 
 app = Mesmer()
 
@@ -68,7 +69,8 @@ __Reference__: Rendeiro, A.F., Ravichandran, H., Bram, Y. et al. The spatial lan
 import scanpy as sc
 import matplotlib.pyplot as plt
 # import in-house defined functions
-from multiplexed_image_processing import *
+# from multiplexed_image_processing import *
+exec(open('./multiplexed_image_processing.py').read())
 plt.rcParams['figure.figsize']=(6,6)
 
 # generate anndata object, which could be adapted to scanpy based packages
