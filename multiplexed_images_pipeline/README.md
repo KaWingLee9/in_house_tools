@@ -1,5 +1,5 @@
 # Data preprocessing of multiplexed imaging data (Python)
-This pipeline is used for data preprocessing and visualization for multiplexed imaging data, which could be perfectly adapted for scanpy and SOAPy.  
+This pipeline is used for data preprocessing and visualization for multiplexed imaging data, which could be perfectly adapted for __scanpy__ and __SOAPy__.  
 
 ## Cell segmentation
 
