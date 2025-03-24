@@ -126,4 +126,5 @@ def subcellular_exp_qc(img,cell_mask,nuclei_mask,qthres=0.99):
     n=np.apply_along_axis(np.mean,1,img[:,nuclei_mask==1])
     
     df=pd.DataFrame({'Background':b,'Cytoplasm':c,'Nuclei':n})
+    df=df.apply(lambda x: (x-np.mean(x))/np.std(x),axis=1)
     return(df)
