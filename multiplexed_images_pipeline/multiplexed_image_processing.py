@@ -348,6 +348,7 @@ def pseudo_color(img,color_panel,max_quantile=0.98):
                labelcolor=color_name,ncol=min(len(color_name),4),columnspacing=0.5)
 
 
+# detect protein expression in background, cytoplasm and nuclear
 def subcellular_exp_qc(img,cell_mask,nuclei_mask,qthres=0.99):
 
     scale_fun=lambda x: (x-np.mean(x))/np.std(x)
@@ -378,3 +379,57 @@ def subcellular_exp_qc(img,cell_mask,nuclei_mask,qthres=0.99):
     df=pd.DataFrame({'Background':b,'Cytoplasm':c,'Nuclei':n})
     df=df.apply(lambda x: (x-np.mean(x))/np.std(x),axis=1)
     return(df)
+
+
+# scale within samples
+# this function is totally copied from https://github.com/scverse/scanpy/issues/2142
+def scale_by_batch(adata,batch_key,
+                   max_value=10) -> ad.AnnData:
+    return ad.concat(
+        {
+            k: sc.pp.scale(adata[idx],copy=True,max_value=max_value)
+            for k, idx in adata.obs.groupby(batch_key).indices.items()
+        },
+        merge="first"
+    )
+
+
+# Spatial distribution pattern of three cell types (compare the distance between CT1 and CT2, and that between CT1 and CT3)
+# Reference: Immune cell topography predicts response to PD-1 blockade in cutaneous T cell lymphoma
+def CalSpatialScore(adata,sample_key,cluster_key,CT1,CT2,CT3):
+    
+    assert all([item in adata.obs[cluster_key].unique() for item in [CT1,CT2,CT3]]) , 'Cell types do not exisit.'
+    
+    coord_mat=pd.DataFrame(adata.obsm['spatial'],index=adata.obs_names,columns=['x','y'])
+    
+    sample_ls=adata.obs[sample_key].unique()
+    
+    SpatialScore_sample={}
+    
+    d={}
+    d['CT1']=CT1
+    d['CT2']=CT3
+    d['CT3']=CT3
+    
+    for sample_id in sample_ls:
+        df_1=coord_mat[np.array(adata.obs[sample_key]==sample_id) & np.array(adata.obs[cluster_key]==CT1)]
+        df_2=coord_mat[np.array(adata.obs[sample_key]==sample_id) & np.array(adata.obs[cluster_key]==CT2)]
+        df_3=coord_mat[np.array(adata.obs[sample_key]==sample_id) & np.array(adata.obs[cluster_key]==CT3)]
+        
+        if any([df_1.shape[0]==0,df_2.shape[0]==0,df_3.shape[0]==0]):
+            continue
+        
+        dist_12=np.sqrt(np.sum(( np.array(df_1)[:,np.newaxis,:]- np.array(df_2))**2,axis=2))
+        dist_12_min=np.apply_along_axis(np.min,axis=1,arr=dist_12)
+        dist_13=np.sqrt(np.sum(( np.array(df_1)[:,np.newaxis,:]- np.array(df_3))**2,axis=2))
+        dist_13_min=np.apply_along_axis(np.min,axis=1,arr=dist_13)
+        
+        df=pd.DataFrame({'CT2':dist_12_min,'CT3':dist_13_min,'ratio':dist_12_min/dist_13_min})
+        df.index=df_1.index
+        
+        d[sample_id]=df
+        SpatialScore_sample[sample_id]=np.mean(df['ratio'])
+    
+    d['SpatialScore_sample']=SpatialScore_sample
+    adata.uns['Spatialscore']=d
+    return(adata)
