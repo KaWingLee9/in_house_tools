@@ -227,7 +227,8 @@ def plot_cell(adata,tag='cluster',col=None):
     
 
 def plot_pixel(adata,color_panel,
-                  max_quantile=0.98,return_mat=False,show_boundary = False):
+               max_quantile=1,min_quantile=0.01,return_mat=False,show_legend=True,
+               show_boundary=False):
     
     idx=list(adata.var_names)
     
@@ -257,7 +258,12 @@ def plot_pixel(adata,color_panel,
             channel_num=channel
         img_gray=img[channel_num,:,:].copy()
         img_gray=np.log2(img_gray+1)
-        img_gray[img_gray>=np.quantile(img_gray[img_gray!=0],max_quantile)]=np.quantile(img_gray[img_gray!=0],max_quantile)
+        img_gray[img_gray>=np.quantile(img_gray[img_gray!=0],max_quantile) ]=np.quantile(img_gray[img_gray!=0],max_quantile)
+        # img_gray[img_gray>=np.quantile(img_gray,max_quantile) ]=np.quantile(img_gray,max_quantile)
+        
+        img_gray[ np.array( img_gray<=np.quantile(img_gray[img_gray!=0],min_quantile) ) ]=0
+        # img_gray[ np.array( img_gray<=np.quantile(img_gray,min_quantile) ) ]=0
+        
         img_gray=img_gray/img_gray.max()*255
         (r,g,b)=_stain(img_gray,color,r,g,b)
         
@@ -265,24 +271,28 @@ def plot_pixel(adata,color_panel,
     rgb_img=rgb_img.astype('uint16')
     if return_mat:
         return (rgb_img)
+
     if show_boundary:  
         mask=adata.uns['mask']
         boundary=find_boundaries(mask,connectivity=1,mode='inner')
         rgb_img=np.copy(rgb_img)
-        rgb_img[boundary>0,:] = 255
+        rgb_img[boundary>0,:]=255
     plt.imshow(rgb_img)
     plt.axis('off')
+
+    if show_legend:
     
-    if 'white' in color_name:
-        color_name[color_name.index('white')]='black'
-    
-    legend_elements=[Line2D([0], [0], marker='o',color='black', markerfacecolor='w', label=channel_name[i], markersize=0,linestyle='None')
-            for i in range(len(channel_name))]
-    plt.legend(handles=legend_elements,loc='lower center',bbox_to_anchor=(0.45,0.98),frameon=False,
-               labelcolor=color_name,ncol=min(len(color_name),4),columnspacing=0.5)
+        if 'white' in color_name:
+            color_name[color_name.index('white')]='black'
+        
+        legend_elements=[Line2D([0], [0], marker='o',color='black', markerfacecolor='w', label=channel_name[i], markersize=0,linestyle='None')
+                for i in range(len(channel_name))]
+        plt.legend(handles=legend_elements,loc='lower center',bbox_to_anchor=(0.45,0.98),frameon=False,
+                labelcolor=color_name,ncol=min(len(color_name),4),columnspacing=0.5)
 
 
-def pseudo_color(img,color_panel,max_quantile=0.98):
+def pseudo_color(img,color_panel,max_quantile=1,min_quantile=0.01,
+                 show_legend=True,return_mat=False):
     
     import numpy as np
     import pandas as pd
@@ -315,7 +325,7 @@ def pseudo_color(img,color_panel,max_quantile=0.98):
             b[:,:,0]=b[:,:,0]+img_gray
             g[:,:,0]=g[:,:,0]+img_gray
         return ((r,g,b))
-    
+
     color_name=list(color_panel.keys())
     
     if type(list(color_panel.values())[0])==type((0,1)):
@@ -330,23 +340,34 @@ def pseudo_color(img,color_panel,max_quantile=0.98):
             channel_num=channel
         img_gray=img[channel_num,:,:].copy()
         img_gray=np.log2(img_gray+1)
-        img_gray[img_gray>=np.quantile(img_gray[img_gray!=0],max_quantile)]=np.quantile(img_gray[img_gray!=0],max_quantile)
+
+        img_gray[img_gray>=np.quantile(img_gray[img_gray!=0],max_quantile) ]=np.quantile(img_gray[img_gray!=0],max_quantile)
+        # img_gray[img_gray>=np.quantile(img_gray,max_quantile) ]=np.quantile(img_gray,max_quantile)
+        img_gray[ np.array( img_gray<=np.quantile(img_gray[img_gray!=0],min_quantile) ) ]=0
+        # img_gray[ np.array( img_gray<=np.quantile(img_gray,min_quantile) ) ]=0
+        
         img_gray=img_gray/img_gray.max()*255
         (r,g,b)=stain(img_gray,color,image_color=(r,g,b))
+        
+    rgb_img=np.concatenate([r,g,b],axis=2)
+    rgb_img=rgb_img.astype('uint16')
+    if return_mat:
+        return (rgb_img)
         
     img_color=np.concatenate([r,g,b],axis=2)
     img_color=img_color.astype('uint16')
     plt.imshow(img_color)
     plt.axis('off')
 
-    if 'white' in color_name:
-    color_name[color_name.index('white')]='black'
-    
-    legend_elements=[Line2D([0], [0], marker='o',color='black', markerfacecolor='w', label=channel_name[i], markersize=0,linestyle='None')
-            for i in range(len(channel_name))]
-    plt.legend(handles=legend_elements,loc='lower center',bbox_to_anchor=(0.45,0.98),frameon=False,
-               labelcolor=color_name,ncol=min(len(color_name),4),columnspacing=0.5)
+    if show_legend:
 
+        if 'white' in color_name:
+            color_name[color_name.index('white')]='black'
+            
+        legend_elements=[Line2D([0], [0], marker='o',color='black', markerfacecolor='w', label=channel_name[i], markersize=0,linestyle='None')
+                for i in range(len(channel_name))]
+        plt.legend(handles=legend_elements,loc='lower center',bbox_to_anchor=(0.45,0.98),frameon=False,
+                labelcolor=color_name,ncol=min(len(color_name),4),columnspacing=0.5)
 
 # detect protein expression in background, cytoplasm and nuclear
 def subcellular_exp_qc(img,cell_mask,nuclei_mask,qthres=0.99):
@@ -432,4 +453,77 @@ def CalSpatialScore(adata,sample_key,cluster_key,CT1,CT2,CT3):
     
     d['SpatialScore_sample']=SpatialScore_sample
     adata.uns['Spatialscore']=d
+    return(adata)
+
+
+# considering permutations
+from joblib import Parallel,delayed
+def _CalRelativeDistance(coord_mat_sample,ct1_id,ct2_id,ct3_id):
+    
+    df_1=coord_mat_sample.loc[ct1_id,:]
+    df_2=coord_mat_sample.loc[ct2_id,:]
+    df_3=coord_mat_sample.loc[ct3_id,:]
+    
+    dist_12=np.sqrt(np.sum(( np.array(df_1)[:,np.newaxis,:]- np.array(df_2))**2,axis=2))
+    dist_12_min=np.apply_along_axis(np.min,axis=1,arr=dist_12)
+    dist_13=np.sqrt(np.sum(( np.array(df_1)[:,np.newaxis,:]- np.array(df_3))**2,axis=2))
+    dist_13_min=np.apply_along_axis(np.min,axis=1,arr=dist_13)
+    
+    df=pd.DataFrame({'CT2':dist_12_min,'CT3':dist_13_min,'ratio':dist_12_min/dist_13_min})
+    return(np.mean(df['ratio']))
+
+def _CalRDpermutation(shuffle_type,ct2_id,ct3_id,coord_mat_sample):
+    
+    if shuffle_type=='shuffle_23':
+        x=np.array(list(ct2_id)+list(ct3_id))
+        ct2_perm_id=np.random.choice(x,size=len(ct2_id),replace=False)
+        ct3_perm_id=np.setdiff1d(x,ct2_perm_id)
+    
+    if shuffle_type=='shuffle_except1':
+        x=np.setdiff1d(np.array(coord_mat_sample.index),ct1_id)
+        ct2_perm_id=np.random.choice(x,size=len(ct2_id),replace=False)
+        ct3_perm_id=np.random.choice(np.setdiff1d(x,ct2_perm_id),size=len(ct3_id),replace=False)
+        
+    RD_perm=_CalRelativeDistance(coord_mat_sample,ct2_perm_id,ct2_id,ct3_perm_id)
+        
+    return(RD_perm)
+
+def relative_distance_analysis(adata,sample_key,cluster_key,CT1,CT2,CT3,
+                               shuffle_type='shuffle_23',shuffle_times=100,n_jobs=20):
+    
+    assert all([item in adata.obs[cluster_key].unique() for item in [CT1,CT2,CT3]]) , 'Cell types do not exisit.'
+    
+    coord_mat=pd.DataFrame(adata.obsm['spatial'],index=adata.obs_names,columns=['x','y'])
+    
+    sample_ls=adata.obs[sample_key].unique()
+    
+    RD_true_dict={}
+    RD_zscore_dict={}
+    
+    for sample_id in sample_ls:
+        
+        coord_mat_sample=coord_mat[adata.obs[sample_key]==sample_id]
+        cell_type_tmp=adata.obs[adata.obs[sample_key]==sample_id][cluster_key]
+        
+        ct1_id=coord_mat_sample.index[cell_type_tmp==CT1]
+        ct2_id=coord_mat_sample.index[cell_type_tmp==CT2]
+        ct3_id=coord_mat_sample.index[cell_type_tmp==CT3]
+        
+        if any([ct1_id.shape[0]==0,ct2_id.shape[0]==0,ct3_id.shape[0]==0]):
+            continue
+        
+        RD_true=_CalRelativeDistance(coord_mat_sample,ct1_id,ct2_id,ct3_id)
+        
+        RD_perms=Parallel(n_jobs=n_jobs)(delayed(_CalRDpermutation)(shuffle_type=shuffle_type,
+                                                                    ct2_id=ct2_id,ct3_id=ct3_id,coord_mat_sample=coord_mat_sample) for i in range(0,shuffle_times))
+        RD_zscore=(RD_true-np.mean(RD_perms))/np.std(RD_perms)
+        
+        RD_true_dict[sample_id]=RD_true
+        RD_zscore_dict[sample_id]=RD_zscore
+        
+    df=pd.DataFrame({'RD':RD_true_dict,'RD_zscore':RD_zscore_dict})
+    adata.uns['RelativeDistance']={'CT1':CT1,'CT2':CT2,'CT3':CT3,
+                                   'shuffle_type':shuffle_type,'shuffle_times':shuffle_times,
+                                   'RD_result':df}
+    
     return(adata)
