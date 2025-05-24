@@ -108,6 +108,10 @@ sc.tl.umap(adata)
 sc.pl.spatial(adata,color='cluster',spot_size=15)
 sc.pl.spatial(adata,color='PanCK',spot_size=15)
 
+# show plot in black background
+# fig=sc.pl.spatial(adata,color='PanCK',spot_size=15,show=False)
+# fig[0].set_facecolor('black')
+
 # staining image with or without cell boundary
 color_panel={'red': 'CD3',
              'green':'Vimentin',
