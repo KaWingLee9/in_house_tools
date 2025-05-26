@@ -727,6 +727,11 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
         coord_2=seq(m-ll2/2,m+ll2/2,length.out=ll2+1)/l
     }
 
+    if (align=='justify'){
+        coord_1=seq(0,1,length.out=ll1+1)
+        coord_2=seq(0,1,length.out=ll2+1)
+    }
+
     link_df[,'y1_coord']=coord_1[sapply(link_df[,'y1_name'],function(x){which(x==l1)})]
     link_df[,'y2_coord']=coord_2[sapply(link_df[,'y2_name'],function(x){which(x==l2)})]
     link_df[,'col']='1'
