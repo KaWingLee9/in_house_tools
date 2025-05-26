@@ -241,6 +241,13 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
 ## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
 __Required packages__: ggplot2, aplot  
 
+Parameters for `LinkedPlot`:  
++ `df`: data frame to generate ggplot object  
++ `link_df`: two-columns data frame to build links between two subplots  
++ `x_col`, `y_col`, `fill_col`, `size_col`: column names of `df` mapped to ggplot object  
++ `widths`: relative widths of the first subplot, links and the second subplot  
++ `align`: ways to align the y-coordinates between two subplots, one of `top`, `bottom`, `center`, `justify`  
+
 ## <a name="order">OrderedPlot - Reset the order of x/y-axis or show dendrogram in ggplot2</a>
 __Required packages__: ggplot2, aplot, RColorBrewer  
 ``` r
