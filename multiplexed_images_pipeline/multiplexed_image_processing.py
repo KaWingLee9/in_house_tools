@@ -190,10 +190,11 @@ def hex_to_rgb(hex_col):
 #     # plt.invert_yaxis()
 #     plt.legend(handles=legend_elements,loc=(1.001,0.5),frameon=False)
 
-def plot_cell(adata,tag='cluster',col=None):
+def plot_cell_cluster(adata,tag='cluster',col=None):
     
     pic=adata.uns['mask'].copy()
     label=adata.obs[tag]
+    label=label.astype('category')
     
     if col==None:
         tag_name=label.cat.categories
@@ -224,7 +225,45 @@ def plot_cell(adata,tag='cluster',col=None):
     plt.axis('off')
     # plt.invert_yaxis()
     plt.legend(handles=legend_elements,loc=(1.001,0.5),frameon=False)
+
+
+def plot_cell_exp(adata,feature,show_boundary=True,
+                  cmap=None,show_colorbar=False,color='red',
+                  max_quantile=0.99,min_quantile=0):
     
+    mask=adata.uns['mask']
+    
+    object_exp=np.array(adata[:,feature].copy().X)
+    object_exp=np.array([i[0] for i in object_exp])
+    
+    object_exp[object_exp>=np.quantile(object_exp[object_exp!=0],max_quantile)]=np.quantile(object_exp[object_exp!=0],max_quantile)
+    object_exp[ np.array( object_exp<=np.quantile(object_exp[object_exp!=0],min_quantile) ) ]=0
+    
+    object_exp={(i+1): val for i, val in enumerate(object_exp)}
+    
+    output_mat=np.zeros_like(mask,dtype=float)
+    for obj_id, value in object_exp.items():
+        output_mat[mask==obj_id]=value
+    
+    if show_boundary:  
+        boundary=find_boundaries(mask,connectivity=1,mode='inner')
+        boundary[boundary>0]=255
+        boundary_mat=np.copy(mask)
+        m=np.max(boundary_mat)+1
+        boundary_mat[boundary]=m
+        boundary_mat[boundary_mat!=m]=0
+        boundary_mat[boundary_mat!=0]=1
+        
+
+    colors=['#000000',color]
+    cmap=LinearSegmentedColormap.from_list('custom_cmap',colors,N=500)
+        
+    plt.imshow(output_mat,cmap=cmap)
+    if show_colorbar:
+        plt.colorbar()
+    plt.imshow(boundary_mat,cmap=LinearSegmentedColormap.from_list('custom_cmap',['#00000000','#FFFFFFFF'],N=100))
+    plt.axis('off')
+    plt.show()
 
 def plot_pixel(adata,color_panel,
                max_quantile=1,min_quantile=0.01,return_mat=False,show_legend=True,
