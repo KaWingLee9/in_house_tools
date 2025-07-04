@@ -149,10 +149,10 @@ def st_Seurat2Scanpy(seurat_file,r_home,
     count_mat=count_mat.transpose()
 
     # get gene names
-    metafeature=GetMetaFeature(seurat_obj,assay)
+    metafeature=robjects.conversion.rpy2py(GetMetaFeature(seurat_obj,assay))
 
     # metadata
-    metadata=GetMetaData(seurat_obj)
+    metadata=robjects.conversion.rpy2py(GetMetaData(seurat_obj))
     
     # create anndata
     adata=ad.AnnData(X=count_mat,var=metafeature,obs=metadata)  
@@ -308,10 +308,10 @@ def sc_Seurat2Scanpy(seurat_file,r_home,
     count_mat=count_mat.transpose()
 
     # get gene names
-    metafeature=GetMetaFeature(seurat_obj,assay)
+    metafeature=robjects.conversion.rpy2py(GetMetaFeature(seurat_obj,assay))
 
     # metadata
-    metadata=GetMetaData(seurat_obj)
+    metadata=robjects.conversion.rpy2py(GetMetaData(seurat_obj))
     
 
     # create anndata
