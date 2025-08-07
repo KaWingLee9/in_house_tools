@@ -264,11 +264,14 @@ SimilarityClustering=function(data,mode='automatic',select.cutoff=FALSE,
   if (!((mode=='ConsensusClusterPlus') & (select.cutoff==FALSE))) {
       
       if (similarity.method=='euclidean') {
-          similarity_matrix=dist(data,method='euclidean') %>% as.matrix()
-          similarity_matrix=-similarity_matrix
+        similarity_matrix=dist(data,method='euclidean') %>% as.matrix()
+        similarity_matrix=-similarity_matrix
       }
-      if (similarity.method %in% c('pearson','spearman')){
-          similarity_matrix=cor(t(data),method=similarity.method)
+      if (similarity.method %in% c('pearson','spearman')) {
+        similarity_matrix=cor(t(data),method=similarity.method)
+      }
+      if (similarity.method=='cosine') {
+        similarity_matrix=lsa::cosine(t(data))
       }
       similarity_matrix[is.na(similarity_matrix)]=0
   }
