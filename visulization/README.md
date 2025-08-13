@@ -112,7 +112,7 @@ Parameters of `SHeatmap`:
 </p>
 
 ## <a name="heatmap2">SimilarityClustering - Blocks division in similarity heatmap</a>
-__Required packages__: simplifyEnrichment, ComplexHeatmap
+__Required packages__: ComplexHeatmap, lsa, NbClust, simplifyEnrichment
 ``` r
 library(simplifyEnrichment)
 library(ComplexHeatmap)
