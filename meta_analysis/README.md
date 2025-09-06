@@ -1,17 +1,25 @@
 # Meta analysis
 
 ## Rank combination
-Combine the rank of P-value.
+Combine the rank of P-value.  
+``` r
+combined_result=CombRank_DFLs(test_result_ls,p_col='p_val',ES_col='avg_log2FC',
+                              min_num=0,min_ratio=0.5,method='RankSum',quantile_est=1/4)
+```
+Parameters of the function:  
++ `l`: list of the test result of each samples/studie  
++ `p_col`: column name of p_val  
++ `ES_col`: column name of ES  
++ `min_num`: minimal study number with test result  
++ `min_ratio`: % of the results (ignoring NA) have consistent effect would be considered  
++ `method`: "RankSum", "RankProd"  
++ `ncores`: number of cores to use  
+Return a data frame of meta analysis:  
+
+
 'Combined rank - Median effect size' plot could be used for visualization, just as volcano plot:  
 
 `signed_combined_rank` could be used for GSEA.  
-__Citation__: -  
-
-## P-value combination
-P-value combination considering the effect direction.  
-__Reference__:  
-[1] Schröder MS, Culhane AC, Quackenbush J, Haibe-Kains B. survcomp: an R/Bioconductor package for performance assessment and comparison of survival models. Bioinformatics. 2011 Nov 15;27(22):3206-8. doi: 10.1093/bioinformatics/btr511.  
-[2] Liu Y, Chen S, Li Z, Morrison AC, Boerwinkle E, Lin X. ACAT: A Fast and Powerful p Value Combination Method for Rare-Variant Analysis in Sequencing Studies. Am J Hum Genet. 2019 Mar 7;104(3):410-421. doi: 10.1016/j.ajhg.2019.01.002.  
-
-## Meta analysis of independence test
+__Citation__:  
+Pan-cancer analysis of spatial transcriptomics reveals heterogeneous tumor spatial microenvironment  
 
