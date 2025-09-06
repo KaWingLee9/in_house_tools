@@ -1,6 +1,6 @@
 # In-house tools/pipelines by Kelvin Lee
 For any questions, please contact with me. His contact information is available at:  
-https://github.com/KaWingLee9/MyProfile
+https://github.com/KaWingLee9
 
 ## Table of Contents
 ### Data analysis pipeline
