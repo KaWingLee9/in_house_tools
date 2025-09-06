@@ -1,6 +1,6 @@
 # Normalization of RNA expression matrix
 Count matrix -> RPKM/TPM matrix  
-__Required packages__: dplyr, GenomicFeatures  
+__Required packages__: `dplyr`, `GenomicFeatures`  
 ``` r
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/RNANormalization/RNANormalization.R')
 
