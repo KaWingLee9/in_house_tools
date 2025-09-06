@@ -20,6 +20,5 @@ Return a data frame of meta analysis:
 'Combined rank - Median effect size' plot could be used for visualization, just as volcano plot:  
 
 `signed_combined_rank` could be used for GSEA.  
-__Citation__:  
-Pan-cancer analysis of spatial transcriptomics reveals heterogeneous tumor spatial microenvironment  
+__Citation__: Pan-cancer analysis of spatial transcriptomics reveals heterogeneous tumor spatial microenvironment  
 
