@@ -119,7 +119,8 @@ color_panel={'red': 'CD3',
 plot_pixel(adata,color_panel,max_quantile=0.98,show_boundary=True)
 plot_pixel(adata,color_panel,max_quantile=0.98,show_boundary=False)
 # show cell types assignment
-plot_cell(adata,tag='cluster')
+plot_cell_cluster(adata,tag='cluster')
+plot_cell_exp(adata,feature='PanCK',color='red')
 ```
 Results of in-situ visualization:  
 
@@ -149,7 +150,7 @@ Parameters of `plot_pixel`:
 + `max_quantile`: the maximum quantile signals to filter out
 + `show_boundary`: whether to show cell boundary
 
-Parameters of `plot_cell`:  
+Parameters of `plot_cell_cluster`:  
 + `adata`
 + `tag`: column name of `adata.obs`
 + `col`: a dictionary for color assignment to the cell type
