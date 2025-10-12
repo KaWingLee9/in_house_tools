@@ -167,7 +167,7 @@ adata=relative_distance_analysis(adata,sample_key='image_id',cluster_key='cell_t
                                  shuffle_type='shuffle_except1',quantatative_method='RN',shuffle_times=100,n_jobs=50)
 ```
 The parameters of `relative_distance_analysis`:  
-+ `adata`: Anndata object  
++ `adata`  
 + `sample_key`: batch’s key in adata.obs  
 + `cluster_key`: the column label of clusters in adata.obs  
 + `CT1`, `CT2`, `CT3`: the cell types used for the analysis  
