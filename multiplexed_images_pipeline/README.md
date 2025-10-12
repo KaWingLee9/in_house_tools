@@ -175,6 +175,8 @@ The parameters of `relative_distance_analysis`:
 + `quantatative_method`: the statistical indicator for analysis. 'RD' is the statistic calculated by the distance between CT1 and CT2, and that between CT1 and CT3. 'RN' is  the statistic calculated by the number of CT1 nearest to CT2, and the number of CT1 nearest to CT3  
 + `shuffle_times`: times for permutation  
 + `n_jobs`: the maximum number of concurrently running jobs  
+
+
 __Reference__:  
 [1] Li. J., Lin. P., Wang. H., Tang. Z., Yan. X., Chen. X., Yuan. J., Chen. W., Li. H.*. Pan-cancer analysis of spatial transcriptomics reveals heterogeneous tumor spatial microenvironment. (In submission)  
 
