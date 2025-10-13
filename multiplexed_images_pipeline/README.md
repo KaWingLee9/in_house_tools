@@ -172,14 +172,15 @@ The parameters of `relative_distance_analysis`:
 + `sample_key`: batch’s key in adata.obs  
 + `cluster_key`: the column label of clusters in adata.obs  
 + `CT1`, `CT2`, `CT3`: the cell types used for the analysis  
-+ `shuffle_type`: the method for the permutation. 'shuffle_all' shuffles the labels of all cell types; 'shuffle_except1' shuffles the labels of all cell types but CT1; 'shuffle_23' shuffles the labels of CT2 and CT3; 'shuffle_123' shuffles the labels of CT1, CT2 and CT3  
-+ `quantatative_method`: the statistical indicator for analysis. 'RD' is the statistic calculated by the distance between CT1 and CT2, and that between CT1 and CT3. 'RN' is  the statistic calculated by the number of CT1 nearest to CT2, and the number of CT1 nearest to CT3  
++ `shuffle_type`: the method for the permutation. `shuffle_all` shuffles the labels of all cell types; `shuffle_except1` shuffles the labels of all cell types but CT1; `shuffle_23` shuffles the labels of CT2 and CT3; `shuffle_123` shuffles the labels of CT1, CT2 and CT3  
++ `quantatative_method`: the statistical indicator for analysis. `RD` is the statistic calculated by the distance between CT1 and CT2, and that between CT1 and CT3. `RN` is  the statistic calculated by the number of CT1 nearest to CT2, and the number of CT1 nearest to CT3  
 + `shuffle_times`: times for permutation  
 + `n_jobs`: the maximum number of concurrently running jobs  
+The results could be found in `adata.uns['RelativeDistance']['RD_result']` or `adata.uns['RelativeDistance']['RN_result']`.  
 
 
 __Reference__:  
-[1] Li. J., Lin. P., Wang. H., Tang. Z., Yan. X., Chen. X., Yuan. J., Chen. W., Li. H.*. Pan-cancer analysis of spatial transcriptomics reveals heterogeneous tumor spatial microenvironment. (In submission)  
+Li. J., Lin. P., Wang. H., Tang. Z., Yan. X., Chen. X., Yuan. J., Chen. W., Li. H.*. Pan-cancer analysis of spatial transcriptomics reveals heterogeneous tumor spatial microenvironment. (In submission)  
 
 ## Data generation from different plaforms
 
