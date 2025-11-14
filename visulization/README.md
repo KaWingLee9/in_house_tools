@@ -59,13 +59,14 @@ __Required packages__: XXX
 __Required packages__: dplyr, ComplexHeatmap
 ``` r
 library(gcookbook)
-<p align="center">
-  <img height="400" src="pct/ConditionHeatmap.png">
-</p>
+
 options(repr.plot.height=4,repr.plot.width=4)
 ConditionHeatmap(plum,x_col='length',y_col='time',group_col='survival',value_col='count',
                  row_gap=unit(0,'mm'),column_gap=unit(0,'mm'))
 ```
+<p align="center">
+  <img height="400" src="pct/ConditionHeatmap.png">
+</p>
 
 Parameters of `ConditionHeatmap`:
 + `df`: a long data frame 
