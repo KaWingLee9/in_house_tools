@@ -56,10 +56,21 @@ Parameters of `CorPlot`:
 __Required packages__: XXX  
 
 ## <a name="conditionHeatmap">ConditionHeatmap - Heatmap showing values under different condition</a>
-__Required packages__: ComplexHeatmap
+__Required packages__: dplyr, ComplexHeatmap
 ``` r
-
+library(gcookbook)
+<p align="center">
+  <img height="400" src="pct/ConditionHeatmap.png">
+</p>
+options(repr.plot.height=4,repr.plot.width=4)
+ConditionHeatmap(plum,x_col='length',y_col='time',group_col='survival',value_col='count',
+                 row_gap=unit(0,'mm'),column_gap=unit(0,'mm'))
 ```
+
+Parameters of `ConditionHeatmap`:
++ `df`: a long data frame 
++ `x_col`, `y_col`, `group_col`, `value_col`: column names of the x axis, y axis, condition to split heatmap and the value mapped to colors  
++ `...`: other arguments passed on to `ComplexHeatmap::Heatmap`  
 
 ## <a name="heatmap1">SHeatmap - Summarized heatmap of grouped data with significance test</a>
 __Required packages__: dplyr, ComplexHeatmap  
