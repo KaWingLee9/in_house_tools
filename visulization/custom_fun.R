@@ -563,6 +563,47 @@ ClusterCombine=function(c,l,reorder=TRUE){
 
 # }
 
+# ConditionHeatmap - split heatmap of multi condition
+# Required packages: ComplexHeatmap
+ConditionHeatmap=function(df,x_col,y_col,group_col,value_col,...){
+
+    library(ComplexHeatmap)
+
+    df[,'row_name']=paste0(df[,x_col],'_',df[,group_col])
+    fun=paste0('row_name~',y_col)
+
+    if (is.factor(df[,x_col]) & is.factor(df[,group_col])){
+        a=levels(df[,x_col])
+        b=levels(df[,group_col])
+        df[,'row_name']=factor(df[,'row_name'],
+                               levels=paste0(rep(a,each=length(b)),'_',rep(b,times=length(a))) ) 
+    }
+
+    df_clustering=reshape2::dcast(df,fun,value.var=value_col) %>% data.frame(row.names=1,check.names=FALSE)
+    
+    if (is.factor(df[,y_col])){
+        df_clustering=df_clustering[,levels(df[,y_col])]
+    }
+
+    lookup_df=unique(df[,c(x_col,group_col,'row_name')])
+
+    Heatmap(df_clustering,cluster_rows=FALSE,cluster_columns=FALSE,
+            show_row_names=FALSE,
+            row_title_rot=0,
+            row_split=lookup_df[,x_col][match(rownames(df_clustering),lookup_df[,'row_name'])],
+            column_split=factor(colnames(df_clustering), levels=colnames(df_clustering) ),
+            border=TRUE,column_title=NULL,
+            ...)
+    
+    l=levels(df[,group_col])
+    lgd=Legend(labels=l,legend_gp=gpar(fill=rep('#FFFFFF',length(l))),
+               title=group_col,title_position="topcenter",border=TRUE,
+               grid_height=unit(1.5,'mm'),grid_width=unit(6,'mm'))
+    
+    draw(ht,heatmap_legend_list=list(lgd))
+    
+}
+
 # Volcano plot for single conditions
 DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
                         y='p_val',pCutoff=0.05,

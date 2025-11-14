@@ -6,6 +6,8 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 
 ## Table of Contents
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
++ [ContigencyPlot](#contigencyPlot)
++ [ConditionHeatmap - Heatmap showing values under different condition](#conditionHeatmap)
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityClustering - Blocks division in similarity heatmap](#heatmap2)
 + [Other tips for clustering](#heatmap3)  
@@ -49,6 +51,15 @@ Parameters of `CorPlot`:
 + `sig.level`: significance level for hypothesis test, reflected in sig.circle
 + `stroke`: outline thickness of the circle
 + `reorder.method`: method for reorder hierarchy, could be one of `reorder.dendrogram`, `dendsort`, `none`
+
+## <a name="ContigencyPlot">ContigencyPlot</a>
+__Required packages__: XXX  
+
+## <a name="conditionHeatmap">ConditionHeatmap - Heatmap showing values under different condition</a>
+__Required packages__: ComplexHeatmap
+``` r
+
+```
 
 ## <a name="heatmap1">SHeatmap - Summarized heatmap of grouped data with significance test</a>
 __Required packages__: dplyr, ComplexHeatmap  
