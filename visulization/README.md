@@ -289,6 +289,8 @@ Idents(seurat_obj)=seurat_obj@meta.data[,'seurat_annotations']
 
 genes=c(link_df[,1],link_df[,2])
 expression_data=seurat_obj@assays$RNA@data[ genes ,]
+# seurat_obj=ScaleData(seurat_obj,features=genes)
+# expression_data=as.data.frame(seurat_obj@assays$RNA@scale.data)
 cell_types=Idents(seurat_obj)
 
 avg_expr_matrix=matrix(0, nrow=length(genes), ncol=length(unique(cell_types)))
