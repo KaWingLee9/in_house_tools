@@ -302,7 +302,7 @@ colnames(percentage_matrix)=unique(cell_types)
 
 for (ct in unique(cell_types) ) {
   ct_cells=which(cell_types == ct)
-  ct_expression=expression_data[ c(link_df[,1],link_df[,2]) , ct_cells, drop=FALSE]
+  ct_expression=expression_data[ genes , ct_cells, drop=FALSE]
   avg_expr_matrix[, ct]=Matrix::rowMeans(ct_expression)
   percentage_matrix[, ct]=Matrix::rowSums(ct_expression > 0) / length(ct_cells)
 }
