@@ -279,6 +279,7 @@ link_df=lapply(1:length(L),function(x){
     expand.grid(L[[x]],R[[x]])
 }) %>% dplyr::bind_rows()
 link_df=link_df %>% filter((Var1 %in% rownames(seurat_obj)) & (Var2 %in% rownames(seurat_obj) ))
+genes=c(link_df[,1],link_df[,2]) %>% unique()
 
 # mean gene expression/expression percentage
 options(timeout=120)
@@ -287,7 +288,6 @@ seurat_obj=LoadData('ifnb')
 seurat_obj=NormalizeData(seurat_obj)
 Idents(seurat_obj)=seurat_obj@meta.data[,'seurat_annotations']
 
-genes=c(link_df[,1],link_df[,2])
 expression_data=seurat_obj@assays$RNA@data[ genes ,]
 # seurat_obj=ScaleData(seurat_obj,features=genes)
 # expression_data=as.data.frame(seurat_obj@assays$RNA@scale.data)
