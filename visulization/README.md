@@ -263,7 +263,73 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
 
 ## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
 __Required packages__: ggplot2, aplot  
+Here, we applied this function to visualize the LR interaction with scRNA-Seq data.   
+```r
+library(dplyr)
+library(Seurat)
+library(SeuratData)
+library(patchwork)
 
+# LR interaction (acquired from CellChatDB)
+LR_pairs=c('CCL15-CCR1','CCL7-CCR1','CCL19-CCR7','CCL21-CCR7','CCL5-CCR1','CCL5-CCR3','CCL5-CCR4','CCL5-CCR5','CCL3-CCR1','CCL3-CCR5',
+                        'CXCL12-ACKR3','CXCL12-CXCR4','CXCL13-CXCR5','CXCL16-CXCR6','CXCL9-CXCR3','CXCL10-CXCR3')
+L=lapply(LR_pairs,function(x) {strsplit(x,'-')[[1]][1]  %>% strsplit(.,'[+]') %>% unlist()})
+R=lapply(LR_pairs,function(x) {strsplit(x,'-')[[1]][2]  %>% strsplit(.,'[+]') %>% unlist()})
+link_df=lapply(1:length(L),function(x){
+    expand.grid(L[[x]],R[[x]])
+}) %>% dplyr::bind_rows()
+link_df=link_df %>% filter((Var1 %in% rownames(seurat_obj)) & (Var2 %in% rownames(seurat_obj) ))
+
+# mean gene expression/expression percentage
+options(timeout=120)
+InstallData('ifnb')
+seurat_obj=LoadData('ifnb')
+seurat_obj=NormalizeData(seurat_obj)
+Idents(seurat_obj)=seurat_obj@meta.data[,'seurat_annotations']
+
+genes=c(link_df[,1],link_df[,2])
+expression_data=seurat_obj@assays$RNA@data[ genes ,]
+cell_types=Idents(seurat_obj)
+
+avg_expr_matrix=matrix(0, nrow=length(genes), ncol=length(unique(cell_types)))
+rownames(avg_expr_matrix)=genes
+colnames(avg_expr_matrix)=unique(cell_types)
+percentage_matrix=matrix(0, nrow=length(genes), ncol=length(unique(cell_types)))
+rownames(percentage_matrix)=genes
+colnames(percentage_matrix)=unique(cell_types)
+
+for (ct in unique(cell_types) ) {
+  ct_cells=which(cell_types == ct)
+  ct_expression=expression_data[ c(link_df[,1],link_df[,2]) , ct_cells, drop=FALSE]
+  avg_expr_matrix[, ct]=Matrix::rowMeans(ct_expression)
+  percentage_matrix[, ct]=Matrix::rowSums(ct_expression > 0) / length(ct_cells)
+}
+
+avg_expr_matrix_long=avg_expr_matrix %>% reshape2::melt(varnames=c('gene','cell_type'),value.name='average_expression')
+percentage_matrix_long=percentage_matrix %>% reshape2::melt(varnames=c('gene','cell_type'),value.name='expression_percentage')
+df=dplyr::left_join(avg_expr_matrix_long,percentage_matrix_long,by=c('gene','cell_type'))
+
+# plot
+p=LinkedPlot(df,link_df,
+             x_col='cell_type',
+             y_col='gene',
+             fill_col='average_expression',
+             size_col='expression_percentage',
+             color_column=1,align='center')
+# plot polish
+p[[1]]=p[[1]]+ggtitle('Ligand')+
+    scale_fill_gradientn(colours=rev(c(paletteer::paletteer_c("grDevices::RdBu",11))))+
+    theme(plot.title=element_text(hjust=0.5),axis.text.x=element_text(angle=45,hjust=1))
+p[[3]]=p[[3]]+ggtitle('Receptor')+
+    scale_fill_gradientn(colours=rev(c(paletteer::paletteer_c("grDevices::RdBu",11))))+
+    theme(plot.title=element_text(hjust=0.5),axis.text.x=element_text(angle=45,hjust=1))
+
+options(repr.plot.height=5,repr.plot.width=12)
+p
+```
+<p align="center">
+  <img height="400" src="pct/LinkedPlot.png">
+</p>
 Parameters for `LinkedPlot`:  
 + `df`: data frame to generate ggplot object  
 + `link_df`: data frame in which the first and second columns are used to build connection between subplots  
@@ -271,7 +337,6 @@ Parameters for `LinkedPlot`:
 + `color_column`: column name or column order of `link_df` to color the links  
 + `widths`: relative widths of the first subplot, links and the second subplot  
 + `align`: ways to align the y-coordinates between two subplots, one of `top`, `bottom`, `center`, `justify`  
-+ 
 
 ## <a name="order">OrderedPlot - Reset the order of x/y-axis or show dendrogram in ggplot2</a>
 __Required packages__: ggplot2, aplot, RColorBrewer  
@@ -402,24 +467,9 @@ Parameters of `SunburstPlot`:
 
 ## <a name="forest">Forest plot for multiple types of regression model</a>
 
-### Logistics regression model
-``` r
-# load data
-data(Affairs,package='AER')
-Affairs$ynaffairs[Affairs$affairs>0]<-1
-Affairs$ynaffairs[Affairs$affairs==0]<-0
-Affairs$ynaffairs <- factor(Affairs$ynaffairs,
-                            levels = c(0,1),
-                            labels = c("No","yes"))
+### Plotting list of univariate models
+```r
 
-logistic_model=glm(ynaffairs~age+children+education+gender+occupation+rating+religiousness+yearsmarried,
-                   data=Affairs,
-                   family=binomial())
 ```
-### Cox regression model
-
-### For multiple models
-
-### For meta analysis result
 
 ## <a name="deg">Differential expression visualization</a>

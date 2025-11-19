@@ -1151,3 +1151,76 @@ layout_circular_community=function(community_labels,R=20,k=0.5){
     return (node_coords[,c('x','y')])
     
 }
+
+# Visuaization of the results from linear models
+ForestPlot_list=function(RegModList,method='linear',return.table=FALSE,
+                         USE.NAMES=TRUE,p.adj=NULL){
+    
+    df_fig=lapply(RegModList,function(reg_model){
+
+        coef_int=confint(reg_model,devmatchtol=1e-4)
+        coef_int=coef_int[nrow(coef_int),,drop=FALSE]
+        colnames(coef_int)=c('lower_limit','higher_limit')
+        coef_int=data.frame(coef_int)
+        coef_int=na.omit(coef_int)
+
+        s_table=summary(reg_model)$coefficients
+
+        coef_int[,c('Estimate','pvalue')]=s_table[rownames(coef_int),c('Estimate',grep('Pr',colnames(s_table),value=TRUE))]
+
+        return(coef_int)
+
+    }) %>% dplyr::bind_rows()
+    
+    if (USE.NAMES){
+        rownames(df_fig)=names(RegModList)
+    }
+    df_fig[,'variable']=rownames(df_fig)
+    
+    if (method=='linear'){
+        x_line=0
+        x_title='Regression coefficient'
+    } else if (method=='logistics'){
+        df_fig[,c('lower_limit','higher_limit','Estimate')]=exp(df_fig[,c('lower_limit','higher_limit','Estimate')])
+        x_line=1
+        x_title='Odds Ratio'
+    } else if (method=='coxph'){
+        df_fig[,c('lower_limit','higher_limit','Estimate')]=exp(df_fig[,c('lower_limit','higher_limit','Estimate')])
+        x_line=1
+        x_title='Hazard Ratio'
+    }
+    
+    if (is.null(p.adj)){
+        df_fig[,'p.adj']=p.adjust(df_fig[,'pvalue'],method=p.adj)
+        df_fig[,'sig']=df_fig[,'p.adj']<=0.05
+    } else {
+        df_fig[,'sig']=df_fig[,'pvalue']<=0.05
+    }
+    
+    variable_order=df_fig %>% arrange(desc(Estimate)) %>% .[,'variable']
+    df_fig[,'variable']=factor(df_fig[,'variable'],levels=variable_order)
+    
+    if (return.table){
+        return(df_fig)
+    } 
+    
+    p=ggplot(df_fig,aes(color=sig))+
+        geom_segment(aes(x=lower_limit,xend=higher_limit,y=variable,yend=variable),
+                     arrow=arrow(ends='both',angle=90,length=unit(0.1,'cm')) )+
+        geom_point(aes(x=Estimate,y=variable),size=point.size,shape=15)+
+#         geom_text(aes(x=x_pvalue,y=variable,label=pvalue),hjust=0)+
+        xlab(x_title)+
+        ylab('')+
+        geom_vline(xintercept=x_line,color='red',linetype='dashed')+
+#         scale_x_log10(breaks=scales::trans_breaks('log10',function(x){10^x}),
+#                       labels=scales::trans_format('log10',scales::math_format(10^.x))
+#                       )+
+#       coord_cartesian(xlim=c(x_min,x_max+ ( (x_max-x_min)*(10^20) )))
+        theme_bw()+
+        scale_color_manual(values=c('TRUE'='black','FALSE'='#DCDCDC'))
+    
+    
+    
+    return(p)
+    
+}
