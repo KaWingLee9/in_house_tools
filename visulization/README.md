@@ -330,6 +330,7 @@ p
 <p align="center">
   <img height="400" src="pct/LinkedPlot.png">
 </p>
+
 Parameters for `LinkedPlot`:  
 + `df`: data frame to generate ggplot object  
 + `link_df`: data frame in which the first and second columns are used to build connection between subplots  
