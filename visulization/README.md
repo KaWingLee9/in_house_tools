@@ -263,7 +263,7 @@ p5=Heatmap(df_5,name='Percantage',clustering_method_rows='ward.D2',cluster_colum
 
 ## <a name="link">LinkedPlot - Heatmap/Bubble plot with links</a>
 __Required packages__: ggplot2, aplot  
-Here, we applied this function to visualize the LR interaction with scRNA-Seq data.   
+Here, we applied this function to visualize the LR interaction between cell types.   
 ```r
 library(dplyr)
 library(Seurat)
