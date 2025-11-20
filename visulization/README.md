@@ -272,7 +272,7 @@ library(patchwork)
 
 # LR interaction (acquired from CellChatDB)
 LR_pairs=c('CCL15-CCR1','CCL7-CCR1','CCL19-CCR7','CCL21-CCR7','CCL5-CCR1','CCL5-CCR3','CCL5-CCR4','CCL5-CCR5','CCL3-CCR1','CCL3-CCR5',
-                        'CXCL12-ACKR3','CXCL12-CXCR4','CXCL13-CXCR5','CXCL16-CXCR6','CXCL9-CXCR3','CXCL10-CXCR3')
+           'CXCL12-ACKR3','CXCL12-CXCR4','CXCL13-CXCR5','CXCL16-CXCR6','CXCL9-CXCR3','CXCL10-CXCR3')
 L=lapply(LR_pairs,function(x) {strsplit(x,'-')[[1]][1]  %>% strsplit(.,'[+]') %>% unlist()})
 R=lapply(LR_pairs,function(x) {strsplit(x,'-')[[1]][2]  %>% strsplit(.,'[+]') %>% unlist()})
 link_df=lapply(1:length(L),function(x){
