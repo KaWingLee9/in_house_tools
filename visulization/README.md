@@ -6,7 +6,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 
 ## Table of Contents
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
-+ [ContigencyPlot](#contigencyPlot)
++ [ContingencyPlot](#contingencyPlot)
 + [ConditionHeatmap - Heatmap showing values under different condition](#conditionHeatmap)
 + [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityClustering - Blocks division in similarity heatmap](#heatmap2)
@@ -41,7 +41,7 @@ p1+p2+p3
   <img height="400" src="pct/CorPlot.png">
 </p>
 
-Parameters of `CorPlot`:
+Parameters of `CorPlot`:  
 + `df`: data frame (observations x variables)
 + `cor.method`: methods to calculate correlation, could be `pearson` or `spearman`, passed on to `Hmisc::rcorr(type=...)`
 + `tri`: show the `whole` matrix or `upper`/`lower` triangular matrix
@@ -52,8 +52,21 @@ Parameters of `CorPlot`:
 + `stroke`: outline thickness of the circle
 + `reorder.method`: method for reorder hierarchy, could be one of `reorder.dendrogram`, `dendsort`, `none`
 
-## <a name="ContigencyPlot">ContigencyPlot</a>
-__Required packages__: XXX  
+## <a name="contingencyPlot">ContingencyPlot</a>
+__Required packages__: ggplot2
+```r
+library(vcd)
+x=Arthritis[,'Treatment']
+y=Arthritis[,'Improved']
+
+ContingencyPlot(x,y)
+```
+<p align="center">
+  <img height="400" src="pct/ContingencyPlot.png">
+</p>
+
+Parameters of `ContigencyPlot`:  
+To be updated...  
 
 ## <a name="conditionHeatmap">ConditionHeatmap - Heatmap showing values under different condition</a>
 __Required packages__: dplyr, ComplexHeatmap
@@ -317,7 +330,7 @@ p=LinkedPlot(df,link_df,
              y_col='gene',
              fill_col='average_expression',
              size_col='expression_percentage',
-             color_column=1,align='center')
+             color_link_col=1,align='center')
 # plot polish
 p[[1]]=p[[1]]+ggtitle('Ligand')+
     scale_fill_gradientn(colours=rev(c(paletteer::paletteer_c("grDevices::RdBu",11))))+
@@ -336,8 +349,8 @@ p
 Parameters for `LinkedPlot`:  
 + `df`: data frame to generate ggplot object  
 + `link_df`: data frame in which the first and second columns are used to build connection between subplots  
-+ `x_col`, `y_col`, `fill_col`, `size_col`: column names of `df` mapped to ggplot object  
-+ `color_column`: column name or column order of `link_df` to color the links  
++ `x_col`, `y_col`, `fill_col`, `size_col`, `color_col`: column names of `df` mapped to ggplot object  
++ `color_link_col`: column name or column order of `link_df` to color the links, could be 0, 1, 2 or the column names of `link_df`  
 + `widths`: relative widths of the first subplot, links and the second subplot  
 + `align`: ways to align the y-coordinates between two subplots, one of `top`, `bottom`, `center`, `justify`  
 

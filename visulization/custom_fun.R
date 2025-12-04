@@ -112,6 +112,55 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
     return(p)
 }
 
+# ContingencyPlot - Plot for the independent test
+# Required packages: ggplot2
+ContingencyPlot=function(x,y,method='fisher'){
+    
+    library(ggplot2)
+    
+    x=as.factor(x)
+    y=as.factor(y)
+    
+    sample_removed=is.na(x) | is.na(y)
+    x=x[!sample_removed]
+    y=y[!sample_removed]
+
+    sample_removed=is.na(x) & is.na(y)
+
+    a=unique(x)
+    b=unique(y)
+
+    test_result=lapply(a,function(m){
+        lapply(b,function(n){
+            ta=matrix( c(sum(x==m & y==n),sum(x!=m & y==n),sum(x==m & y!=n),sum(x!=m & y!=n)) , nrow=2)
+            
+            if (method=='fisher'){
+                test_result=fisher.test(ta)
+                return(data.frame('group_x'=m,'group_y'=n,'OR'=test_result[['estimate']][[1]],'pval'=test_result[['p.value']]))
+            }
+#             if (method=='chisq'){
+#                 test_result=chisq.test(ta)
+#                 return(data.frame('group_x'=m,'group_y'=n,'estimate'=test_result[['statistic']][[1]],'pval'=test_result[['p.value']]))
+#             }
+            
+        }) %>% dplyr::bind_rows() 
+    }) %>% dplyr::bind_rows()
+    
+    test_result[,'sig']=test_result[,'pval']<=0.05
+    
+    p=ggplot(data=test_result,aes(x=group_x,y=group_y,fill=OR,size=pval,color=sig))+
+        geom_point(shape=21,stroke=1)+
+        scale_fill_gradient2(low='blue',mid='white',high='red',midpoint=1)+
+        scale_size(trans='reverse')+
+        scale_size_continuous(range=c(6,0.1))+
+        theme_bw()+
+        theme(axis.title=element_blank())+
+        scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'),na.value='#FFFFFF00',limits=c(TRUE,FALSE))
+    
+    return(p)
+    
+}
+
 # SHeatmap - Summarized heatmap with significance test
 # Required packages: dplyr, coin, ComplexHeatmap
 SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
@@ -680,8 +729,9 @@ Draw_MVolcano=function(df,x_col,y_col,gene_col,cluster_col,selected_gene=NULL,yi
 }
 
 # marker expression of ligand and receptor
-LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
-                    color_column=0,
+# marker expression of ligand and receptor
+LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,color_col=NULL,
+                    color_link_col=0,
                     widths=c(3,1,3),
                     align='bottom'){
     
@@ -716,11 +766,6 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
         coord_2=seq(m-ll2/2,m+ll2/2,length.out=ll2+1)/l
     }
 
-    if (align=='justify'){
-        coord_1=seq(0,1,length.out=ll1+1)
-        coord_2=seq(0,1,length.out=ll2+1)
-    }
-
     link_df[,'y1_coord']=coord_1[sapply(link_df[,'y1_name'],function(x){which(x==l1)})]
     link_df[,'y2_coord']=coord_2[sapply(link_df[,'y2_name'],function(x){which(x==l2)})]
     link_df[,'col']='1'
@@ -730,9 +775,9 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
     
     if (! is.null(size_col)){
         p1=ggplot(df_1,aes_string(x=x_col,y='y_coord'))+
-            geom_point(aes_string(size=size_col,fill=fill_col),shape=21)
+            geom_point(aes_string(size=size_col,fill=fill_col,col=color_col),shape=21)
         p2=ggplot(df_2,aes_string(x=x_col,y='y_coord'))+
-            geom_point(aes_string(size=size_col,fill=fill_col),shape=21)
+            geom_point(aes_string(size=size_col,fill=fill_col,col=color_col),shape=21)
     } else {
         p1=ggplot(df_1,aes_string(x=x_col,y='y_coord'))+
             geom_tile(aes_string(fill=fill_col))
@@ -758,14 +803,14 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
         theme(# legend.position='right',
               axis.title.x=element_blank(),axis.title.y=element_blank())
     
-    if (color_column==0){
+    if (color_link_col==0){
         p3=ggplot(link_df)+
             geom_segment(aes(x=x1,xend=x2,
                              y=y1_coord,yend=y2_coord,color=col))+
             scale_color_manual(values=c('1'='black'))
     }
     
-    if (color_column==1) {
+    if (color_link_col==1) {
         col_1=setNames(rep(ggsci::pal_d3(palette='category10')(10),length.out=length(l1)),
                      l1)
         link_df[,'col']=link_df[,'y1_name']
@@ -779,7 +824,7 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
             scale_color_manual(values=col_1)+
             guides(color='none')
         
-    } else if (color_column==2) {
+    } else if (color_link_col==2) {
         col_2=setNames(rep(ggsci::pal_d3(palette='category10')(10),length.out=length(l2)),
                      l2)
         link_df[,'col']=link_df[,'y2_name']
@@ -793,12 +838,12 @@ LinkedPlot=function(df,link_df,x_col,y_col,fill_col,size_col=NULL,
             scale_color_manual(values=col_2)+
             guides(color='none')
         
-    } else if (! is.null(color_column)){
-        link_df[,'col']=link_df[,color_column]
+    } else if (! is.null(color_link_col)){
+        link_df[,'col']=link_df[,color_link_col]
         p3=ggplot(link_df)+
             geom_segment(aes(x=x1,xend=x2,
                              y=y1_coord,yend=y2_coord,color=col))+
-            labs(color=color_column)
+            labs(color=color_link_col)
     }
     
     p3=p3+
