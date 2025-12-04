@@ -18,8 +18,8 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [AnnotatedPlot - Draw annotation bar in ggplot2](#annotation)
 + [layout_circular_community - Network for each community as a circle (like cytoscape)](#circular)
 + [SunburstPlot - Sunburst plot](#sunburst)
-+ [Forest plot for multiple types of regression model](#forest)
 + [Differential expression visualization](#deg)
++ [Forest plot for multiple types of regression model](#forest)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 __Required packages__: Hmisc, dendsort  
@@ -468,11 +468,14 @@ Parameters of `SunburstPlot`:
 + `circular`: if TRUE, returns the traditional sunburst plot; if FALSE, returns the mosaic plot  
 + `color`: the outline color of each layer  
 
-## <a name="forest">Forest plot for multiple types of regression model</a>
+
+## <a name="deg">Differential expression visualization</a>
+
+
+## <a name="regression">Visualization of the regression model</a>
 
 ### Plotting list of univariate models
 ```r
 
 ```
 
-## <a name="deg">Differential expression visualization</a>

@@ -612,6 +612,7 @@ ConditionHeatmap=function(df,x_col,y_col,group_col,value_col,...){
 }
 
 # Volcano plot for single conditions
+# Required packages: ggplot2, ggrepel, EnhancedVolcano
 DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
                         y='p_val',pCutoff=0.05,
                         col=c('red2','royalblue','grey30'), #
@@ -1154,9 +1155,10 @@ layout_circular_community=function(community_labels,R=20,k=0.5){
 
 # Visuaization of the results from linear models
 ForestPlot_list=function(RegModList,method='linear',return.table=FALSE,
-                         USE.NAMES=TRUE,p.adj=NULL){
+                         USE.NAMES=TRUE,p.adj=NULL,sig.level=0.05,ncores=5){
     
-    df_fig=lapply(RegModList,function(reg_model){
+    library(ggplot2)
+    df_fig=parallel::mclapply(RegModList,function(reg_model){
 
         coef_int=confint(reg_model,devmatchtol=1e-4)
         coef_int=coef_int[nrow(coef_int),,drop=FALSE]
@@ -1170,7 +1172,7 @@ ForestPlot_list=function(RegModList,method='linear',return.table=FALSE,
 
         return(coef_int)
 
-    }) %>% dplyr::bind_rows()
+    },mc.cores=ncores) %>% dplyr::bind_rows()
     
     if (USE.NAMES){
         rownames(df_fig)=names(RegModList)
@@ -1192,9 +1194,9 @@ ForestPlot_list=function(RegModList,method='linear',return.table=FALSE,
     
     if (is.null(p.adj)){
         df_fig[,'p.adj']=p.adjust(df_fig[,'pvalue'],method=p.adj)
-        df_fig[,'sig']=df_fig[,'p.adj']<=0.05
+        df_fig[,'sig']=df_fig[,'p.adj']<=sig.level
     } else {
-        df_fig[,'sig']=df_fig[,'pvalue']<=0.05
+        df_fig[,'sig']=df_fig[,'pvalue']<=sig.level
     }
     
     variable_order=df_fig %>% arrange(desc(Estimate)) %>% .[,'variable']
@@ -1207,7 +1209,7 @@ ForestPlot_list=function(RegModList,method='linear',return.table=FALSE,
     p=ggplot(df_fig,aes(color=sig))+
         geom_segment(aes(x=lower_limit,xend=higher_limit,y=variable,yend=variable),
                      arrow=arrow(ends='both',angle=90,length=unit(0.1,'cm')) )+
-        geom_point(aes(x=Estimate,y=variable),size=point.size,shape=15)+
+        geom_point(aes(x=Estimate,y=variable),size=1,shape=15)+
 #         geom_text(aes(x=x_pvalue,y=variable,label=pvalue),hjust=0)+
         xlab(x_title)+
         ylab('')+
@@ -1219,7 +1221,62 @@ ForestPlot_list=function(RegModList,method='linear',return.table=FALSE,
         theme_bw()+
         scale_color_manual(values=c('TRUE'='black','FALSE'='#DCDCDC'))
     
+    return(p)
     
+}
+
+# Visuaization of the results from linear models
+VolcanoPlot_list=function(RegModList,method='linear',return.table=FALSE,
+                          USE.NAMES=TRUE,p.adj=NULL,sig.level=0.05,
+                          FCcutoff=1,pCutoff=0.05,selectLab=NULL,col=c('red2','royalblue','grey30'),ncores=5){
+    
+    df_fig=parallel::mclapply(RegModList,function(reg_model){
+
+        s_table=summary(reg_model)$coefficients
+
+        coef_int=s_table[nrow(s_table),c('Estimate',grep('Pr',colnames(s_table),value=TRUE)),drop=FALSE]
+        coef_int=data.frame(coef_int,check.names=FALSE)
+        colnames(coef_int)[2]='pvalue'
+
+        return(coef_int)
+
+    },mc.cores=5) %>% dplyr::bind_rows()
+    
+    if (USE.NAMES){
+        rownames(df_fig)=names(RegModList)
+    }
+    df_fig[,'variable']=rownames(df_fig)
+    
+    if (method=='linear'){
+        x_line=0
+        x_title='Regression coefficient'
+    } else if (method=='logistics'){
+        df_fig[,c('Estimate')]=exp(df_fig[,c('Estimate')])
+        x_line=1
+        x_title='Odds Ratio'
+    } else if (method=='coxph'){
+        df_fig[,c('Estimate')]=exp(df_fig[,c('Estimate')])
+        x_line=1
+        x_title='Hazard Ratio'
+    }
+    
+    if (!is.null(p.adj)){
+        df_fig[,'p.adj']=p.adjust(df_fig[,'pvalue'],method=p.adj)
+    } 
+    
+    if (return.table){
+        return(df_fig)
+    }
+    
+    if (!is.null(p.adj)){
+        p=DrawVolcano(df_fig,x='Estimate',FCcutoff=FCcutoff,
+                      y='p.adj',pCutoff=pCutoff,
+                      col=col,selectLab=selectLab,alpha=0.5)
+    } else {
+        p=DrawVolcano(df_fig,x='Estimate',FCcutoff=FCcutoff,
+                      y='pvalue',pCutoff=pCutoff,
+                      col=col,selectLab=selectLab,alpha=0.5)        
+    }
     
     return(p)
     

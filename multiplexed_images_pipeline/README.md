@@ -155,6 +155,15 @@ Parameters of `plot_cell_cluster`:
 + `tag`: column name of `adata.obs`
 + `col`: a dictionary for color assignment to the cell type
 
+Parameters of `plot_cell_exp`:  
++ `adata`  
++ `feature`: marker used for visualization  
++ `show_boundary`: whether to show cell boundary  
++ `show_colorbar`: whether to show colorbar  
++ `color`: color for visualization  
++ `max_quantile`: the maximum quantile signals to filter out  
++ `min_quantile`: the minimum quantile signals to filter out
+
 __Next, `SOAPy` could be used for further spatial-related analysis!__  
 https://github.com/LiHongCSBLab/SOAPy  
 
