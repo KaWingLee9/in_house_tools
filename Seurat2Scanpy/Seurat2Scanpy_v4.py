@@ -271,6 +271,7 @@ def sc_Seurat2Scanpy(seurat_file,r_home,
     function(seurat_obj){
     library(Seurat)
     metadata=seurat_obj@meta.data
+    metadata$Idents=Idents(seurat_obj)
     return(metadata)
     }
     """)

@@ -20,6 +20,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [SunburstPlot - Sunburst plot](#sunburst)
 + [Differential expression visualization](#deg)
 + [Forest plot for multiple types of regression model](#forest)
++ [Visualization in chrmosome way](#chrmosome)
 
 ## <a name="correlation">CorPlot - Correlation bubble plot with significance test</a>
 __Required packages__: Hmisc, dendsort  
@@ -176,7 +177,7 @@ __The first mode__: `mode='manual'`; Manually determine cluster number using `wa
 # cluster number evaluation through NbClust
 SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20)
 # specific clustering result evaluation indicatior
-# SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20,show.index.result='dunn')
+# x=SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20,show_index_result='dunn')
 ```
 
 ```r
@@ -491,4 +492,6 @@ Parameters of `SunburstPlot`:
 ```r
 
 ```
+
+## <a name="chrmosome">Visualization in chrmosome way</a>
 
