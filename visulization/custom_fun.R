@@ -114,7 +114,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
 
 # ContingencyPlot - Plot for the independent test
 # Required packages: ggplot2
-ContingencyPlot=function(x,y,method='fisher'){
+ContingencyPlot=function(x,y,method='fisher',return_plot=TRUE){
     
     library(ggplot2)
     
@@ -148,16 +148,20 @@ ContingencyPlot=function(x,y,method='fisher'){
     
     test_result[,'sig']=test_result[,'pval']<=0.05
     
-    p=ggplot(data=test_result,aes(x=group_x,y=group_y,fill=OR,size=pval,color=sig))+
-        geom_point(shape=21,stroke=1)+
-        scale_fill_gradient2(low='blue',mid='white',high='red',midpoint=1)+
-        scale_size(trans='reverse')+
-        scale_size_continuous(range=c(6,0.1))+
-        theme_bw()+
-        theme(axis.title=element_blank())+
-        scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'),na.value='#FFFFFF00',limits=c(TRUE,FALSE))
-    
-    return(p)
+    if (return_plot){
+        p=ggplot(data=test_result,aes(x=group_x,y=group_y,fill=OR,size=pval,color=sig))+
+            geom_point(shape=21,stroke=1)+
+            scale_fill_gradientn(colors=c('blue','white','red'),
+                                 values=scales::rescale( c( min(test_result[,'OR']),1,max(test_result[,'OR']) ),to=c(0,1) ) )
+            scale_size(trans='reverse')+
+            scale_size_continuous(range=c(6,0.1))+
+            theme_bw()+
+            theme(axis.title=element_blank())+
+            scale_color_manual(values=c('TRUE'='black','FALSE'='#FFFFFF00'),na.value='#FFFFFF00',limits=c(TRUE,FALSE)) 
+        return(p)
+    } else {
+        return(test_result)
+    }
     
 }
 
