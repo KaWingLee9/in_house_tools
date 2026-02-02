@@ -7,7 +7,7 @@ __Required packages__: `dplyr`, `GenomicFeatures`
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/RNANormalization/RNANormalization.R')
 
 # remove non-coding genes
-count_mat=KeepProteinGene=function(count_mat,species='human')
+count_mat=KeepProteinGene(count_mat,species='human')
 # count matrix -> tpm/fpkm matrix
 tpm_mat=NormalizeCount(count_matrix,species='human',length.type='transcript',method='tpm')
 ```
