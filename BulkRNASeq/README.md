@@ -35,7 +35,7 @@ Parameters for `SampleQC_PCA`:
 + `PC`: two PC dimension for visualization  
 + `plot_label`: whether to show sample label  
 
-Parameters for `SampleQC_PCA`:  
+Parameters for `SampleQC_cor`:  
 + `exp_mat`: tpm_mat or fpkm matrix with sample x gene  
 + `group1`, `group2` (optional): vectors to show sample group  
 + `method`: method to calculate correlation, could be `pearson` or `spearman`  
