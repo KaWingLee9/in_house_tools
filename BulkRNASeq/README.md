@@ -4,7 +4,7 @@
 Count matrix -> RPKM/TPM matrix  
 __Required packages__: `dplyr`, `GenomicFeatures`  
 ``` r
-source('https://github.com/KaWingLee9/in_house_tools/blob/main/RNANormalization/RNANormalization.R')
+source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/RNANormalization.R')
 
 # remove non-coding genes
 count_mat=KeepProteinGene(count_mat,species='human')
@@ -21,6 +21,8 @@ Parameters:
 ## QC of samples
 __Required packages__: `ggplot2`, `ComplexHeatmap`  
 ``` r
+source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/DEAnalysis.R')
+
 p=SampleQC_PCA(tpm_mat,group1,group2,PC=c('PC1','PC2'))
 p
 
@@ -41,6 +43,8 @@ Parameters for `SampleQC_PCA`:
 ## Differential gene expression analysis
 __Required packages__: DESeq2, edgeR, limma, ggplot2, ggrepel, EnhancedVolcano  
 ```r
+source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/DEAnalysis.R')
+
 test_result=DiffExp(count_mat,mat_type='count',group=c(),group_ctrl='WT',method='DESeq2')
 test_result=data.frame(test_result)
 DrawVolcano(test_result,x='log2FoldChange',y='padj',
