@@ -32,7 +32,7 @@ ht
 Parameters for `SampleQC_PCA`:  
 + `exp_mat`: tpm_mat or fpkm_mat with sample x gene  
 + `group1`, `group2` (optional): vectors to show sample group  
-+ `PC`: two PC dimension for visualization  
++ `PC`: two PC dimensions for visualization  
 + `plot_label`: whether to show sample label  
 
 Parameters for `SampleQC_cor`:  
@@ -66,7 +66,7 @@ Parameters for `DiffExp`:
 
 Parameters for `DrawVolcano`:  
 + `deg_result`: a data frame resulting fro DEG analysis  
-+ `x`, 'y': column name of logfc and p-vale
++ `x`, `y`: column name of logfc and p-vale
 + `FCcutoff`, `pCutoff`: the cutoff of logfc and p-value to select DEGs  
 + `col`: color vector diaplaying significantly upregulated, significantly downregulated, and non-significantly changed genes; should be length of three  
 + `selectLab`: genes that label on the plot    
