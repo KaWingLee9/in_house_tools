@@ -30,10 +30,11 @@ ht=SampleQC_cor(log2tpm_mat_scale,group1,group2,method='pearson')
 ht
 ```
 Parameters for `SampleQC_PCA`:  
-+ `exp_mat`: tpm_mat or fpkm matrix with sample x gene  
++ `exp_mat`: tpm_mat or fpkm_mat with sample x gene  
 + `group1`, `group2` (optional): vectors to show sample group  
 + `PC`: two PC dimension for visualization  
 + `plot_label`: whether to show sample label  
+
 Parameters for `SampleQC_PCA`:  
 + `exp_mat`: tpm_mat or fpkm matrix with sample x gene  
 + `group1`, `group2` (optional): vectors to show sample group  
