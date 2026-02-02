@@ -1,13 +1,31 @@
+KeepProteinGene=function(count_mat,species='human'){
+    library(dplyr)
+    library(biomaRt)
+    
+    if (species=='human'){mart=useEnsembl(biomart='genes',dataset='hsapiens_gene_ensembl')}
+    if (species=='mouse'){mart=useEnsembl(biomart='genes',dataset='mmusculus_gene_ensembl')}
+    protein_coding_genes=getBM(attributes = c('ensembl_gene_id', 'external_gene_name','description', 
+                                              'chromosome_name','start_position','end_position','strand'),
+                               filters='biotype',values='protein_coding',mart=mart)
+    protein_coding_genes=unique(protein_coding_genes[,'external_gene_name'])
+    g=intersect(rownames(count_mat),protein_coding_genes)
+    count_mat=count_mat[g,]
+    return(count_mat)
+    
+}
+
 NormalizeCount=function(count_mat,species='human',method='tpm',length.type='transcript'){
     
     library(dplyr)
+    library(biomaRt)
     library(GenomicFeatures)
     
     if (species=='human'){
         txdb=TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
         symbol_table=toTable(org.Hs.eg.db::org.Hs.egSYMBOL)
     } else if (species=='mouse'){
-        x=1+1
+        txdb=TxDb.Mmusculus.UCSC.mm10.knownGene::TxDb.Mmusculus.UCSC.mm10.knownGene
+        symbol_table=toTable(org.Mm.eg.db::org.Mm.egSYMBOL)
     }
     
     if (length.type=='transcript'){

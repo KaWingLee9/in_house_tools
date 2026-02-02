@@ -1204,29 +1204,34 @@ layout_circular_community=function(community_labels,R=20,k=0.5){
 
 # Visuaization of the results from linear models
 ForestPlot_list=function(RegModList,method='linear',return.table=FALSE,
-                         USE.NAMES=TRUE,p.adj=NULL,sig.level=0.05,ncores=5){
-    
-    library(ggplot2)
-    df_fig=parallel::mclapply(RegModList,function(reg_model){
+                         USE.NAMES=TRUE,p.adj=NULL,sig.level=0.05,point.size=1,
+                         dodge_width=0.6,error_bar_width=0.2){
 
+    if (is.null(names(RegModList))){
+        names(RegModList)=1:length(RegModList)
+    }
+        
+    df_fig=lapply(1:length(RegModList),function(n){
+    
+        reg_model=RegModList[[n]]
+    
         coef_int=confint(reg_model,devmatchtol=1e-4)
-        coef_int=coef_int[nrow(coef_int),,drop=FALSE]
+        coef_int=coef_int[4:nrow(coef_int),,drop=FALSE]
+        # return(coef_int)
         colnames(coef_int)=c('lower_limit','higher_limit')
         coef_int=data.frame(coef_int)
         coef_int=na.omit(coef_int)
-
-        s_table=summary(reg_model)$coefficients
-
-        coef_int[,c('Estimate','pvalue')]=s_table[rownames(coef_int),c('Estimate',grep('Pr',colnames(s_table),value=TRUE))]
-
-        return(coef_int)
-
-    },mc.cores=ncores) %>% dplyr::bind_rows()
     
-    if (USE.NAMES){
-        rownames(df_fig)=names(RegModList)
-    }
-    df_fig[,'variable']=rownames(df_fig)
+        s_table=summary(reg_model)$coefficients
+    
+        coef_int[,c('Estimate','se','pvalue')]=s_table[rownames(coef_int),c('Estimate','Std. Error',grep('Pr',colnames(s_table),value=TRUE))]
+        coef_int[,'variable']=rownames(coef_int)
+        coef_int[,'model']=names(RegModList)[n]
+        rownames(coef_int)=NULL
+    
+        return(coef_int)
+    
+    }) %>% dplyr::bind_rows()
     
     if (method=='linear'){
         x_line=0
@@ -1248,27 +1253,23 @@ ForestPlot_list=function(RegModList,method='linear',return.table=FALSE,
         df_fig[,'sig']=df_fig[,'pvalue']<=sig.level
     }
     
-    variable_order=df_fig %>% arrange(desc(Estimate)) %>% .[,'variable']
-    df_fig[,'variable']=factor(df_fig[,'variable'],levels=variable_order)
+    model_order=df_fig %>% arrange(desc(Estimate)) %>% .[,'model'] %>% unique()
+    df_fig[,'model']=factor(df_fig[,'model'],levels=model_order)
     
     if (return.table){
         return(df_fig)
     } 
     
-    p=ggplot(df_fig,aes(color=sig))+
-        geom_segment(aes(x=lower_limit,xend=higher_limit,y=variable,yend=variable),
-                     arrow=arrow(ends='both',angle=90,length=unit(0.1,'cm')) )+
-        geom_point(aes(x=Estimate,y=variable),size=1,shape=15)+
-#         geom_text(aes(x=x_pvalue,y=variable,label=pvalue),hjust=0)+
+    p=ggplot(df_fig)+
+        geom_point(aes(x=Estimate,y=model,color=variable,alpha=sig),size=point.size,shape=15,
+                   position=position_dodge(width=dodge_width) )+
+        geom_errorbar(aes(xmin=lower_limit,xmax=higher_limit,y=model,color=variable,alpha=sig),
+                      width=error_bar_width,
+                      position=position_dodge(width=dodge_width))+
         xlab(x_title)+
         ylab('')+
         geom_vline(xintercept=x_line,color='red',linetype='dashed')+
-#         scale_x_log10(breaks=scales::trans_breaks('log10',function(x){10^x}),
-#                       labels=scales::trans_format('log10',scales::math_format(10^.x))
-#                       )+
-#       coord_cartesian(xlim=c(x_min,x_max+ ( (x_max-x_min)*(10^20) )))
-        theme_bw()+
-        scale_color_manual(values=c('TRUE'='black','FALSE'='#DCDCDC'))
+        theme_bw()
     
     return(p)
     

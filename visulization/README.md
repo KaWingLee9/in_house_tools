@@ -486,9 +486,9 @@ Parameters of `SunburstPlot`:
 ## <a name="deg">Differential expression visualization</a>
 
 
-## <a name="regression">Visualization of the regression model</a>
+## <a name="regression">Visualization of the linear model</a>
 
-### Plotting list of univariate models
+### Plotting list of linear models
 ```r
 
 ```

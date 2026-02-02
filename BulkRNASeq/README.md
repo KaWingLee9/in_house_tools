@@ -1,4 +1,4 @@
-# Pipeline for data analysis of bulk RNA-Seq
+# Pipeline for bulk RNA-Seq data analysis
 
 ## Normalization of RNA expression matrix
 Count matrix -> RPKM/TPM matrix  
@@ -13,5 +13,8 @@ Parameters:
 + `species`: species of the genes, e.g. `human` (default), `mouse`  
 + `method`: `tpm` (default) or `rpkm`  
 + `length.type`: method to define gene length: `exon` or `transcript` (default)  
+
+## QC of samples
+
 
 ## Differential gene expression analysis
