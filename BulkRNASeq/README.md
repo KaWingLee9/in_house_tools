@@ -58,6 +58,7 @@ Parameters for `DiffExp`:
 + `exp_mat`: expression matrix (gene x sample)
 + `mat_type`: one of `count`, `tpm`, `fpkm`  
 + `group`: vector for sample groups  
++ `group_ctrl`: name of control group   
 + `method`: one of `DESeq2`, `edgeR`, `limma`,`wilcox`. __Note that: count_mat for DESeq2 and edgeR; and tpm_mat/fpkm_mat for limma and wilcox!!!__  
 + `test`, `fitType`, `sfType`, `lfc_shrinkage_method` (recommended: ashr): passed on to `DESeq2::DESeq`  
 + `useQL`: whether to use Quasi-likelihood (if FALSE, using v2; if TRUE, using v3/v4)  
@@ -66,7 +67,7 @@ Parameters for `DiffExp`:
 
 Parameters for `DrawVolcano`:  
 + `deg_result`: a data frame resulting fro DEG analysis  
-+ `x`, `y`: column name of logfc and p-vale
++ `x`, `y`: column name of logfc and p-vale  
 + `FCcutoff`, `pCutoff`: the cutoff of logfc and p-value to select DEGs  
 + `col`: color vector diaplaying significantly upregulated, significantly downregulated, and non-significantly changed genes; should be length of three  
 + `selectLab`: genes that label on the plot    
