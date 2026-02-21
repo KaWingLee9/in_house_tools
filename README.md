@@ -11,3 +11,5 @@ https://github.com/KaWingLee9
 + [Conver Seurat object (v4) to scanpy object (for both __single-cell__ and __spatial-omics__ data)](https://github.com/KaWingLee9/in_house_tools/tree/main/Seurat2Scanpy)
 + Clustering result assessment
 + [Meta analysis](https://github.com/KaWingLee9/in_house_tools/tree/main/meta_analysis)
++ [Curated gene sets](https://github.com/KaWingLee9/in_house_tools/tree/main/curated_gene_sets.csv)
+
