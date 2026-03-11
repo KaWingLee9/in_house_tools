@@ -73,3 +73,18 @@ Parameters for `DrawVolcano`:
 + `selectLab`: genes that label on the plot    
 + `alpha`: the transparency of the points  
 + `...`: other arguments that passed on to `EnhancedVolcano::EnhancedVolcano`  
+
+## Regulation network analysis
+
+``` r
+source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/network.R')
+
+
+```
+Parameters for `BuildNetwork`:  
++ `exp_mat`: TPM or FPKM matrix  
++ `method`: one of `pearson`, `spearman`, `WGCNA`, `GENIE3`; for WGCNA return the modules that the genes belong to; others return the matrix of regulation strength  
++ `power_vector`: the range of powers to automatically select power for WGCNA  
++ `power_used`: the exact power for WGCNA  
++ `minModuleSize`, `maxBlockSize`, `saveTOMFileBase`: as defined in WGCNA  
++ `regulators`: subset of genes used as candidate regulators in GENIE3  
