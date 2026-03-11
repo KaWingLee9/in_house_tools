@@ -79,10 +79,16 @@ Parameters for `DrawVolcano`:
 ``` r
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/network.R')
 
+# get transcription factor from GTRD database
+regulators=msigdbr::msigdbr(species='Homo sapiens',category='C3',subcategory='TFT:GTRD') %>% data.frame %>% .[,'gs_name'] %>% unique %>% gsub('_TARGET_GENES','',.)
+# gene transformation when dealing with datasets from other species
+# regulators=stringr::str_to_title(regulators)
+# regulators=intersect(regulators,rownames(count_mat))
 
+weighted_mat=BuildNetwork(as.matrix(count_mat),method='GENIE3',regulators=regulators)
 ```
 Parameters for `BuildNetwork`:  
-+ `exp_mat`: TPM or FPKM matrix  
++ `exp_mat`: count matrix for GENIE3; TPM or FPKM matrix for others  
 + `method`: one of `pearson`, `spearman`, `WGCNA`, `GENIE3`; for WGCNA return the modules that the genes belong to; others return the matrix of regulation strength  
 + `power_vector`: the range of powers to automatically select power for WGCNA  
 + `power_used`: the exact power for WGCNA  

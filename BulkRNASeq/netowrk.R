@@ -1,8 +1,17 @@
+# build regulatory network
 BuildNetwork=function(exp_mat,method='WGCNA',
                       power_vector=1:10,power_used=NULL,
-                      minModuleSize=100,maxBlockSize=5000,saveTOMFileBase='SpodopteraTOM-blockwise'
+                      minModuleSize=100,maxBlockSize=5000,saveTOMFileBase='SpodopteraTOM-blockwise',
                       regulators=NULL){
 
+    if (method=='GENIE3'){
+        
+        library(GENIE3)
+        weighted_mat=GENIE3(exp_mat,regulators=regulators)
+        return(weighted_mat)
+
+    }
+    
     exp_mat=log2(exp_mat+1)
     exp_mat=t(exp_mat)
 
@@ -34,13 +43,5 @@ BuildNetwork=function(exp_mat,method='WGCNA',
         module_df=data.frame(gene_id=names(wgcna_network$colors),module=wgcna_network$colors)
         
         return(module_df)
-    }
-
-    if (method=='GENIE3'){
-        
-        library(GENIE3)
-        weighted_mat=GENIE3(t(exp_mat),regulators=regulators)
-        return(weighted_mat)
-
     }
 }
