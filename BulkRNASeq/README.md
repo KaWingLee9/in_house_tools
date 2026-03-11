@@ -26,7 +26,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/DEAnal
 p=SampleQC_PCA(tpm_mat,group1,group2,PC=c('PC1','PC2'))
 p
 
-ht=SampleQC_cor(log2tpm_mat_scale,group1,group2,method='pearson')
+ht=SampleQC_cor(tpm_mat,group1,group2,method='pearson')
 ht
 ```
 Parameters for `SampleQC_PCA`:  
