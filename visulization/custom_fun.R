@@ -171,7 +171,7 @@ ContingencyPlot=function(x,y,method='fisher',return_plot=TRUE){
 SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
                     show.significance=TRUE,sig.level=c(0.01,0.05),sig.label=c('**','*'),
-                    p.adj=FALSE,p.adj.method='fdr',scale=TRUE,transpose=FALSE,...){
+                    p.adj=FALSE,p.adj.method='fdr',scale=TRUE,transpose=FALSE,return_plot=TRUE,...){
     
     options(warn=-1)
     
@@ -284,23 +284,30 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
         }
     }
 
-    library(ComplexHeatmap)
-    ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
-        if (show.significance){
-            q=min(which(p_matrix[i,j]<=sig.level))
-            if (q<=length(sig.level)){
-                grid.text(sig.label[q],x,y)
-            } else{
+    if (!return_plot){
+        test_result=heatmap_matrix %>% reshape2::melt(varnames=c('group','variable'),value.name='value')
+        test_result[,'p_value']=test_result %>% apply(1,function(x) { p_matrix[x[1],x[2]] })
+        return(test_result)
+    } else {
+        
+        library(ComplexHeatmap)
+        ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
+            if (show.significance){
+                q=min(which(p_matrix[i,j]<=sig.level))
+                if (q<=length(sig.level)){
+                    grid.text(sig.label[q],x,y)
+                } else{
+                    grid.text('',x,y)
+                }
+            } else {
                 grid.text('',x,y)
             }
-        } else {
-            grid.text('',x,y)
-        }
-
-    },...)
     
-    options(warn=1)
-    return(ht)
+        },...)
+        
+        options(warn=1)
+        return(ht)   
+    }
 
 }
 

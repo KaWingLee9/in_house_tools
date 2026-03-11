@@ -8,7 +8,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [CorPlot - Correlation bubble plot with significance test](#correlation)
 + [ContingencyPlot](#contingencyPlot)
 + [ConditionHeatmap - Heatmap showing values under different condition](#conditionHeatmap)
-+ [SHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
++ [SumHeatmap - Summarized heatmap of grouped data with significance test](#heatmap1)
 + [SimilarityClustering - Blocks division in similarity heatmap](#heatmap2)
 + [Other tips for clustering](#heatmap3)  
   Reorder row/column order of the table for heatmap visualization  
@@ -87,7 +87,7 @@ Parameters of `ConditionHeatmap`:
 + `x_col`, `y_col`, `group_col`, `value_col`: column names of the x axis, y axis, condition to split heatmap and the value mapped to colors  
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`  
 
-## <a name="heatmap1">SHeatmap - Summarized heatmap of grouped data with significance test</a>
+## <a name="heatmap1">SumHeatmap - Summarized heatmap of grouped data with significance test</a>
 __Required packages__: dplyr, ComplexHeatmap  
 ``` r
 # load dataset
@@ -129,7 +129,7 @@ draw(ht_1+ht_2,auto_adjust=FALSE)
   <img height="400" src="pct/SHeatmap.png">
 </p>
 
-Parameters of `SHeatmap`:
+Parameters of `SumHeatmap`:
 + `df`: a long data frame 
 + `group.col`: column name represents sample group
 + `variable.col`: column name represents variable
@@ -142,6 +142,7 @@ Parameters of `SHeatmap`:
 + `p.adj`, `p.adj.method`: whether to adjust p value and method for p value adjustment (passed on to `p.adjust(method=...)`)
 + `scale`: whether to scale data within each variable. Default: `TRUE`
 + `transpose`: Default:`FALSE`, show heatmap in group x variable. If `TRUE`, show heatmap in variable x group
++ `return_plot`: whether to return plot or the test result  
 + `...`: other arguments passed on to `ComplexHeatmap::Heatmap`
 
 <p align="center">
