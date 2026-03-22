@@ -105,9 +105,9 @@ DiffExp=function(exp_mat,group,group_ctrl=NA,method='DESeq2',mat_type='count',
 
             if ( ! is.na(lfc_shrinkage_method) ){
                 cds=lfcShrink(cds,type=lfc_shrinkage_method)
+            } else {
+                test_resut=results(cds,pAdjustMethod=p_adj_method)
             }
-            
-            test_resut=results(cds,pAdjustMethod=p_adj_method)
     
             DESeq2::plotMA(test_resut)
             # plot(test_resut[,'baseMean'],test_resut[,'log2FoldChange'],
@@ -131,6 +131,81 @@ DiffExp=function(exp_mat,group,group_ctrl=NA,method='DESeq2',mat_type='count',
                 } else{
                     fit=glmFit(y,design)
                     test_resut=glmLRT(fit)
+                }
+                test_resut$table['Padj']=p.adjust(test_resut$table[,'PValue'],method='fdr')
+                
+                test_table=test_resut$table
+                plot(test_table[,'logCPM'],test_table[,'logFC'],
+                     col=ifelse(test_table[,'Padj']<=0.05,'red','black'),xlab='logCounts', ylab='logFC',pch=20)
+                
+                return(test_resut)
+                
+            }
+    }
+
+    if (mat_type=='tpm' | mat_type=='fpkm'){
+
+        # if (method=='limma'){}
+        # if (method=='wilcox'){}
+        
+    }
+
+    
+}
+
+# DiffExp_batch
+DiffExp_batch=function(exp_mat,group,batch,group_ctrl=NA,method='DESeq2',mat_type='count',
+                 test='Wald',fitType='parametric',sfType='ratio',lfc_shrinkage_method=NA,
+                 NormFactorMethod='TMM',useQL=TRUE,
+                 p_adj_method='fdr',...){
+    
+    method=match.arg(method,choices=c('DESeq2','edgeR','limma','wilcox'))
+    mat_type=match.arg(mat_type,choices=c('count','tpm','fpkm'))
+
+    if (! is.na(group_ctrl)){
+        group=relevel(factor(group),ref=group_ctrl)
+    }
+    
+    if (mat_type=='count'){
+        count_mat=exp_mat
+
+        if (method=='DESeq2'){
+            
+            library(DESeq2)
+            
+            cds=DESeqDataSetFromMatrix(count_mat,colData=DataFrame(group,batch),design=~group+batch)
+            cds=DESeq(cds,test=test,fitType=fitType,sfType=sfType)
+            rn=grep('group',resultsNames(cds),value=TRUE)
+
+            if ( ! is.na(lfc_shrinkage_method) ){
+                cds=lfcShrink(cds,coef=rn,type=lfc_shrinkage_method)
+            } else {
+                test_resut=results(cds,name=rn,pAdjustMethod='fdr')
+            }
+    
+            DESeq2::plotMA(test_resut)
+            # plot(test_resut[,'baseMean'],test_resut[,'log2FoldChange'],
+            #      col=ifelse(test_resut[,'padj']<=0.05,'red','black'),xlab='logCounts', ylab='logFC',pch=20)
+    
+            return(test_resut)
+            }
+        
+            if (method=='edgeR'){
+        
+                library(edgeR)
+                
+                y=DGEList(count_mat,group=group)
+                y=calcNormFactors(y,method=NormFactorMethod)
+                design=model.matrix(~group+batch)
+                y=estimateDisp(y,design)
+                rn=grep('group',colnames(fit$coefficients),value=TRUE)
+                
+                if (useQL){
+                    fit=glmQLFit(y,design)
+                    test_resut=glmQLFTest(fit,coef=rn)
+                } else{
+                    fit=glmFit(y,design)
+                    test_resut=glmLRT(fit,coef=rn)
                 }
                 test_resut$table['Padj']=p.adjust(test_resut$table[,'PValue'],method='fdr')
                 
@@ -192,5 +267,3 @@ DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
 
     return(p)
 }
-
-
