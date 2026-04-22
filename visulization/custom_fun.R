@@ -198,7 +198,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     }
     
     if (show.significance){
-        p_matrix=lapply(unique(df[,variable.col]),function(x){
+        p_matrix=parallel::mclapply(unique(df[,variable.col]),function(x){
 
             m=unique(df[,group.col])
             df=sapply(m,function(y){
@@ -246,17 +246,22 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                     }
                 }
 
-                if (!permutated){
-                    if (test.method=='t.test'){
-                        p=t.test(x1,x2)$p.value
+                if ((length(x1)>=3) & (length(x2)>=3) & (any(is.na(c(x1,x2)))) ){
+                    if (!permutated){
+                        if (test.method=='t.test'){
+                            p=t.test(x1,x2)$p.value
+                        }
+    
+                        if (test.method=='wilcox.test'){
+                            p=wilcox.test(x1,x2)$p.value
+                        }
                     }
-
-                    if (test.method=='wilcox.test'){
-                        p=wilcox.test(x1,x2)$p.value
-                    }
+    
+                    return(p)
+                    
+                } else {
+                    return(1)
                 }
-
-                return(p)
 
             },USE.NAMES=TRUE) %>% data.frame()
 
@@ -264,7 +269,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
             colnames(df)=x
             return(df)
 
-        }) %>% dplyr::bind_cols()
+        },mc.cores=15) %>% dplyr::bind_cols()
 
         p_matrix=p_matrix[rownames(heatmap_matrix),colnames(heatmap_matrix)]
 
@@ -285,7 +290,10 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     }
 
     if (!return_plot){
+        heatmap_matrix=as.matrix(heatmap_matrix)
         test_result=heatmap_matrix %>% reshape2::melt(varnames=c('group','variable'),value.name='value')
+        test_result[,'group']=as.character(test_result[,'group'])
+        test_result[,'variable']=as.character(test_result[,'variable'])
         test_result[,'p_value']=test_result %>% apply(1,function(x) { p_matrix[x[1],x[2]] })
         return(test_result)
     } else {
