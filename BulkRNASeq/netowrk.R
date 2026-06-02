@@ -4,6 +4,10 @@ BuildNetwork=function(exp_mat,method='WGCNA',
                       minModuleSize=100,maxBlockSize=5000,saveTOMFileBase='SpodopteraTOM-blockwise',
                       regulators=NULL){
 
+    if (is.null((regulators))){
+        regulators=intersect(rownames(exp_mat),regulators)
+    }
+
     if (method=='GENIE3'){
         
         library(GENIE3)
@@ -15,15 +19,25 @@ BuildNetwork=function(exp_mat,method='WGCNA',
     exp_mat=log2(exp_mat+1)
     exp_mat=t(exp_mat)
 
-    if (method=='pearson'){
-        cor_mat=cor(exp_mat,method='pearson')
-        return(cor_mat)
+    if ( (method=='pearson') | (method=='spearman') ) {
+
+        if (is.null((regulators))){
+            test_result=Hmisc::rcorr(exp_mat,type=method)
+        } else {
+            test_result=Hmisc::rcorr(exp_mat,exp_mat[regulators,],type=method)
+        }
+
+        test_result[['P.adj']] =p.adjust( c(test_result[['P']]) ,method='fdr') %>% matrix(.,nrow=ncol(test_result[['P']]) )
+        rownames(test_result[['P.adj']])=rownames(test_result[['P']])
+        colnames(test_result[['P.adj']])=colnames(test_result[['P']])
+        
+        return(test_result)
     }
 
-    if (method=='spearman'){
-        cor_mat=cor(exp_mat,method='spearman')
-        return(cor_mat)
-    }
+    # if (method=='spearman'){
+    #     cor_mat=cor(exp_mat,method='spearman')
+    #     return(cor_mat)
+    # }
     
     if (method=='WGCNA'){
         

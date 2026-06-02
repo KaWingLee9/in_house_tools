@@ -437,7 +437,7 @@ p
 </p>
 
 Parameters for `layout_circular_community`:  
-+ `layout_circular_community`: community label for each vertex  
++ `layout_circular_community`: community label for each vertex, should be numeric (1, 2, ...)   
 + `R`: radius of the main circle  
 + `k`: radius adjustment of each community circle  
 
