@@ -190,29 +190,35 @@ def hex_to_rgb(hex_col):
 #     # plt.invert_yaxis()
 #     plt.legend(handles=legend_elements,loc=(1.001,0.5),frameon=False)
 
-def plot_cell_cluster(adata,tag='cluster',col=None):
+def plot_cell_cluster(adata,tag='cluster',col=None,show_boundary=True,
+                      show_legend=True,return_mat=False):
     
     pic=adata.uns['mask'].copy()
+    mask=adata.uns['mask'].copy()
     label=adata.obs[tag]
     label=label.astype('category')
+
+    cell_removed=list( set(np.unique(adata.obs[tag])) - set(list(col.keys())) )
+    for x in cell_removed:
+        col[x]='#000000'
     
     if col==None:
         tag_name=label.cat.categories
-        label=label.cat.rename_categories(dict(zip(tag_name,range(len(label)+1,len(label)+len(np.unique(label))+1))))
+        label=label.cat.rename_categories(dict(zip(tag_name,range(len(label)+1,len(label)+1+len(np.unique(tag_name))+1))))
         col_default=['#5050FFFF','#CE3D32FF','#749B58FF','#F0E685FF','#466983FF','#BA6338FF','#5DB1DDFF','#802268FF','#6BD76BFF','#D595A7FF','#924822FF',
                      '#837B8DFF','#C75127FF','#D58F5CFF','#7A65A5FF','#E4AF69FF','#3B1B53FF','#CDDEB7FF','#612A79FF','#AE1F63FF','#E7C76FFF','#5A655EFF',
                      '#CC9900FF','#99CC00FF','#A9A9A9FF','#CC9900FF','#99CC00FF','#33CC00FF','#00CC33FF','#00CC99FF','#0099CCFF','#0A47FFFF','#4775FFFF',
                      '#FFC20AFF','#FFD147FF','#990033FF','#991A00FF','#996600FF','#809900FF','#339900FF','#00991AFF','#009966FF','#008099FF','#003399FF',
                      '#1A0099FF','#660099FF','#990080FF','#D60047FF','#FF1463FF','#00D68FFF','#14FFB1FF']
         col=col_default[0:(len(np.unique(label)))]
-        col_0=['#FFFFFF']
+        col_0=['#000000']
         col_0=col_0+col
         
     else:
         tag_name=list(col.keys())
-        label=label.cat.rename_categories(dict(zip(tag_name,range(len(label)+1,len(label)+len(np.unique(label))+1))))
+        label=label.cat.rename_categories(dict(zip(tag_name,range(len(label)+1,len(label)+1+len(np.unique(tag_name))+1))))
         col=list(col.values())
-        col_0=['#FFFFFF']+col
+        col_0=['#000000']+col
     
     for i in range(0,label.shape[0]):
         pic[pic==i+1]=label[i]
@@ -220,11 +226,22 @@ def plot_cell_cluster(adata,tag='cluster',col=None):
     pic[pic!=0]=pic[pic!=0]-len(label)
     colormap=np.array([[hex_to_rgb(i) for i in col_0[0:len(col_0)]]],np.uint8)/255
     rgb=gray2color(pic.astype(np.uint8), use_pallet=None, custom_pallet=colormap)
-    legend_elements=[Patch(color=col[i],label=tag_name[i]) for i in range(0,len(tag_name))]
-    plt.imshow(rgb)
-    plt.axis('off')
-    # plt.invert_yaxis()
-    plt.legend(handles=legend_elements,loc=(1.001,0.5),frameon=False)
+    
+    if show_boundary:
+        boundary=find_boundaries(mask,connectivity=1,mode='inner')
+        rgb[boundary>0]=255
+    
+    legend_elements=None
+    if show_legend:
+        legend_elements=[Patch(color=col[i],label=tag_name[i]) for i in range(0,len(tag_name))]
+    
+    if not return_mat:
+        plt.imshow(rgb)
+        plt.axis('off')
+        if show_legend:
+            plt.legend(handles=legend_elements,loc=(1.001,0.5),frameon=False)
+    else:
+        return rgb
 
 
 def plot_cell_exp(adata,feature,show_boundary=True,

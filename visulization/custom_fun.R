@@ -168,10 +168,10 @@ ContingencyPlot=function(x,y,method='fisher',return_plot=TRUE){
 
 # SHeatmap - Summarized heatmap with significance test
 # Required packages: dplyr, coin, ComplexHeatmap
-SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
+SumHeatmap=function(df,group.col,variable.col,value.col,heatmap.aggr.fun=mean,test.mode='ONEvsVALUE',
                     test.method='t.test',permutated=FALSE,
                     show.significance=TRUE,sig.level=c(0.01,0.05),sig.label=c('**','*'),
-                    p.adj=FALSE,p.adj.method='fdr',scale=TRUE,transpose=FALSE,return_plot=TRUE,...){
+                    p.adj=FALSE,p.adj.method='fdr',scale=TRUE,transpose=FALSE,...){
     
     options(warn=-1)
     
@@ -198,10 +198,12 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
     }
     
     if (show.significance){
-        p_matrix=parallel::mclapply(unique(df[,variable.col]),function(x){
+        p_matrix=lapply(unique(df[,variable.col]),function(x){
 
             m=unique(df[,group.col])
             df=sapply(m,function(y){
+                
+                options(warn=-1)
 
                 if (test.mode=='ONEvsVALUE'){
                     x1=df[ (df[,group.col] %in% y) & (df[,variable.col] %in% x) ,value.col]
@@ -246,22 +248,17 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
                     }
                 }
 
-                if ((length(x1)>=3) & (length(x2)>=3) & (any(is.na(c(x1,x2)))) ){
-                    if (!permutated){
-                        if (test.method=='t.test'){
-                            p=t.test(x1,x2)$p.value
-                        }
-    
-                        if (test.method=='wilcox.test'){
-                            p=wilcox.test(x1,x2)$p.value
-                        }
+                if (!permutated){
+                    if (test.method=='t.test'){
+                        p=t.test(x1,x2)$p.value
                     }
-    
-                    return(p)
-                    
-                } else {
-                    return(1)
+
+                    if (test.method=='wilcox.test'){
+                        p=wilcox.test(x1,x2)$p.value
+                    }
                 }
+
+                return(p)
 
             },USE.NAMES=TRUE) %>% data.frame()
 
@@ -269,7 +266,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
             colnames(df)=x
             return(df)
 
-        },mc.cores=15) %>% dplyr::bind_cols()
+        }) %>% dplyr::bind_cols()
 
         p_matrix=p_matrix[rownames(heatmap_matrix),colnames(heatmap_matrix)]
 
@@ -279,6 +276,17 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
             colnames(p_matrix_adj)=colnames(p_matrix)
             p_matrix=p_matrix_adj
         }
+
+        # significance annotation
+        if (p.adj){
+            p_title='Adjusted\nP value'
+            p_label=paste0('P.adj<',sig.level)
+        } else {
+            p_title='P value'
+            p_label=paste0('P<',sig.level)
+        }
+        lgd_sig=Legend(title=p_title,type='points',pch=sig.label,labels=p_label,background="white")
+        
     }
     
     if (transpose){
@@ -289,32 +297,24 @@ SumHeatmap=function(df,group.col,variable.col,value.col,test.mode='ONEvsVALUE',
         }
     }
 
-    if (!return_plot){
-        heatmap_matrix=as.matrix(heatmap_matrix)
-        test_result=heatmap_matrix %>% reshape2::melt(varnames=c('group','variable'),value.name='value')
-        test_result[,'group']=as.character(test_result[,'group'])
-        test_result[,'variable']=as.character(test_result[,'variable'])
-        test_result[,'p_value']=test_result %>% apply(1,function(x) { p_matrix[x[1],x[2]] })
-        return(test_result)
-    } else {
-        
-        library(ComplexHeatmap)
-        ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
-            if (show.significance){
-                q=min(which(p_matrix[i,j]<=sig.level))
-                if (q<=length(sig.level)){
-                    grid.text(sig.label[q],x,y)
-                } else{
-                    grid.text('',x,y)
-                }
-            } else {
+    library(ComplexHeatmap)
+    ht=Heatmap(heatmap_matrix,cell_fun=function(j,i,x,y,w,h,fill){
+        if (show.significance){
+            q=min(which(p_matrix[i,j]<=sig.level))
+            if (q<=length(sig.level)){
+                grid.text(sig.label[q],x,y)
+            } else{
                 grid.text('',x,y)
             }
+        }
+    },...)
     
-        },...)
-        
-        options(warn=1)
-        return(ht)   
+    options(warn=1)
+    if (show.significance){
+        ht=draw(ht,annotation_legend_list=lgd_sig)
+        return(ht)
+    } else {
+        return(ht)
     }
 
 }

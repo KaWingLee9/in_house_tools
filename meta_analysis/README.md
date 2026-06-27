@@ -3,6 +3,25 @@
 ## Rank combination
 Combine the rank of P-value.  
 ``` r
+library(Seurat)
+library(SeuratData)
+
+InstallData('pbmcsca')
+seurat_obj=LoadData('pbmcsca')
+
+table(pbmcsca@meta.data[,c('Experiment','Method')])
+#           Method
+# Experiment 10x Chromium (v2) 10x Chromium (v2) A 10x Chromium (v2) B
+#      pbmc1                 0                3222                3222
+#      pbmc2              3362                   0                   0
+#           Method
+# Experiment 10x Chromium (v3) CEL-Seq2 Drop-seq inDrops Seq-Well Smart-seq2
+#      pbmc1              3222      253     3222    3222     3222        253
+#      pbmc2                 0      273     3362    3362      551        273
+
+lapply
+
+
 combined_result=CombRank_DFLs(test_result_ls,p_col='p_val',ES_col='avg_log2FC',
                               min_num=0,min_ratio=0.5,method='RankSum',quantile_est=1/4)
 ```
