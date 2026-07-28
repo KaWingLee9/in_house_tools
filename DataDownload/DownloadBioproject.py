@@ -145,7 +145,9 @@ def write_text_new(path: Path, text: str) -> None:
         if path.stat().st_size == 0:
             raise ValueError(f"Existing metadata file is empty: {path}")
         return
-    path.write_text(text, encoding="utf-8", newline="")
+
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        handle.write(text)
 
 
 def md5sum(path: Path, chunk_size: int = 16 * 1024 * 1024) -> str:
