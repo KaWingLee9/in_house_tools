@@ -115,7 +115,7 @@ CorPlot=function(df,cor.method='pearson', # 'pearson', 'spearman'
 
 # ContingencyPlot - Plot for the independent test
 # Required packages: ggplot2
-ContingencyPlot=function(x,y,method='fisher',return_plot=TRUE){
+ContingencyPlot=function(x,y,method='fisher',sig.level=0.05,return_plot=TRUE){
     
     library(ggplot2)
     
@@ -147,7 +147,7 @@ ContingencyPlot=function(x,y,method='fisher',return_plot=TRUE){
         }) %>% dplyr::bind_rows() 
     }) %>% dplyr::bind_rows()
     
-    test_result[,'sig']=test_result[,'pval']<=0.05
+    test_result[,'sig']=test_result[,'pval']<=sig.level
     
     if (return_plot){
         p=ggplot(data=test_result,aes(x=group_x,y=group_y,fill=OR,size=pval,color=sig))+
