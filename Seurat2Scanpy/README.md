@@ -10,7 +10,7 @@ B) R console with: `Seurat`, `dplyr`.
 2. Download the source file Seurat2Scanpy.py and import the functions:  
 ```
 exec(open('Seurat2Scanpy_v4.py','r').read())  
-r_home="~/miniconda3/envs/R/lib/R" # path of R console 
+r_home="/home/lijiarong/miniconda3/envs/R/lib/R" # absolute path of R console 
 ```
 3. For scRNA-Seq data:  
 ```
