@@ -10,10 +10,18 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/RNANor
 count_mat=KeepProteinGene(count_mat,species='human')
 # count matrix -> tpm/fpkm matrix
 tpm_mat=NormalizeCount(count_matrix,species='human',length.type='transcript',method='tpm')
+
+# keep genes according to total counts across samples
+genes_keep=colSums(count_mat)>=10
+# keep genes according to the number of samples that gene express
+genes_keep=colSums(count_mat!=0)>=3
+
+count_mat=count_mat[,genes_keep]
+tpm_mat=tpm_mat[,genes_keep]
 ```
 
 Parameters:  
-+ `count_mat`: count matrix with sample x gene  
++ `count_mat`: count matrix with gene x sample  
 + `species`: species of the genes, e.g. `human` (default), `mouse`  
 + `method`: `tpm` (default) or `rpkm`  
 + `length.type`: method to define gene length: `exon` or `transcript` (default)  
@@ -23,20 +31,21 @@ __Required packages__: `ggplot2`, `ComplexHeatmap`
 ``` r
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/DEAnalysis.R')
 
-p=SampleQC_PCA(tpm_mat,group1,group2,PC=c('PC1','PC2'))
-p
+valid_genes=apply(tpm_mat,1,var,na.rm=TRUE) > 0
 
-ht=SampleQC_cor(tpm_mat,group1,group2,method='pearson')
-ht
+p=SampleQC_PCA(tpm_mat[valid_genes,],group1=groups_1,PC=c('PC1','PC2'),plot_label=TRUE)
+p=SampleQC_PCA(tpm_mat[valid_genes,],group1=groups_1,group2=groups_2,PC=c('PC1','PC2'),plot_label=TRUE)
+p=SampleQC_PCA(tpm_mat[valid_genes,],gene='CYP2E1',PC=c('PC1','PC2'),plot_label=TRUE)
+ht=SampleQC_cor(t(tpm_mat)[valid_columns,],group1=groups_1,group2=groups_2,method='pearson')
 ```
 Parameters for `SampleQC_PCA`:  
-+ `exp_mat`: tpm_mat or fpkm_mat with sample x gene  
-+ `group1`, `group2` (optional): vectors to show sample group  
++ `exp_mat`: tpm_mat or fpkm_mat with gene x sample  
++ `group1`, `group2`, `gene` (optional): vectors to show sample group or gene expression    
 + `PC`: two PC dimensions for visualization  
 + `plot_label`: whether to show sample label  
 
 Parameters for `SampleQC_cor`:  
-+ `exp_mat`: tpm_mat or fpkm matrix with sample x gene  
++ `exp_mat`: tpm_mat or fpkm matrix with gene x sample  
 + `group1`, `group2` (optional): vectors to show sample group  
 + `method`: method to calculate correlation, could be `pearson` or `spearman`  
 + `...`: other arguments passed on to `ComlexHeatmap::Heatmap`
@@ -51,8 +60,10 @@ test_result=data.frame(test_result)
 DrawVolcano(test_result,x='log2FoldChange',y='padj',
             pCutoff=0.05,FCcutoff=1.5)
 
-test_result=DiffExp(count_mat,mat_type='count',group=c(),group_ctrl='WT',method='edgeR')
+test_result=DiffExp(count_mat,mat_type='count',group=c(...),group_ctrl='WT',method='edgeR')
 test_result=data.frame(test_result)
+DrawVolcano(test_result,x='logFC',y='Padj',
+            pCutoff=0.05,FCcutoff=1.5)
 ```
 Parameters for `DiffExp`:
 + `exp_mat`: expression matrix (gene x sample)

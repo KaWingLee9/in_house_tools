@@ -32,7 +32,7 @@ SampleQC_cor=function(exp_mat,group1,group2=NA,method='spearman',...){
     
 }
 
-SampleQC_PCA=function(exp_mat,group1,group2=NA,PC=c('PC1','PC2'),plot_label=FALSE){
+SampleQC_PCA=function(exp_mat,gene=NA,group1=NA,group2=NA,PC=c('PC1','PC2'),plot_label=FALSE){
 
     library(ggplot2)
 
@@ -46,24 +46,43 @@ SampleQC_PCA=function(exp_mat,group1,group2=NA,PC=c('PC1','PC2'),plot_label=FALS
     pca_coord[,'sample']=rownames(pca_coord)
     pca_variance=pca_result$importance['Proportion of Variance',]
 
-    if (is.na(group2)){
-        pca_coord[,'group1']=group1
-        p=ggplot(pca_coord,aes_string(x=PC[1],y=PC[2],color='group1'))
+    if (is.na(gene)){
+        
+        if (is.na(group2)){
+            pca_coord[,'group1']=group1
+            p=ggplot(pca_coord,aes_string(x=PC[1],y=PC[2],color='group1'))
+        } else {
+            pca_coord[,'group']=paste0(group1,'_',group2)
+            pca_coord[,'group2']=group2
+            p=ggplot(pca_coord,aes_string(x=PC[1],y=PC[2],color='group1',shape='group2'))
+        }
+    
+        p=p+
+            geom_point()+
+            theme_bw()+
+            xlab(paste0(PC[1],' (',pca_variance[PC[1]]*100,'%)'))+
+            ylab(paste0(PC[2],' (',pca_variance[PC[2]]*100,'%)'))
+    
+        if (plot_label){
+            p=p+geom_text(aes_string(label='sample'))
+        }
+        
     } else {
-        pca_coord[,'group']=paste0(group1,'_',group2)
-        pca_coord[,'group2']=group2
-        p=ggplot(pca_coord,aes_string(x=PC[1],y=PC[2],color='group1',shape='group2'))
-    }
 
-    p=p+
-        geom_point()+
-        theme_bw()+
-        xlab(paste0(PC[1],' (',pca_variance[PC[1]]*100,'%)'))+
-        ylab(paste0(PC[2],' (',pca_variance[PC[2]]*100,'%)'))
-
-    if (plot_label){
-        p=p+geom_text(aes_string(label='sample'))
-    }
+        pca_coord[,'gene']=exp_mat[gene,]
+        p=ggplot(pca_coord,aes_string(x=PC[1],y=PC[2],color='gene'))
+        p=p+
+            geom_point()+
+            theme_bw()+
+            xlab(paste0(PC[1],' (',pca_variance[PC[1]]*100,'%)'))+
+            ylab(paste0(PC[2],' (',pca_variance[PC[2]]*100,'%)'))+
+            labs(color=gene)
+            
+    
+        if (plot_label){
+            p=p+geom_text(aes_string(label='sample'))
+        
+    }}
 
     return(p)
     
