@@ -186,6 +186,8 @@ SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20)
 c1=SimilarityClustering(df,mode='manual',select_cutoff=FALSE,cluster_num=4)
 # plot using provided label
 # c1=SimilarityClustering(df,mode='manual',select.cutoff=FALSE,provided.label=c1)
+# ht=Heatmap(cell_type_comp_scale[,selected_type],clustering_method_rows='ward.D2',
+#            show_row_names=FALSE,show_row_dend=FALSE,row_split=c1[rownames(cell_type_comp_scale)])
 ```
 <p align="center">
   <img height="400" src="pct/SimilarityHeatmap_c1.png">
