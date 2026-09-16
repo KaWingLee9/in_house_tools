@@ -581,10 +581,9 @@ ClusterCombine=function(c,l,reorder=TRUE){
     if ( sum(duplicated( unlist(l) ))!=0 ) {
         stop('Duplicated clusters among combinations!')
     }
+
+    c[c %in% l]=l[1]
     
-    for (x in l){
-        c[c %in% x]=x[1]
-    }
     if (reorder){
         c=factor(c,labels=1:length(unique(c)))
     }

@@ -18,11 +18,13 @@ Sample data are aquired from __Spatial multi-omics landscape of colorectal cance
 
 ### Phylogenetic reconstruction from CNV
 #### CNV
+Infer CNV profile using scRNA-Seq or ST data:  
 ``` R
 library(dplyr)
 library(Seurat)
 library(infercnv)
 
+# select cells or spots that belong to benign or malignant tissue
 selected_cluster=c('Liver macrometastasis tumor','Liver micrometastasis tumor',
   'Lung macrometastasis tumor',
   'Non-neoplastic colon',
@@ -50,8 +52,50 @@ infercnv_obj=infercnv::run(infercnv_obj,
                            denoise=TRUE,
                            HMM=FALSE)
 ```
-Based on the CNV profiles, identify phylogenetic clones and construct of phylogenetic tree.  
+Based on the CNV profiles, identify phylogenetic clones:  
 ``` r
+# cells/spots clustering based on the CNv profiles
+source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
+
+# infercnv_obj=readRDS()
+cnv_mat=t(infercnv_obj@expr.data)
+gene_order=infercnv_obj@gene_order[,'chr']
+col_chr=rep(c('#B5B5B5','#1C1C1C'),11)
+names(col_chr)=1:22
+heatmap_cutoff=0.01
+col_cnv=circlize::colorRamp2(unique(c(seq(quantile(unlist(cnv_mat),heatmap_cutoff),1,length.out=6),
+                                    1,
+                                    seq(1,quantile(unlist(cnv_mat),1-heatmap_cutoff),length.out=6))),
+                             c('#104680','#317CB7','#6DADD1','#B6D7E8','#E9F1F4','white',
+                               '#FBE3D5','#F6B293','#DC6D57','#B72230','#6D011F'))
+
+# determine the clustering number
+cl=SimilarityClustering(cnv_mat,mode='manual',select.cutoff=FALSE,
+                        similarity.method='pearson',hc.method='ward.D2',cluster_num=11)
+ht1=Heatmap(cnv_mat,clustering_method_rows='ward.D2',
+           show_row_names=FALSE,show_column_names=FALSE,row_split=cl[rownames(cnv_mat)],
+           # cluster_rows=cluster_within_group(cnv_mat,cl),
+           row_dend_reorder=TRUE,clustering_distance_rows='pearson',
+           col=col_cnv,
+           top_annotation=HeatmapAnnotation(Chr=as.numeric(gene_order),
+                                               col=list(Chr=col_chr),show_legend=FALSE,annotation_name_side='left'),
+           cluster_columns=FALSE)
+
+# combine clusters with similar CNV profiles
+cl1=ClusterCombine(cl,c(4,5,6,7),reorder=TRUE)
+ht2=Heatmap(cnv_mat,col=col_cnv,
+           show_row_names=FALSE,show_column_names=FALSE,row_split=cl1[rownames(cnv_mat)],
+           # cluster_rows=cluster_within_group(cnv_mat,cl),
+           cluster_rows=FALSE,
+           clustering_method_rows='ward.D2',clustering_distance_rows='pearson',
+           top_annotation=HeatmapAnnotation(Chr=as.numeric(gene_order),
+                                               col=list(Chr=col_chr),show_legend=FALSE,annotation_name_side='left'),
+           cluster_columns=FALSE)
+```
+
+and construct phylogentic tree:  
+```r
+
 
 ```
 
@@ -63,6 +107,10 @@ __Reference__:
 
 ## Phylogenic analysis from scRNA-Seq/ST with paired WES/WGS  
 
+
+### IntegrateCNV
+
+__Reference__: 
 
 ## Phylogenic analysis from scDNA-Seq
 Sample data are aquired from .
