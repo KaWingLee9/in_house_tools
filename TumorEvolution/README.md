@@ -57,7 +57,7 @@ Based on the CNV profiles, identify phylogenetic clones:
 # cells/spots clustering based on the CNv profiles
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/custom_fun.R')
 
-# infercnv_obj=readRDS()
+# infercnv_obj=readRDS('run.final.infercnv_obj')
 cnv_mat=t(infercnv_obj@expr.data)
 gene_order=infercnv_obj@gene_order[,'chr']
 col_chr=rep(c('#B5B5B5','#1C1C1C'),11)
@@ -92,7 +92,9 @@ ht2=Heatmap(cnv_mat,col=col_cnv,
                                                col=list(Chr=col_chr),show_legend=FALSE,annotation_name_side='left'),
            cluster_columns=FALSE)
 ```
-
+<p align="center">
+  <img height="400" src="pct/ht1_ht2.png">
+</p>
 and construct phylogentic tree:  
 ```r
 
@@ -108,7 +110,8 @@ __Reference__:
 ## Phylogenic analysis from scRNA-Seq/ST with paired WES/WGS  
 
 
-### IntegrateCNV
+### CNV inference based on scRNA-Seq and paired WES - IntegrateCNV
+
 
 __Reference__: 
 

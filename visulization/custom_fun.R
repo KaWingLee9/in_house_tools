@@ -575,15 +575,20 @@ SumHeatmap2=function(similarity_matrix,c){
            )
 }
 
-                              
+# c:
+# l: list of vector for clusters to combine
+# reorder: 
 ClusterCombine=function(c,l,reorder=TRUE){
     
     if ( sum(duplicated( unlist(l) ))!=0 ) {
         stop('Duplicated clusters among combinations!')
     }
+    
+    for (x in l){
+        c[c %in% x]=x[1]
+    }
 
     c[c %in% l]=l[1]
-    
     if (reorder){
         c=factor(c,labels=1:length(unique(c)))
     }
