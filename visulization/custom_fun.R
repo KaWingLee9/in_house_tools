@@ -1025,10 +1025,10 @@ set_color_ggplot=function(value,color_pal,legend_name){
                                            seq(quantile(value,0.01),quantile(value,0.99),length.out=length(color_pal)-2),
                                            max(value))
                                      ),name=legend_name)
-    } else if (is.character(value)){
+    } else if ( (is.character(value)) | (is.factor(value)) ){
         n=length(unique(value))
         if (! is.null(color_pal)){
-            if (! is.colors(color_pal)){
+            if (!all(is.colors(color_pal))){
                 color_pal=brewer.pal(n,color_pal)
             }
         } else {
