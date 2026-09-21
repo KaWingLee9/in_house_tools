@@ -82,7 +82,7 @@ cl=SimilarityClustering(cnv_mat,mode='manual',select.cutoff=FALSE,
                         similarity.method='pearson',hc.method='ward.D2',cluster_num=11)
 
 # combine clusters with similar CNV profiles -> tumor clones
-cl1=ClusterCombine(cl,c(4,5,6,7),reorder=TRUE)
+cl1=ClusterCombine(cl,c(5,6,7),reorder=TRUE)
 ht2=Heatmap(cnv_mat,col=col_cnv,
            show_row_names=FALSE,show_column_names=FALSE,row_split=cl1[rownames(cnv_mat)],
            # cluster_rows=cluster_within_group(cnv_mat,cl),
@@ -105,7 +105,7 @@ cnv_mat_mean=cnv_mat %>% group_by(cl1) %>% summarise_if(is.numeric,mean) %>% dat
 # build phylogenetic tree using NJ method
 d=dist(cnv_mat_mean)
 nj_tree=ape::nj(d)
-rooted_tree=ape::root(nj_tree,outgroup='4',resolve.root=TRUE)
+rooted_tree=ape::root(nj_tree,outgroup='5',resolve.root=TRUE)
 p1=ggtree(rooted_tree)+
     theme_tree()+
     # geom_tippoint(size=5)+
