@@ -57,10 +57,10 @@ Error in checkDataCategoriesInput(project, data.category, legacy) :
 Last update since download: Download day 2024.7.20                         2022-03-29 (Data Release 32.0)
 Reference Genome: hg38
 ```r
-projects <- TCGAbiolinks::getGDCprojects()$project_id %>% .[grepl('^TCGA',.,perl=TRUE)]
+projects=TCGAbiolinks::getGDCprojects()$project_id %>% .[grepl('^TCGA',.,perl=TRUE)]
 
 sapply(projects, function(project){
-  query <- GDCquery(project = project,
+  query=GDCquery(project = project,
                     data.category="Simple Nucleotide Variation"，
                     data.type = "Masked Somatic Mutation",
                     workflow.type = "Aliquot Ensemble Somatic Variant Merging and Masking") # legacy: TRUE-hg19 (GDC Legacy Archive), FALSE-hg38 (GDC harmonized database, default)
@@ -108,20 +108,20 @@ Transcriptome Profiling-Gene Expression Quantification: 2023-11-21 (mRNA)
 library(dplyr)
 library(TCGAbiolinks)
 library(SummarizedExperiment)
-library(tidyverse)
+library(dplyr)
 
 # get TCGA tumor names
-projects <- TCGAbiolinks::getGDCprojects()$project_id %>% .[grepl('^TCGA',.,perl=TRUE)]
+projects=TCGAbiolinks::getGDCprojects()$project_id %>% .[grepl('^TCGA',.,perl=TRUE)]
 
 sapply(projects, function(project){
-  query <- GDCquery(project = project,
+  query=GDCquery(project = project,
                     data.category="Transcriptome Profiling",
                     data.type="Gene Expression Quantification",
                     workflow.type="STAR - Counts") # legacy: TRUE-hg19 (GDC Legacy Archive), FALSE-hg38 (GDC harmonized database, default)
   GDCdownload(query, files.per.chunk = 100)
   GDCprepare(query,save=T,save.filename=paste0("mRNA/RData/",project,"_mRNA.Rdata")) # 100 files download in each time
   data=GDCprepare(query,save=FALSE)
-)}
+})
 
 > unique(rowdata$gene_type)
  [1] "protein_coding"                     "transcribed_unitary_pseudogene"
@@ -161,9 +161,9 @@ sapply(projects, function(project){
   symbol_mrna=rowData(data_mrna)$gene_name
 
   # raw counts data
-  expr_mat <- assay(data_mrna,"unstranded")
-  expr_mat <- cbind(data.frame(symbol_mrna),as.data.frame(expr_mat))
-  expr_mat <- expr_mat %>% 
+  expr_mat=assay(data_mrna,"unstranded")
+  expr_mat=cbind(data.frame(symbol_mrna),as.data.frame(expr_mat))
+  expr_mat=expr_mat %>% 
     as_tibble() %>% 
     mutate(meanrow = rowMeans(.[,-1]), .before=2) %>% 
     arrange(desc(meanrow)) %>% 
@@ -174,9 +174,9 @@ sapply(projects, function(project){
   write.table(expr_mat,paste0('mRNA/counts/',project,'_mRNA_counts.txt'),quote=FALSE)
 
   # TPM
-  expr_mat <- assay(data_mrna,"tpm_unstrand")
-  expr_mat <- cbind(data.frame(symbol_mrna),as.data.frame(expr_mat))
-  expr_mat <- expr_mat %>% 
+  expr_mat=assay(data_mrna,"tpm_unstrand")
+  expr_mat=cbind(data.frame(symbol_mrna),as.data.frame(expr_mat))
+  expr_mat=expr_mat %>% 
     as_tibble() %>% 
     mutate(meanrow = rowMeans(.[,-1]), .before=2) %>% 
     arrange(desc(meanrow)) %>% 
@@ -187,9 +187,9 @@ sapply(projects, function(project){
   write.table(expr_mat,paste0('mRNA/TPM/',project,'_mRNA_TPM.txt'),quote=FALSE)
 
   # FPKM
-  expr_mat <- assay(data_mrna,"fpkm_unstrand")
-  expr_mat <- cbind(data.frame(symbol_mrna),as.data.frame(expr_mat))
-  expr_mat <- expr_mat %>% 
+  expr_mat=assay(data_mrna,"fpkm_unstrand")
+  expr_mat=cbind(data.frame(symbol_mrna),as.data.frame(expr_mat))
+  expr_mat=expr_mat %>% 
     as_tibble() %>% 
     mutate(meanrow = rowMeans(.[,-1]), .before=2) %>% 
     arrange(desc(meanrow)) %>% 
@@ -200,9 +200,9 @@ sapply(projects, function(project){
   write.table(expr_mat,paste0('mRNA/FPKM/',project,'_mRNA_FPKM.txt'),quote=FALSE)
 
   # FPKM-UQ
-  # expr_mat <- assay(data_mrna,"fpkm_uq_unstrand")
-  # expr_mat <- cbind(data.frame(symbol_mrna),as.data.frame(expr_mat))
-  # expr_mat <- expr_mat %>% 
+  # expr_mat=assay(data_mrna,"fpkm_uq_unstrand")
+  # expr_mat=cbind(data.frame(symbol_mrna),as.data.frame(expr_mat))
+  # expr_mat=expr_mat %>% 
   #   as_tibble() %>% 
   #   mutate(meanrow = rowMeans(.[,-1]), .before=2) %>% 
   #   arrange(desc(meanrow)) %>% 
@@ -222,11 +222,11 @@ sapply(projects, function(project){
 ### ==============================
 ### N. Clinical data
 
-projects <- TCGAbiolinks::getGDCprojects()$project_id %>% .[grepl('^TCGA',.,perl=TRUE)]
+projects=TCGAbiolinks::getGDCprojects()$project_id %>% .[grepl('^TCGA',.,perl=TRUE)]
 
 clinical_file_str='clinical_patient'
 sapply(projects, function(project){
-  query <- GDCquery(project = project,
+  query=GDCquery(project = project,
     data.category = "Clinical",
     data.type = "Clinical Supplement", 
     data.format = "BCR Biotab")
