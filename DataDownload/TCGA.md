@@ -61,12 +61,12 @@ projects=TCGAbiolinks::getGDCprojects()$project_id %>% .[grepl('^TCGA',.,perl=TR
 
 sapply(projects, function(project){
   query=GDCquery(project = project,
-                    data.category="Simple Nucleotide Variation"，
+                    data.category="Simple Nucleotide Variation",
                     data.type = "Masked Somatic Mutation",
                     workflow.type = "Aliquot Ensemble Somatic Variant Merging and Masking") # legacy: TRUE-hg19 (GDC Legacy Archive), FALSE-hg38 (GDC harmonized database, default)
   GDCdownload(query)
   GDCprepare(query,save=T,save.filename=paste0("DNA/RData/",project,"_SNP.Rdata")) # 100 files download in each time
-data=GDCprepare(query,save=FALSE) 
+  data=GDCprepare(query,save=FALSE) 
 })
 
 |data_type in query          |
