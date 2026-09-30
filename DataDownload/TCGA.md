@@ -77,7 +77,7 @@ sapply(projects, function(project){
 |Raw Simple Somatic Mutation |
 |Simple Germline Variation   |
 
-> unique(query$results[[1]]$analysis_workflow_type)
+unique(query$results[[1]]$analysis_workflow_type)
  [1] "MuTect2 Annotation"
  [2] "VarScan2 Annotation"
  [3] "VarScan2"
@@ -89,6 +89,9 @@ sapply(projects, function(project){
  [9] "CaVEMan"
 [10] "Pindel Annotation"
 [11] "Birdseed"
+
+# sample name: Tumor_Sample_Barcode; gene: Hugo_Symbol; mutation type: Variant_Classification; AA change: HGVSp_Short; 
+load(paste0("DNA/RData/",project,"_SNP.Rdata"))
 ```
 
 # MC3 pipeline
@@ -123,7 +126,7 @@ sapply(projects, function(project){
   data=GDCprepare(query,save=FALSE)
 })
 
-> unique(rowdata$gene_type)
+unique(rowdata$gene_type)
  [1] "protein_coding"                     "transcribed_unitary_pseudogene"
  [3] "transcribed_unprocessed_pseudogene" "processed_pseudogene"
  [5] "lncRNA"                             "polymorphic_pseudogene"
