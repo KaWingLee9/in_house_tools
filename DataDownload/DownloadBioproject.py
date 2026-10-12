@@ -15,18 +15,19 @@ import shutil
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
+from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 from urllib.parse import quote, urljoin
-
 
 EUTILS = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 SRA_LOCATOR = "https://locate.ncbi.nlm.nih.gov/sdl/2/retrieve"
 GEO_FTP = "https://ftp.ncbi.nlm.nih.gov/geo/series"
 BIOPROJECT_PATTERN = re.compile(r"^PRJNA[0-9]+$")
 GEO_PATTERN = re.compile(r"^GSE[0-9]+$")
+LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -135,7 +136,7 @@ def query_json(url: str) -> dict[str, Any]:
     """Retrieve and decode a JSON response."""
     value = json.loads(run_curl(url, capture=True))
     if not isinstance(value, dict):
-        raise ValueError(f"Expected a JSON object from {url}")
+        raise TypeError(f"Expected a JSON object from {url}")
     return value
 
 
@@ -163,9 +164,11 @@ def verify_file(remote: RemoteFile) -> bool:
     """Return whether an existing final file matches all available metadata."""
     if not remote.output_path.is_file():
         return False
-    if remote.size_bytes is not None:
-        if remote.output_path.stat().st_size != remote.size_bytes:
-            raise ValueError(f"Existing final file has a wrong size: {remote.output_path}")
+    if (
+        remote.size_bytes is not None
+        and remote.output_path.stat().st_size != remote.size_bytes
+    ):
+        raise ValueError(f"Existing final file has a wrong size: {remote.output_path}")
     if remote.md5 is not None and md5sum(remote.output_path) != remote.md5.lower():
         raise ValueError(f"Existing final file failed MD5: {remote.output_path}")
     return True
@@ -174,17 +177,17 @@ def verify_file(remote: RemoteFile) -> bool:
 def download_file(remote: RemoteFile) -> None:
     """Resume, validate, and atomically finalize one download."""
     if verify_file(remote):
-        logging.info("SKIP verified file: %s", remote.output_path)
+        LOGGER.info("SKIP verified file: %s", remote.output_path)
         return
     partial_path = remote.output_path.with_name(remote.output_path.name + ".part")
-    logging.info("DOWNLOAD start: %s", remote.url)
+    LOGGER.info("DOWNLOAD start: %s", remote.url)
     run_curl(remote.url, output_path=partial_path, resume=True)
     if remote.size_bytes is not None and partial_path.stat().st_size != remote.size_bytes:
         raise ValueError(f"Downloaded file has a wrong size: {partial_path}")
     if remote.md5 is not None and md5sum(partial_path) != remote.md5.lower():
         raise ValueError(f"Downloaded file failed MD5: {partial_path}")
     partial_path.replace(remote.output_path)
-    logging.info("DOWNLOAD verified: %s", remote.output_path)
+    LOGGER.info("DOWNLOAD verified: %s", remote.output_path)
 
 
 def batched(values: list[str], size: int) -> Iterable[list[str]]:
@@ -217,8 +220,79 @@ def fetch_bioproject_xml(accession: str, metadata_dir: Path) -> tuple[str, list[
     return project_id, geo_accessions
 
 
+def unavailable_run_reason(row: dict[str, str]) -> str | None:
+    """Return a specific reason when an SRA RunInfo row has no downloadable data."""
+    try:
+        spots = int(row["spots"])
+        bases = int(row["bases"])
+        size_mb = int(row["size_MB"])
+    except (KeyError, TypeError, ValueError) as error:
+        raise ValueError(
+            f"Invalid numeric availability fields for SRA run {row.get('Run', '')}"
+        ) from error
+
+    missing_fields = []
+    if spots <= 0:
+        missing_fields.append("spots")
+    if bases <= 0:
+        missing_fields.append("bases")
+    if size_mb <= 0:
+        missing_fields.append("size_MB")
+    if not row.get("download_path", "").strip():
+        missing_fields.append("download_path")
+    if not missing_fields:
+        return None
+    return "no downloadable SRA data: " + ", ".join(missing_fields)
+
+
+def write_unavailable_run_report(
+    unavailable_rows: list[tuple[dict[str, str], str]], metadata_dir: Path
+) -> Path:
+    """Write an explicit TSV report for public records without downloadable data."""
+    report_path = metadata_dir / "unavailable_sra_runs.tsv"
+    fieldnames = [
+        "run_accession",
+        "experiment_accession",
+        "sample_accession",
+        "biosample_accession",
+        "sample_name",
+        "release_date",
+        "load_date",
+        "spots",
+        "bases",
+        "size_mb",
+        "download_path",
+        "status",
+        "reason",
+    ]
+    with report_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle, fieldnames=fieldnames, delimiter="\t", lineterminator="\n"
+        )
+        writer.writeheader()
+        for row, reason in unavailable_rows:
+            writer.writerow(
+                {
+                    "run_accession": row["Run"],
+                    "experiment_accession": row["Experiment"],
+                    "sample_accession": row["Sample"],
+                    "biosample_accession": row["BioSample"],
+                    "sample_name": row["SampleName"],
+                    "release_date": row["ReleaseDate"],
+                    "load_date": row["LoadDate"],
+                    "spots": row["spots"],
+                    "bases": row["bases"],
+                    "size_mb": row["size_MB"],
+                    "download_path": row["download_path"],
+                    "status": "unavailable",
+                    "reason": reason,
+                }
+            )
+    return report_path
+
+
 def fetch_runinfo(accession: str, metadata_dir: Path) -> list[dict[str, str]]:
-    """Download and validate SRA RunInfo rows associated with the project."""
+    """Download RunInfo, report unavailable records, and return usable rows."""
     search_url = (
         f"{EUTILS}/esearch.fcgi?db=sra"
         f"&term={quote(accession + '[BioProject]')}&retmode=json&retmax=100000"
@@ -239,19 +313,54 @@ def fetch_runinfo(accession: str, metadata_dir: Path) -> list[dict[str, str]]:
         reader = csv.DictReader(csv_text.splitlines())
         if reader.fieldnames is None:
             raise ValueError("SRA RunInfo response has no header")
-        fieldnames = reader.fieldnames
+        fieldnames = list(reader.fieldnames)
         rows.extend(dict(row) for row in reader)
     if len(rows) != len(ids):
         raise ValueError(f"Expected {len(ids)} RunInfo rows, received {len(rows)}")
     if {row["BioProject"] for row in rows} != {accession}:
         raise ValueError("SRA RunInfo contains unexpected BioProject accessions")
+    if fieldnames is None:
+        raise ValueError("SRA RunInfo did not provide column names")
     runinfo_path = metadata_dir / "sra_runinfo.csv"
     if not runinfo_path.exists():
         with runinfo_path.open("w", encoding="utf-8", newline="") as handle:
             writer = csv.DictWriter(handle, fieldnames=fieldnames)
             writer.writeheader()
             writer.writerows(rows)
-    return rows
+
+    available_rows: list[dict[str, str]] = []
+    unavailable_rows: list[tuple[dict[str, str], str]] = []
+    for row in rows:
+        reason = unavailable_run_reason(row)
+        if reason is None:
+            available_rows.append(row)
+        else:
+            unavailable_rows.append((row, reason))
+
+    if unavailable_rows:
+        report_path = write_unavailable_run_report(unavailable_rows, metadata_dir)
+        unavailable_accessions = ", ".join(
+            row["Run"] for row, _ in unavailable_rows
+        )
+        LOGGER.warning(
+            "%d of %d SRA runs are unavailable and will not be downloaded: %s. "
+            "See %s",
+            len(unavailable_rows),
+            len(rows),
+            unavailable_accessions,
+            report_path,
+        )
+    if not available_rows:
+        raise ValueError(
+            f"No SRA runs with downloadable data are currently available for {accession}"
+        )
+    LOGGER.info(
+        "SRA availability: %d available, %d unavailable, %d total",
+        len(available_rows),
+        len(unavailable_rows),
+        len(rows),
+    )
+    return available_rows
 
 
 def locate_sra(row: dict[str, str]) -> SraFile:
@@ -435,12 +544,12 @@ def main() -> None:
         directory.mkdir(parents=True, exist_ok=True)
     configure_logging(project_dir)
 
-    logging.info("Resolving BioProject: %s", accession)
+    LOGGER.info("Resolving BioProject: %s", accession)
     _, geo_accessions = fetch_bioproject_xml(accession, metadata_dir)
     runinfo = fetch_runinfo(accession, metadata_dir)
     manifest = build_sra_manifest(runinfo, metadata_dir)
     total_sra_bytes = sum(item.size_bytes for item in manifest)
-    logging.info(
+    LOGGER.info(
         "SRA target: %d runs, %.2f GiB", len(manifest), total_sra_bytes / 1024**3
     )
 
@@ -456,11 +565,11 @@ def main() -> None:
     download_many(sra_files, args.workers)
 
     for geo_accession in geo_accessions:
-        logging.info("Preparing linked GEO Series: %s", geo_accession)
+        LOGGER.info("Preparing linked GEO Series: %s", geo_accession)
         geo_files = prepare_geo_files(geo_accession, metadata_dir, geo_dir)
         download_many(geo_files, args.workers)
 
-    logging.info(
+    LOGGER.info(
         "COMPLETE: %s (%d SRA runs; GEO: %s)",
         accession,
         len(manifest),
