@@ -1,11 +1,23 @@
-### Sample QC
+library(dplyr)
 
-SampleQC_cor=function(exp_mat,group1,group2=NA,method='spearman',...){
+### Sample QC
+SampleQC_cor=function(exp_mat,group1,group2=NULL,method='spearman',
+                      scale=TRUE,n_gene=NULL,remove_mtrb=TRUE,...){
 
     library(ComplexHeatmap)
 
-    exp_mat=log(exp_mat+1)
-    exp_mat=scale(exp_mat)
+    # exp_mat=log(exp_mat+1)
+    exp_mat=exp_mat[exp_mat %>% apply(1,sum)!=0,]
+    if (remove_mtrb){
+        exp_mat=exp_mat[! grepl("^MT-|^RP[SL]",rownames(exp_mat)),]
+    }
+    if (! is.null(n_gene)){
+        g=exp_mat %>% apply(1,sd) %>% sort() %>% tail(n_gene) %>% names()
+        exp_mat=exp_mat[g,]
+    }
+    if (scale){
+        exp_mat=t(scale(t(exp_mat)))
+    }
     
     col_list1=c('#E64B35FF','#4DBBD5FF','#00A087FF','#3C5488FF','#F39B7FFF',
                 '#8491B4FF','#91D1C2FF','#DC0000FF','#7E6148FF','#B09C85FF')
@@ -14,7 +26,7 @@ SampleQC_cor=function(exp_mat,group1,group2=NA,method='spearman',...){
     
     cor_mat=cor(exp_mat,method=method)
 
-    if (is.na(group2)){
+    if (is.null(group2)){
         ht=Heatmap(cor_mat,show_column_dend=FALSE,
                    name=paste0(method,'\ncorrelation'),
                    left_annotation=rowAnnotation('group1'=group1,
@@ -32,12 +44,23 @@ SampleQC_cor=function(exp_mat,group1,group2=NA,method='spearman',...){
     
 }
 
-SampleQC_PCA=function(exp_mat,gene=NA,group1=NA,group2=NA,PC=c('PC1','PC2'),plot_label=FALSE){
+SampleQC_PCA=function(exp_mat,gene=NULL,group1=NULL,group2=NULL,PC=c('PC1','PC2'),
+                      scale=TRUE,n_gene=NULL,remove_mtrb=TRUE,plot_label=FALSE,return_plot=TRUE){
 
     library(ggplot2)
 
-    exp_mat=log(exp_mat+1)
-    exp_mat=scale(exp_mat)
+    # exp_mat=log(exp_mat+1)
+    exp_mat=exp_mat[exp_mat %>% apply(1,sum)!=0,]
+    if (remove_mtrb){
+        exp_mat=exp_mat[! grepl("^MT-|^RP[SL]",rownames(exp_mat)),]
+    }
+    if (! is.null(n_gene)){
+        g=exp_mat %>% apply(1,sd) %>% sort() %>% tail(n_gene) %>% names()
+        exp_mat=exp_mat[g,]
+    }
+    if (scale){
+        exp_mat=t(scale(t(exp_mat)))
+    }
 
     pca_result=prcomp(exp_mat)
     pca_result=summary(pca_result)
@@ -46,9 +69,9 @@ SampleQC_PCA=function(exp_mat,gene=NA,group1=NA,group2=NA,PC=c('PC1','PC2'),plot
     pca_coord[,'sample']=rownames(pca_coord)
     pca_variance=pca_result$importance['Proportion of Variance',]
 
-    if (is.na(gene)){
+    if (is.null(gene)){
         
-        if (is.na(group2)){
+        if (is.null(group2)){
             pca_coord[,'group1']=group1
             p=ggplot(pca_coord,aes_string(x=PC[1],y=PC[2],color='group1'))
         } else {
@@ -84,7 +107,11 @@ SampleQC_PCA=function(exp_mat,gene=NA,group1=NA,group2=NA,PC=c('PC1','PC2'),plot
         
     }}
 
-    return(p)
+    if (return_plot){
+        return(p)  
+    } else {
+        return(pca_coord)
+    }
     
 }
 
@@ -253,7 +280,7 @@ DiffExp_batch=function(exp_mat,group,batch,group_ctrl=NA,method='DESeq2',mat_typ
 
 # Volcano plot for single conditions
 # Required packages: ggplot2, ggrepel, EnhancedVolcano
-DrawVolcano <- function(deg_result,x='log_fc',FCcutoff=1,
+DrawVolcano=function(deg_result,x='log_fc',FCcutoff=1,
                         y='p_val',pCutoff=0.05,
                         col=c('red2','royalblue','grey30'), #
                         selectLab=NULL,alpha=0.5){

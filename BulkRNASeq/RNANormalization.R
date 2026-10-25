@@ -1,4 +1,33 @@
-KeepProteinGene=function(count_mat,species='human'){
+# protein_coding_genes generated from gtf file
+# library(dplyr)
+# library(rtracklayer)
+# gtf=import("Homo_sapiens.GRCh38.116.gtf")
+# gtf=as.data.frame(gtf)
+# gtf=gtf %>% filter(type=='gene',gene_biotype=='protein_coding')
+# protein_coding_genes=gtf[,c('gene_id','gene_name','seqnames','strand','start','end')]
+KeepProteinGene=function(exp_mat,species='human',protein_coding_file='./hsapiens_gene_ensembl_proteincoding.tsv',
+                         rm_mt=FALSE,rm_rb=FALSE){
+    
+    library(dplyr)
+    
+    protein_coding_genes=read.table(protein_coding_file)
+    protein_coding_genes=unique(protein_coding_genes[,'gene_name'])
+    g=intersect(rownames(exp_mat),protein_coding_genes)
+    exp_mat=exp_mat[g,]
+
+    if (rm_mt){
+        exp_mat=exp_mat[! grepl("^MT-",rownames(exp_mat)),]
+    }
+    if (rm_rb){
+        exp_mat=exp_mat[! grepl("^RP[SL]",rownames(exp_mat)),]
+    }
+    
+    return(exp_mat)
+    
+}
+
+# KeepProteinGene_v1 deprecated because of bad connection to ensembl
+KeepProteinGene_v1=function(exp_mat,species='human'){
     library(dplyr)
     library(biomaRt)
     
@@ -8,9 +37,9 @@ KeepProteinGene=function(count_mat,species='human'){
                                               'chromosome_name','start_position','end_position','strand'),
                                filters='biotype',values='protein_coding',mart=mart)
     protein_coding_genes=unique(protein_coding_genes[,'external_gene_name'])
-    g=intersect(rownames(count_mat),protein_coding_genes)
-    count_mat=count_mat[g,]
-    return(count_mat)
+    g=intersect(rownames(exp_mat),protein_coding_genes)
+    exp_mat=exp_mat[g,]
+    return(exp_mat)
     
 }
 

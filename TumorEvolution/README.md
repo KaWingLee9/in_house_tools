@@ -11,9 +11,16 @@ Sample data are aquired from __Quantitative evidence for early metastatic seedin
 
 
 ## Phylogenic analysis from scRNA-Seq/ST
-Sample data are aquired from __Spatial multi-omics landscape of colorectal cancer macro- and micrometastases__ (PAT1 in Figure 2). Processed data acquired from GSE294385 (M-ST-13: CRC, M-ST-05: CLiM, M-ST-14: CLuM). Spot annotation could be found in https://github.com/yliuup/CRC_micromets_ST/blob/main/Meta_data/visium_meta_raw.rds.  
+Sample data are aquired from __Spatial multi-omics landscape of colorectal cancer macro- and micrometastases__ (PAT1 in Figure 2). Raw data acquired from PRJNA1249293, and processed data acquired from GSE294385 (SRR33089543, M-ST-13: CRC; SRR33089547, M-ST-05: CLiM; SRR33089544, M-ST-14: CLuM). Spot annotation could be found in https://github.com/yliuup/CRC_micromets_ST/blob/main/Meta_data/visium_meta_raw.rds.  
 ### Phylogenetic reconstruction from somatic mutation
+Get mutation from raw fastq data:  
+```bash
+# cellranger: mapping
+cellranger
 
+# 
+
+```
 
 ### Phylogenetic reconstruction from CNV
 Infer CNV profile using scRNA-Seq or ST data:  
@@ -148,9 +155,12 @@ __Reference__:
 [3] Pei, G., Min, J., Rajapakshe, K. I., Branchi, V., Liu, Y., Selvanesan, B. C., Thege, F., Sadeghian, D., Zhang, D., Cho, K. S., Chu, Y., Dai, E., Han, G., Li, M., Yee, C., Takahashi, K., Garg, B., Tiriac, H., Bernard, V., Semaan, A., … Maitra, A. (2025). Spatial mapping of transcriptomic plasticity in metastatic pancreatic cancer. Nature, 642(8066), 212–221.  
 [4] Yu, K., Chen, J., Chu, Y. Y., Nair, S., Crupi, E., Hasanov, E., Mei, Y., Han, X., Liu, Y., Liu, Y., Pei, G., Peng, F., Liao, J., Dai, E., Chu, T., Cho, K. S., Jiang, J., Yan, X., Dai, Y., Wang, J., … Wang, L. (2026). A Spatial Atlas of Muscle-Invasive Bladder Cancer Reveals Lineage-Specific Vulnerabilities and Immune Architecture. Cancer discovery, 10.1158/2159-8290.CD-26-0099. https://doi.org/10.1158/2159-8290.CD-26-0099  
 
+### Phylogenetic reconstruction from mitochondrial mutation
+
+
 ## Phylogenic analysis from scRNA-Seq/ST with paired WES/WGS  
 ### Mutation calling based on scRNA-Seq and paired WES  
-scVarScan
+celllite-snp
 
 ### CNV inference based on scRNA-Seq and paired WES - IntegrateCNV
 

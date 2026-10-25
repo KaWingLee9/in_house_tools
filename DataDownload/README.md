@@ -4,6 +4,9 @@
 ``` bash
 # Before using, install sra-tools in home directory: https://github.com/ncbi/sra-tools/wiki/02.-Installing-SRA-Toolkit#the-installation-processes-for-mac-os-x-and-the-two-linux-distributions-are-roughly-identical
 
+# wget https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-alma_linux64.tar.gz
+# tar -zxvf sratoolkit.current-alma_linux64.tar.gz
+
 export PATH=~/sratoolkit.3.4.1-alma_linux64/bin:$PATH
 Accession=PRJNA1147209
 

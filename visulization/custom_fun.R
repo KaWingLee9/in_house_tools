@@ -176,6 +176,7 @@ SumHeatmap=function(df,group.col,variable.col,value.col,heatmap.aggr.fun=mean,te
     options(warn=-1)
     
     library(dplyr)
+    library(ComplexHeatmap)
     
 #     if (scale){
 #         df_1=df %>% group_by(!!!syms(variable.col)) %>% mutate(value.col=scale(!!!syms(value.col)))
