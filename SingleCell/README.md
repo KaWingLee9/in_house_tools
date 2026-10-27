@@ -1,5 +1,4 @@
-
-
+# Single-cell data analysis
 ## Intra-tumoral and inter-tumoral heterogeneity of cells 
 ### Intra-tumoral heterogeneity of cells
 Conduct NMF within each sample and get consensus metaprograms.  
@@ -33,21 +32,28 @@ enrichment_result=pd.DataFrame(enrichment_result)
 # 
 ```
 
-R version:
-
-
-__Reference__: 
+__Reference__:  
 [1] Tirosh I, Suva ML. Cancer cell states: Lessons from ten years of single-cell RNA-sequencing of human tumors. Cancer Cell. 2024 Sep 9;42(9):1497-1506. doi: 10.1016/j.ccell.2024.08.005. Epub 2024 Aug 29.  
 [2] Gavish A, Tyler M, Greenwald AC, Hoefflin R, Simkin D, Tschernichovsky R, Galili Darnell N, Somech E, Barbolin C, Antman T, Kovarsky D, Barrett T, Gonzalez Castro LN, Halder D, Chanoch-Myers R, Laffy J, Mints M, Wider A, Tal R, Spitzer A, Hara T, Raitses-Gurevich M, Stossel C, Golan T, Tirosh A, Suvà ML, Puram SV, Tirosh I. Hallmarks of transcriptional intratumour heterogeneity across a thousand tumours. Nature. 2023 Jun;618(7965):598-606. doi: 10.1038/s41586-023-06130-4. Epub 2023 May 31.  
 [3] Nomura M, Spitzer A, Johnson KC, Garofano L, Nehar-Belaid D, Galili Darnell N, Greenwald AC, Bussema L, Oh YT, Varn FS, D'Angelo F, Gritsch S, Anderson KJ, Migliozzi S, Gonzalez Castro LN, ChowdhFury T, Robine N, Reeves C, Park JB, Lipsa A, Hertel F, Golebiewska A, Niclou SP, Nusrat L, Kellet S, Das S, Moon HE, Paek SH, Bielle F, Laurenge A, Di Stefano AL, Mathon B, Picca A, Sanson M, Tanaka S, Saito N, Ashley DM, Keir ST, Ligon KL, Huse JT, Yung WKA, Lasorella A, Verhaak RGW, Iavarone A, Suvà ML, Tirosh I. The multilayered transcriptional architecture of glioblastoma ecosystems. Nat Genet. 2025 May;57(5):1155-1167. doi: 10.1038/s41588-025-02167-5. Epub 2025 May 9.  
 
 ### Inter-tumoral heterogeneity of cells
+Extract gene programs that perform high heterogeneity across samples or patients.  
+```python
 
-
-
+```
 
 __Reference__:  
 [1] Tirosh I, Suva ML. Cancer cell states: Lessons from ten years of single-cell RNA-sequencing of human tumors. Cancer Cell. 2024 Sep 9;42(9):1497-1506. doi: 10.1016/j.ccell.2024.08.005. Epub 2024 Aug 29.  
 [2] Nomura M, Spitzer A, Johnson KC, Garofano L, Nehar-Belaid D, Galili Darnell N, Greenwald AC, Bussema L, Oh YT, Varn FS, D'Angelo F, Gritsch S, Anderson KJ, Migliozzi S, Gonzalez Castro LN, ChowdhFury T, Robine N, Reeves C, Park JB, Lipsa A, Hertel F, Golebiewska A, Niclou SP, Nusrat L, Kellet S, Das S, Moon HE, Paek SH, Bielle F, Laurenge A, Di Stefano AL, Mathon B, Picca A, Sanson M, Tanaka S, Saito N, Ashley DM, Keir ST, Ligon KL, Huse JT, Yung WKA, Lasorella A, Verhaak RGW, Iavarone A, Suvà ML, Tirosh I. The multilayered transcriptional architecture of glioblastoma ecosystems. Nat Genet. 2025 May;57(5):1155-1167. doi: 10.1038/s41588-025-02167-5. Epub 2025 May 9.  
 
+
+Combine the cells of patients to get pseudobulk.  
+```python
+from pseudobulk import create_pseudobulk
+
+pseudobulk_adata = create_pseudobulk(adata,sample_col='sample_id',layer='counts')
+```
+
+__Reference__: Datar Y, Chaffin M, Simonson B, Mandia A, Ellinor PT. An integrated cell atlas of 2.4 million cardiac cells across 209 individuals in health and disease. Nat Cardiovasc Res. 2026 Jul;5(7):624-637. doi: 10.1038/s44161-026-00831-5. Epub 2026 Jun 26.  
 
