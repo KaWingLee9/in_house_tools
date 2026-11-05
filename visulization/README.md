@@ -18,6 +18,7 @@ source('https://github.com/KaWingLee9/in_house_tools/blob/main/visulization/cust
 + [AnnotatedPlot - Draw annotation bar in ggplot2](#annotation)
 + [layout_circular_community - Network for each community as a circle (like cytoscape)](#circular)
 + [SunburstPlot - Sunburst plot](#sunburst)
++ [PlotXYInterval - Compare the intervals of two hypothesis test](#xyinterval)
 + [Differential expression visualization](#deg)
 + [Forest plot for multiple types of regression model](#forest)
 + [Visualization in chrmosome way](#chrmosome)
@@ -486,6 +487,32 @@ Parameters of `SunburstPlot`:
 + `circular`: if TRUE, returns the traditional sunburst plot; if FALSE, returns the mosaic plot  
 + `color`: the outline color of each layer  
 
+## <a name="xyinterval">PlotXYInterval - Compare the intervals of two hypothesis test</a>
+```r
+df=data.frame(
+  lower_bound_x = c(-0.3339276, -0.2271411, -0.4316421, 0.0845798),
+  statistic_x   = c( 0.2384580,  0.3673910,  0.1763720, 0.7154940),
+  upper_bound_x = c( 0.8108430,  0.9619230,  0.7843860, 1.3464090),
+  pval_x        = c( 0.4060398,  0.2198354,  0.5620358, 0.0271166),
+  lower_bound_y = c(-0.8342352, -0.1669505, -0.0206899, 1.3095109),
+  statistic_y   = c(-0.1715620,  0.4558410,  0.5504650, 1.9267790),
+  upper_bound_y = c( 0.4911110,  1.0786330,  1.1216200, 2.5440480),
+  pval_y        = c( 0.6046760,  0.1472440,  0.0585214, 0.000000108989),
+  group         = c("Group_A", "Group_B", "Group_C", "Group_D")
+  )
+
+PlotXYInterval(df,color_col='group',cap_width=0.02,alpha=0.1)+
+    geom_hline(yintercept=0,color='red',linetype='dashed')+
+    geom_vline(xintercept=0,color='red',linetype='dashed')
+```
+<p align="center">
+  <img height="400" src="pct/PlotXYInterval.png">
+</p>
+
+Parameters for `PlotXYInterval`:
++ `data`: a data frame containing columns: `category` (passed on to color_col), `lower_bound_x`, `statistic_x`, `upper_bound_x`, `pval_x`, `lower_bound_y`, `statistic_y`, `upper_bound_y`, `pval_y`  
++   
++ 
 
 ## <a name="deg">Differential expression visualization</a>
 

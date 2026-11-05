@@ -1352,3 +1352,120 @@ VolcanoPlot_list=function(RegModList,method='linear',return.table=FALSE,
     return(p)
     
 }
+
+PlotXYInterval=function(data,color_col,
+                                         lower_bound_x="lower_bound_x",
+                                         statistic_x="statistic_x",
+                                         upper_bound_x="upper_bound_x",
+                                         pval_x="pval_x",
+                                         lower_bound_y="lower_bound_y",
+                                         statistic_y="statistic_y",
+                                         upper_bound_y="upper_bound_y",
+                                         pval_y="pval_y",
+                                         sig.level=0.05,
+                                         alpha=0.2,
+                                         x_label="Statistic 1",
+                                         y_label="Statistic 2",
+                                         interval_colour="#2C7FB8",
+                                         point_colour="#D95F0E",
+                                         point_size=2.5,
+                                         cap_width=0.005) {
+  required_columns=c(
+    lower_bound_x,statistic_x,upper_bound_x,pval_x,
+    lower_bound_y,statistic_y,upper_bound_y,pval_y
+  )
+
+  if (any(!nzchar(required_columns))) {
+    stop("Column-name arguments must be non-empty strings")
+  }
+  missing_columns=setdiff(required_columns,names(data))
+  if (length(missing_columns)>0) {
+    stop("Missing required columns: ",paste(missing_columns,collapse=","))
+  }
+
+  non_numeric=required_columns[
+    !vapply(data[required_columns],is.numeric,logical(1))
+  ]
+  if (length(non_numeric)>0) {
+    stop("Required columns must be numeric: ",paste(unique(non_numeric),collapse=","))
+  }
+  if (nrow(data) == 0) {
+    stop("data must contain at least one row")
+  }
+  if (length(sig.level) != 1 || !is.numeric(sig.level) ||
+      is.na(sig.level) || sig.level <= 0 || sig.level >= 1) {
+    stop("sig.level must be a single number between 0 and 1")
+  }
+  if (length(cap_width) != 1 || !is.numeric(cap_width) ||
+      is.na(cap_width) || cap_width<0) {
+    stop("cap_width must be a single non-negative number")
+  }
+
+  lower_x=data[[lower_bound_x]]
+  estimate_x=data[[statistic_x]]
+  upper_x=data[[upper_bound_x]]
+  p_x=data[[pval_x]]
+  lower_y=data[[lower_bound_y]]
+  estimate_y=data[[statistic_y]]
+  upper_y=data[[upper_bound_y]]
+  p_y=data[[pval_y]]
+  color=data[[color_col]]
+
+  invalid_x=lower_x>estimate_x | estimate_x>upper_x
+  invalid_y=lower_y>estimate_y | estimate_y>upper_y
+  if (any(invalid_x,na.rm=TRUE) || any(invalid_y,na.rm=TRUE)) {
+    stop("Each statistic must lie between its lower and upper bounds")
+  }
+  invalid_p=(p_x<0 | p_x>1) | (p_y<0 | p_y>1)
+  if (any(invalid_p,na.rm=TRUE)) {
+    stop("P-values must be between 0 and 1")
+  }
+
+  plot_data=data.frame(
+    color=color,
+    x=estimate_x,
+    y=estimate_y,
+    lower_x=lower_x,
+    upper_x=upper_x,
+    lower_y=lower_y,
+    upper_y=upper_y,
+    alpha_x=ifelse(p_x<sig.level,1,alpha),
+    alpha_y=ifelse(p_y<sig.level,1,alpha)
+  )
+  cap_data_x=data.frame(
+    x=c(lower_x,upper_x),
+    y=c(estimate_y,estimate_y),
+    color=c(color,color),
+    alpha=c(plot_data$alpha_x,plot_data$alpha_x)
+  )
+  cap_data_y=data.frame(
+    x=c(estimate_x,estimate_x),
+    y=c(lower_y,upper_y),
+    color=c(color,color),
+    alpha=c(plot_data$alpha_y,plot_data$alpha_y)
+  )
+
+  ggplot2::ggplot(plot_data,ggplot2::aes_string(x='x',y='y',color='color'))+
+    ggplot2::geom_segment(
+      ggplot2::aes(x=lower_x,xend=upper_x,y=y,yend=y,
+                   alpha=alpha_x),linewidth=0.7
+    )+
+    ggplot2::geom_segment(
+      ggplot2::aes(x=x,xend=x,y=lower_y,yend=upper_y,
+                   alpha=alpha_y),linewidth=0.7)+
+    ggplot2::geom_segment(
+      data=cap_data_x,
+      ggplot2::aes(x=x,xend=x,y=y-cap_width,
+                   yend=y+cap_width,alpha=alpha,color=color),
+      inherit.aes=FALSE,linewidth=0.7)+
+    ggplot2::geom_segment(
+      data=cap_data_y,
+      ggplot2::aes(x=x-cap_width,xend=x+cap_width,
+                   y=y,yend=y,alpha=alpha,color=color),
+      inherit.aes=FALSE,linewidth=0.7)+
+    ggplot2::scale_alpha_identity()+
+    ggplot2::geom_point(size=point_size)+
+    ggplot2::labs(x=x_label,y=y_label)+
+    ggplot2::theme_classic()
+}
+

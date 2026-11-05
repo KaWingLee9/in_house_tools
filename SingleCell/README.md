@@ -38,7 +38,7 @@ __Reference__:
 [3] Nomura M, Spitzer A, Johnson KC, Garofano L, Nehar-Belaid D, Galili Darnell N, Greenwald AC, Bussema L, Oh YT, Varn FS, D'Angelo F, Gritsch S, Anderson KJ, Migliozzi S, Gonzalez Castro LN, ChowdhFury T, Robine N, Reeves C, Park JB, Lipsa A, Hertel F, Golebiewska A, Niclou SP, Nusrat L, Kellet S, Das S, Moon HE, Paek SH, Bielle F, Laurenge A, Di Stefano AL, Mathon B, Picca A, Sanson M, Tanaka S, Saito N, Ashley DM, Keir ST, Ligon KL, Huse JT, Yung WKA, Lasorella A, Verhaak RGW, Iavarone A, Suvà ML, Tirosh I. The multilayered transcriptional architecture of glioblastoma ecosystems. Nat Genet. 2025 May;57(5):1155-1167. doi: 10.1038/s41588-025-02167-5. Epub 2025 May 9.  
 
 ### Inter-tumoral heterogeneity of cells
-Extract gene programs that perform high heterogeneity across samples or patients.  
+__A.__ Extract gene programs that perform high heterogeneity across samples or patients.  
 ```python
 
 ```
@@ -48,7 +48,7 @@ __Reference__:
 [2] Nomura M, Spitzer A, Johnson KC, Garofano L, Nehar-Belaid D, Galili Darnell N, Greenwald AC, Bussema L, Oh YT, Varn FS, D'Angelo F, Gritsch S, Anderson KJ, Migliozzi S, Gonzalez Castro LN, ChowdhFury T, Robine N, Reeves C, Park JB, Lipsa A, Hertel F, Golebiewska A, Niclou SP, Nusrat L, Kellet S, Das S, Moon HE, Paek SH, Bielle F, Laurenge A, Di Stefano AL, Mathon B, Picca A, Sanson M, Tanaka S, Saito N, Ashley DM, Keir ST, Ligon KL, Huse JT, Yung WKA, Lasorella A, Verhaak RGW, Iavarone A, Suvà ML, Tirosh I. The multilayered transcriptional architecture of glioblastoma ecosystems. Nat Genet. 2025 May;57(5):1155-1167. doi: 10.1038/s41588-025-02167-5. Epub 2025 May 9.  
 
 
-Combine the cells of patients to get pseudobulk.  
+__B.__ Combine the cells of patients to get pseudobulk.  
 ```python
 from pseudobulk import create_pseudobulk
 
