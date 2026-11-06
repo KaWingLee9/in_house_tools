@@ -13,14 +13,12 @@ Sample data are aquired from __Quantitative evidence for early metastatic seedin
 ## Phylogenic analysis from scRNA-Seq/ST
 Sample data are aquired from __Spatial multi-omics landscape of colorectal cancer macro- and micrometastases__ (PAT1 in Figure 2). Raw data acquired from PRJNA1249293, and processed data acquired from GSE294385 (SRR33089543, M-ST-13: CRC; SRR33089547, M-ST-05: CLiM; SRR33089544, M-ST-14: CLuM). Spot annotation could be found in https://github.com/yliuup/CRC_micromets_ST/blob/main/Meta_data/visium_meta_raw.rds.  
 ### Phylogenetic reconstruction from somatic mutation
-Get mutation from raw fastq data:  
+Get mutation from raw fastq data using Cellsnp-slite:  
 ```bash
-# cellranger: mapping
-cellranger
-
-# 
 
 ```
+
+__Reference__:  
 
 ### Phylogenetic reconstruction from CNV
 Infer CNV profile using scRNA-Seq or ST data:  

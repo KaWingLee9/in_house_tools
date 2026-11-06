@@ -510,9 +510,13 @@ PlotXYInterval(df,color_col='group',cap_width=0.02,alpha=0.1)+
 </p>
 
 Parameters for `PlotXYInterval`:
-+ `data`: a data frame containing columns: `category` (passed on to color_col), `lower_bound_x`, `statistic_x`, `upper_bound_x`, `pval_x`, `lower_bound_y`, `statistic_y`, `upper_bound_y`, `pval_y`  
-+   
-+ 
++ `data`: a data frame  
++ `color_col`, `lower_bound_x`, `statistic_x`, `upper_bound_x`, `pval_x`, `lower_bound_y`, `statistic_y`, `upper_bound_y`, `pval_y`: column names to plot figure  
++ `sig.level`: significance level for hypothesis test, the insignificant intervals would be transparent  
++ `alpha`: transparency for insignificant intervals  
++ `x_label`, `y_label`: labels for x- and y- axis  
++ `point_size`: size of points  
++ `cap_width`: length of the caps of interval  
 
 ## <a name="deg">Differential expression visualization</a>
 
