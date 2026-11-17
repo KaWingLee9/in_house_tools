@@ -1,5 +1,5 @@
 # Curated gene sets for tumor biology
-### Information of the gene sets
+## Information of the gene sets
 __A. Cancer and cancer cell related gene sets__  
 + [Oncogene and tumor suppresor genes](https://github.com/KaWingLee9/in_house_tools/blob/main/CuratedGeneSets/TumorGene_gs.csv)  
 + [Transcriptional programs of cancer cells across tumor types](https://github.com/KaWingLee9/in_house_tools/blob/main/CuratedGeneSets/PanCancer_gs.csv)  
@@ -14,7 +14,7 @@ __C. TME related gene sets__
 + [T/NK](https://github.com/KaWingLee9/in_house_tools/blob/main/CuratedGeneSets/TNK_gs.csv)  
 
 
-### Usage of the gene sets
+## Usage of the gene sets
 __A. ClusterProfiler__  
 ``` R
 # ORA enrichment
