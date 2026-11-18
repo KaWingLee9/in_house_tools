@@ -184,7 +184,7 @@ SimilarityClustering(df,mode='manual',select.cutoff=TRUE,min.nc=2,max.nc=20)
 
 ```r
 # return the cluster assignment
-c1=SimilarityClustering(df,mode='manual',select_cutoff=FALSE,cluster_num=4)
+c1=SimilarityClustering(df,mode='manual',select.cutoff=FALSE,cluster_num=4)
 # plot using provided label
 # c1=SimilarityClustering(df,mode='manual',select.cutoff=FALSE,provided.label=c1)
 # ht=Heatmap(cell_type_comp_scale[,selected_type],clustering_method_rows='ward.D2',

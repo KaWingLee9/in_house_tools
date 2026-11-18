@@ -2,22 +2,24 @@
 
 ## Normalization of RNA expression matrix
 Count matrix -> RPKM/TPM matrix  
-__Required packages__: `dplyr`, `GenomicFeatures`  
+__Required packages__: `dplyr`, `GenomicFeatures`, `TxDb.Hsapiens.UCSC.hg38.knownGene`  
 ``` r
 source('https://github.com/KaWingLee9/in_house_tools/blob/main/BulkRNASeq/RNANormalization.R')
 
+# sum up counts with the same gene symbol
+# count_mat=count_mat %>% group_by(gene_symbol) %>% summarise_if(is.numeric,sum) %>% data.frame(row.names=1,check.names=FALSE)
 # remove non-coding genes
 count_mat=KeepProteinGene(count_mat,species='human')
 # count matrix -> tpm/fpkm matrix
-tpm_mat=NormalizeCount(count_matrix,species='human',length.type='transcript',method='tpm')
+tpm_mat=NormalizeCount(count_mat,species='human',length.type='transcript',method='tpm')
 
 # keep genes according to total counts across samples
-genes_keep=colSums(count_mat)>=10
+genes_keep=rowSums(count_mat)>=10
 # keep genes according to the number of samples that gene express
-genes_keep=colSums(count_mat!=0)>=3
+genes_keep=rowSums(count_mat!=0)>=3
 
-count_mat=count_mat[,genes_keep]
-tpm_mat=tpm_mat[,genes_keep]
+count_mat=count_mat[genes_keep,]
+tpm_mat=tpm_mat[genes_keep,]
 ```
 
 Parameters:  

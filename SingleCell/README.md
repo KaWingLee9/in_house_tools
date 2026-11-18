@@ -57,3 +57,5 @@ pseudobulk_adata = create_pseudobulk(adata,sample_col='sample_id',layer='counts'
 
 __Reference__: Datar Y, Chaffin M, Simonson B, Mandia A, Ellinor PT. An integrated cell atlas of 2.4 million cardiac cells across 209 individuals in health and disease. Nat Cardiovasc Res. 2026 Jul;5(7):624-637. doi: 10.1038/s44161-026-00831-5. Epub 2026 Jun 26.  
 
+## Pre-loaded functions when using monocle2
+https://github.com/KaWingLee9/analysis_code/blob/main/HeartFibroblast_GLI1/monocle2_function.R 

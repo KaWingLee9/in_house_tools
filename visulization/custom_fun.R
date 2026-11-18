@@ -403,12 +403,13 @@ SimilarityClustering=function(data,mode='automatic',select.cutoff=FALSE,
     if (select.cutoff){
         
         if (is.na(show_index_result)){
-            
+
+            # GAP, Gamma, Gplus and Tau
             test_index_1=c("kl","ch","hartigan","ccc","scott","marriot","trcovw","tracew","friedman","rubin",
                             "cindex", "db", "silhouette", 
                             "duda", "pseudot2", "beale", 
-                            "ratkowsky", "ball", "ptbiserial", "gap", "frey", "mcclain", 
-                            "gamma", "gplus", "tau", "dunn","sdindex","sdbw")
+                            "ratkowsky", "ball", "ptbiserial", "frey", "mcclain", 
+                            "dunn","sdindex","sdbw")
             
 
             test_index_2=c("hubert","dindex")
@@ -422,14 +423,14 @@ SimilarityClustering=function(data,mode='automatic',select.cutoff=FALSE,
                 return(y$Best.nc[['Number_clusters']])
             }))
 
-            sapply(test_index_2,function(x){
-                res=try({
-                      y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
-                         method=hc.method,alphaBeale=0.1,index=x)
-                },silent=TRUE)
-                if (inherits(res,'try-error')) {return(NULL)}
-                return(NULL)
-            })
+            # sapply(test_index_2,function(x){
+            #     res=try({
+            #           y=NbClust::NbClust(data=data,diss=as.dist(diss_mat),distance=NULL,min.nc=min.nc,max.nc=max.nc, 
+            #              method=hc.method,alphaBeale=0.1,index=x)
+            #     },silent=TRUE)
+            #     if (inherits(res,'try-error')) {return(NULL)}
+            #     return(NULL)
+            # })
 
           return(NULL)
         } else {
@@ -483,9 +484,10 @@ SimilarityClustering=function(data,mode='automatic',select.cutoff=FALSE,
      library(ConsensusClusterPlus)
           
      if (select.cutoff){
-        ConsensusClustering_result=ConsensusClusterPlus(similarity_matrix,clusterAlg='hc',maxK=maxK,
-                       distance='euclidean',innerLinkage=hc.method,finalLinkage=hc.method,title='ConsensusClusteringResult',
-                       verbose=FALSE,plot='pdf')
+        ConsensusClustering_result=ConsensusClusterPlus(t(data),clusterAlg='hc',maxK=maxK,
+                                                        distance=similarity.method,
+                                                        innerLinkage=hc.method,finalLinkage=hc.method,
+                                                        title='ConsensusClusteringResult',verbose=FALSE,plot='pdf')
         return(ConsensusClustering_result)
      } else if (cluster_num!=0) {
         ConsensusClustering_result=data
