@@ -1,6 +1,6 @@
-# Special columns of *Nature Methods*
+# Special columns
 
-## Points of significance
+## Points of significance - *Nature Methods*
 
 + [Importance of being uncertain](https://www.nature.com/articles/nmeth.2613)
 + [Error bars](https://www.nature.com/articles/nmeth.2659)
@@ -68,7 +68,7 @@
 + [Double robustness](https://www.nature.com/articles/s41592-026-03099-6)
 + [Consequences of missing data](https://www.nature.com/articles/s41592-026-03203-w)
 
-## Points of view
+## Points of view - *Nature Methods*
 
 + [Color coding](https://www.nature.com/articles/nmeth0810-573)
 + [Design of data figures](https://www.nature.com/articles/nmeth0910-665)
@@ -119,3 +119,53 @@
 + [The graphical abstract](https://www.nature.com/articles/s41592-026-03207-6)
 + [Engaging figures](https://www.nature.com/articles/s41592-026-03241-4)
 + [The companion website](https://www.nature.com/articles/s41592-026-03276-7)
+
+## AI Bytes - *Nature Methods*
+
++ [Biological foundation models](https://www.nature.com/articles/s41592-026-03269-6)
+
+## Primers - *Nature Biotechnology*
+
++ [What is dynamic programming?](https://www.nature.com/articles/nbt0704-909)
++ [Where did the BLOSUM62 alignment score matrix come from?](https://www.nature.com/articles/nbt0804-1035)
++ [What is Bayesian statistics?](https://www.nature.com/articles/nbt0904-1177)
++ [What is a hidden Markov model?](https://www.nature.com/articles/nbt1004-1315)
++ [How do RNA folding algorithms work?](https://www.nature.com/articles/nbt1104-1457)
++ [How does gene expression clustering work?](https://www.nature.com/articles/nbt1205-1499)
++ [Inference in Bayesian networks](https://www.nature.com/articles/nbt0106-51)
++ [What are DNA sequence motifs?](https://www.nature.com/articles/nbt0406-423)
++ [How does DNA sequence motif discovery work?](https://www.nature.com/articles/nbt0806-959)
++ [What is a support vector machine?](https://www.nature.com/articles/nbt1206-1565)
++ [How do shotgun proteomics algorithms identify proteins?](https://www.nature.com/articles/nbt0707-755)
++ [How does eukaryotic gene prediction work?](https://www.nature.com/articles/nbt0807-883)
++ [What are artificial neural networks?](https://www.nature.com/articles/nbt1386)
++ [What is principal component analysis?](https://www.nature.com/articles/nbt0308-303)
++ [What is the expectation maximization algorithm?](https://www.nature.com/articles/nbt1406)
++ [What are decision trees?](https://www.nature.com/articles/nbt0908-1011)
++ [Understanding genome browsing](https://www.nature.com/articles/nbt0209-153)
++ [Maximizing power in association studies](https://www.nature.com/articles/nbt0309-255)
++ [SNP imputation in association studies](https://www.nature.com/articles/nbt0409-349)
++ [How to map billions of short reads onto genomes](https://www.nature.com/articles/nbt0509-455)
++ [How to visually interpret biological data using networks](https://www.nature.com/articles/nbt.1567)
++ [How does multiple testing correction work?](https://www.nature.com/articles/nbt1209-1135)
++ [What is flux balance analysis?](https://www.nature.com/articles/nbt.1614)
++ [Analyzing 'omics data using hierarchical models](https://www.nature.com/articles/nbt.1619)
++ [How to apply de Bruijn graphs to genome assembly](https://www.nature.com/articles/nbt.2023)
++ [Designing proteins with language models](https://www.nature.com/articles/s41587-024-02123-4)
++ [Generative models for protein structures and sequences](https://www.nature.com/articles/s41587-023-02115-w)
+
+## Bioinformatics Primers - 
+
++ [Genome-wide association studies](https://www.nature.com/articles/s43586-021-00056-9)
++ [Mendelian randomization](https://www.nature.com/articles/s43586-021-00092-5)
++ [Principal component analysis](https://www.nature.com/articles/s43586-022-00184-w)
++ [Molecular quantitative trait loci](https://www.nature.com/articles/s43586-022-00188-6)
++ [Behavioural genetics methods](https://www.nature.com/articles/s43586-022-00191-x)
++ [Containers for computational reproducibility](https://www.nature.com/articles/s43586-023-00236-9)
++ [Adaptive immune receptor repertoire analysis](https://www.nature.com/articles/s43586-023-00284-1)
++ [Graph neural networks](https://www.nature.com/articles/s43586-024-00294-7)
++ [Optimal transport for single-cell and spatial omics](https://www.nature.com/articles/s43586-024-00334-2)
++ [Uniform manifold approximation and projection](https://www.nature.com/articles/s43586-024-00363-x)
++ [Analysis of metagenomic data](https://www.nature.com/articles/s43586-024-00376-6)
++ [Computational protein design](https://www.nature.com/articles/s43586-025-00383-1)
++ [Bioinformatics for human long-read whole-genome sequencing](https://www.nature.com/articles/s43586-026-00519-x)
