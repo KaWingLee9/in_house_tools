@@ -15,5 +15,5 @@ https://github.com/KaWingLee9
 + Clustering result assessment
 + [Meta analysis](https://github.com/KaWingLee9/in_house_tools/tree/main/meta_analysis)
 + [Curated gene sets](https://github.com/KaWingLee9/in_house_tools/tree/main/CuratedGeneSets)  
-### Materials and information
+### Materials
 + [Special columns for computational biology](https://github.com/KaWingLee9/in_house_tools/tree/main/ComputationalColumn.md)
