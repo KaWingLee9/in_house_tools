@@ -154,7 +154,7 @@
 + [Designing proteins with language models](https://www.nature.com/articles/s41587-024-02123-4)
 + [Generative models for protein structures and sequences](https://www.nature.com/articles/s41587-023-02115-w)
 
-## Bioinformatics Primers - 
+## Primers - Nature Reviews Methods Primers
 
 + [Genome-wide association studies](https://www.nature.com/articles/s43586-021-00056-9)
 + [Mendelian randomization](https://www.nature.com/articles/s43586-021-00092-5)
